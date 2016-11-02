@@ -91,7 +91,7 @@
 
 <table border="0" width="100%" cellspacing="0" cellpadding="2">
   <tr>
-    <td class="pageHeading"><?php echo HEADING_TITLE; ?></td>
+    <td class="pageHeading"><?php echo OSCOM::getDef('heading_title'); ?></td>
   </tr>
 </table>
 

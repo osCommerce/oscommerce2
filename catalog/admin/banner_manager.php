@@ -30,9 +30,9 @@
         if ( ($_GET['flag'] == '0') || ($_GET['flag'] == '1') ) {
           tep_set_banner_status($_GET['bID'], $_GET['flag']);
 
-          $OSCOM_MessageStack->add(SUCCESS_BANNER_STATUS_UPDATED, 'success');
+          $OSCOM_MessageStack->add(OSCOM::getDef('success_banner_status_updated'), 'success');
         } else {
-          $OSCOM_MessageStack->add(ERROR_UNKNOWN_STATUS_FLAG, 'error');
+          $OSCOM_MessageStack->add(OSCOM::getDef('error_unknown_status_flag'), 'error');
         }
 
         OSCOM::redirect(FILENAME_BANNER_MANAGER, 'page=' . $_GET['page']);
@@ -54,12 +54,12 @@
 
         $banner_error = false;
         if (empty($banners_title)) {
-          $OSCOM_MessageStack->add(ERROR_BANNER_TITLE_REQUIRED, 'error');
+          $OSCOM_MessageStack->add(OSCOM::getDef('error_banner_title_required'), 'error');
           $banner_error = true;
         }
 
         if (empty($banners_group)) {
-          $OSCOM_MessageStack->add(ERROR_BANNER_GROUP_REQUIRED, 'error');
+          $OSCOM_MessageStack->add(OSCOM::getDef('error_banner_group_required'), 'error');
           $banner_error = true;
         }
 
@@ -94,11 +94,11 @@
 
             $banners_id = $OSCOM_Db->lastInsertId();
 
-            $OSCOM_MessageStack->add(SUCCESS_BANNER_INSERTED, 'success');
+            $OSCOM_MessageStack->add(OSCOM::getDef('success_banner_inserted'), 'success');
           } elseif ($action == 'update') {
             $OSCOM_Db->save('banners', $sql_data_array, ['banners_id' => (int)$banners_id]);
 
-            $OSCOM_MessageStack->add(SUCCESS_BANNER_UPDATED, 'success');
+            $OSCOM_MessageStack->add(OSCOM::getDef('success_banner_updated'), 'success');
           }
 
           if (tep_not_null($expires_date)) {
@@ -146,10 +146,10 @@
             if (FileSystem::isWritable(OSCOM::getConfig('dir_root', 'Shop') . 'images/' . $Qbanner->value('banners_image'))) {
               unlink(OSCOM::getConfig('dir_root', 'Shop') . 'images/' . $Qbanner->value('banners_image'));
             } else {
-              $OSCOM_MessageStack->add(ERROR_IMAGE_IS_NOT_WRITEABLE, 'error');
+              $OSCOM_MessageStack->add(OSCOM::getDef('error_image_is_not_writeable'), 'error');
             }
           } else {
-            $OSCOM_MessageStack->add(ERROR_IMAGE_DOES_NOT_EXIST, 'error');
+            $OSCOM_MessageStack->add(OSCOM::getDef('error_image_does_not_exist'), 'error');
           }
         }
 
@@ -170,7 +170,7 @@
           }
         }
 
-        $OSCOM_MessageStack->add(SUCCESS_BANNER_REMOVED, 'success');
+        $OSCOM_MessageStack->add(OSCOM::getDef('success_banner_removed'), 'success');
 
         OSCOM::redirect(FILENAME_BANNER_MANAGER, 'page=' . $_GET['page']);
         break;
@@ -204,10 +204,10 @@
   if (function_exists('imagecreate') && tep_not_null($banner_extension)) {
     if (is_dir(OSCOM::getConfig('dir_root') . 'images/graphs')) {
       if (!FileSystem::isWritable(OSCOM::getConfig('dir_root') . 'images/graphs')) {
-        $OSCOM_MessageStack->add(ERROR_GRAPHS_DIRECTORY_NOT_WRITEABLE, 'error');
+        $OSCOM_MessageStack->add(OSCOM::getDef('error_graphs_directory_not_writeable'), 'error');
       }
     } else {
-      $OSCOM_MessageStack->add(ERROR_GRAPHS_DIRECTORY_DOES_NOT_EXIST, 'error');
+      $OSCOM_MessageStack->add(OSCOM::getDef('error_graphs_directory_does_not_exist'), 'error');
     }
   }
 
@@ -219,14 +219,14 @@
 ?>
 
 <div class="pull-right">
-  <?= HTML::button(IMAGE_NEW_BANNER, 'fa fa-plus', OSCOM::link('banner_manager.php', 'action=new'), null, 'btn-info'); ?>
+  <?= HTML::button(OSCOM::getDef('image_new_banner'), 'fa fa-plus', OSCOM::link('banner_manager.php', 'action=new'), null, 'btn-info'); ?>
 </div>
 
 <?php
   }
 ?>
 
-<h2><i class="fa fa-picture-o"></i> <a href="<?= OSCOM::link('banner_manager.php'); ?>"><?= HEADING_TITLE; ?></a></h2>
+<h2><i class="fa fa-picture-o"></i> <a href="<?= OSCOM::link('banner_manager.php'); ?>"><?= OSCOM::getDef('heading_title'); ?></a></h2>
 
 <?php
   if (!empty($action)) {
@@ -288,28 +288,28 @@
 <div class="panel panel-info">
   <div class="panel-body">
     <div class="form-group">
-      <label for="banners_title"><?= TEXT_BANNERS_TITLE . TEXT_FIELD_REQUIRED; ?></label>
+      <label for="banners_title"><?= OSCOM::getDef('text_banners_title') . OSCOM::getDef('text_field_required'); ?></label>
       <?= HTML::inputField('banners_title', $bInfo->banners_title); ?>
     </div>
 
     <div class="form-group">
-      <label for="banners_url"><?= TEXT_BANNERS_URL; ?></label>
+      <label for="banners_url"><?= OSCOM::getDef('text_banners_url'); ?></label>
       <?= HTML::inputField('banners_url', $bInfo->banners_url); ?>
     </div>
 
     <div class="form-group">
-      <label for="banners_group"><?= TEXT_BANNERS_GROUP; ?></label>
+      <label for="banners_group"><?= OSCOM::getDef('text_banners_group'); ?></label>
       <?= HTML::selectField('banners_group', $groups_array, $bInfo->banners_group); ?>
 
-      <label for="new_banners_group"><?= TEXT_BANNERS_NEW_GROUP . ((sizeof($groups_array) > 0) ? '' : TEXT_FIELD_REQUIRED); ?></label>
+      <label for="new_banners_group"><?= OSCOM::getDef('text_banners_new_group') . ((sizeof($groups_array) > 0) ? '' : OSCOM::getDef('text_field_required')); ?></label>
       <?= HTML::inputField('new_banners_group'); ?>
     </div>
 
     <div class="form-group">
-      <label for="banners_image"><?= TEXT_BANNERS_IMAGE; ?></label>
+      <label for="banners_image"><?= OSCOM::getDef('text_banners_image'); ?></label>
       <?= HTML::fileField('banners_image'); ?>
 
-      <label for="banners_image_local"><?= TEXT_BANNERS_IMAGE_LOCAL; ?></label>
+      <label for="banners_image_local"><?= OSCOM::getDef('text_banners_image_local'); ?></label>
       <div class="input-group">
         <div class="input-group-addon"><?= OSCOM::getConfig('dir_root', 'Shop') . 'images/'; ?></div>
         <?= HTML::inputField('banners_image_local', (isset($bInfo->banners_image) ? $bInfo->banners_image : '')); ?>
@@ -317,7 +317,7 @@
     </div>
 
     <div class="form-group">
-      <label for="banners_image_target"><?= TEXT_BANNERS_IMAGE_TARGET; ?></label>
+      <label for="banners_image_target"><?= OSCOM::getDef('text_banners_image_target'); ?></label>
       <div class="input-group">
         <div class="input-group-addon"><?= OSCOM::getConfig('dir_root', 'Shop') . 'images/'; ?></div>
         <?= HTML::inputField('banners_image_target'); ?>
@@ -325,32 +325,32 @@
     </div>
 
     <div class="form-group">
-      <label for="banners_html_text"><?= TEXT_BANNERS_HTML_TEXT; ?></label>
+      <label for="banners_html_text"><?= OSCOM::getDef('text_banners_html_text'); ?></label>
       <?= HTML::textareaField('banners_html_text', '60', '5', $bInfo->banners_html_text); ?>
     </div>
 
     <div class="form-group">
-      <label for="date_scheduled"><?= TEXT_BANNERS_SCHEDULED_AT; ?></label>
+      <label for="date_scheduled"><?= OSCOM::getDef('text_banners_scheduled_at'); ?></label>
       <?= HTML::inputField('date_scheduled', $bInfo->date_scheduled, 'id="date_scheduled"', 'date'); ?>
     </div>
 
     <div class="form-group">
-      <label for="expires_date"><?= TEXT_BANNERS_EXPIRES_ON; ?></label>
+      <label for="expires_date"><?= OSCOM::getDef('text_banners_expires_on'); ?></label>
       <?= HTML::inputField('expires_date', $bInfo->expires_date, 'id="expires_date"', 'date'); ?>
 
-      <label for="expires_impressions"><?= TEXT_BANNERS_OR_AT; ?></label>
+      <label for="expires_impressions"><?= OSCOM::getDef('text_banners_or_at'); ?></label>
       <?= HTML::inputField('expires_impressions', $bInfo->expires_impressions, 'maxlength="7" size="7"'); ?>
-      <p class="help-block"><?= TEXT_BANNERS_IMPRESSIONS; ?></p>
+      <p class="help-block"><?= OSCOM::getDef('text_banners_impressions'); ?></p>
     </div>
 
-    <?= HTML::button(IMAGE_SAVE, 'fa fa-save', null, null, 'btn-success') . HTML::button(IMAGE_CANCEL, null, OSCOM::link(FILENAME_BANNER_MANAGER, 'page=' . $_GET['page']), null, 'btn-link'); ?>
+    <?= HTML::button(OSCOM::getDef('image_save'), 'fa fa-save', null, null, 'btn-success') . HTML::button(OSCOM::getDef('image_cancel'), null, OSCOM::link(FILENAME_BANNER_MANAGER, 'page=' . $_GET['page']), null, 'btn-link'); ?>
   </div>
 </div>
 
 </form>
 
 <p>
-  <?= TEXT_BANNERS_BANNER_NOTE . '<br />' . TEXT_BANNERS_INSERT_NOTE . '<br />' . TEXT_BANNERS_EXPIRCY_NOTE . '<br />' . TEXT_BANNERS_SCHEDULE_NOTE; ?>
+  <?= OSCOM::getDef('text_banners_banner_note') . '<br />' . OSCOM::getDef('text_banners_insert_note') . '<br />' . OSCOM::getDef('text_banners_expircy_note') . '<br />' . OSCOM::getDef('text_banners_schedule_note'); ?>
 </p>
 
 <?php
@@ -367,10 +367,10 @@
             $heading[] = array('text' => $bInfo->banners_title);
 
             $contents = array('form' => HTML::form('banners', OSCOM::link(FILENAME_BANNER_MANAGER, 'page=' . $_GET['page'] . '&bID=' . $bInfo->banners_id . '&action=deleteconfirm')));
-            $contents[] = array('text' => TEXT_INFO_DELETE_INTRO);
+            $contents[] = array('text' => OSCOM::getDef('text_info_delete_intro'));
             $contents[] = array('text' => '<strong>' . $bInfo->banners_title . '</strong>');
-            if ($bInfo->banners_image) $contents[] = array('text' => HTML::checkboxField('delete_image', 'on', true) . ' ' . TEXT_INFO_DELETE_IMAGE);
-            $contents[] = array('text' => HTML::button(IMAGE_DELETE, 'fa fa-trash', null, null, 'btn-danger') . HTML::button(IMAGE_CANCEL, null, OSCOM::link(FILENAME_BANNER_MANAGER, 'page=' . $_GET['page'] . '&bID=' . $_GET['bID']), null, 'btn-link'));
+            if ($bInfo->banners_image) $contents[] = array('text' => HTML::checkboxField('delete_image', 'on', true) . ' ' . OSCOM::getDef('text_info_delete_image'));
+            $contents[] = array('text' => HTML::button(OSCOM::getDef('image_delete'), 'fa fa-trash', null, null, 'btn-danger') . HTML::button(OSCOM::getDef('image_cancel'), null, OSCOM::link(FILENAME_BANNER_MANAGER, 'page=' . $_GET['page'] . '&bID=' . $_GET['bID']), null, 'btn-link'));
           }
         }
       }
@@ -389,10 +389,10 @@
 <table class="oscom-table table table-hover">
   <thead>
     <tr class="info">
-      <th><?php echo TABLE_HEADING_BANNERS; ?></th>
-      <th class="text-right"><?php echo TABLE_HEADING_GROUPS; ?></th>
-      <th class="text-right"><?php echo TABLE_HEADING_STATISTICS; ?></th>
-      <th class="text-right"><?php echo TABLE_HEADING_STATUS; ?></th>
+      <th><?php echo OSCOM::getDef('table_heading_banners'); ?></th>
+      <th class="text-right"><?php echo OSCOM::getDef('table_heading_groups'); ?></th>
+      <th class="text-right"><?php echo OSCOM::getDef('table_heading_statistics'); ?></th>
+      <th class="text-right"><?php echo OSCOM::getDef('table_heading_status'); ?></th>
       <th class="action"></th>
     </tr>
   </thead>
@@ -420,17 +420,17 @@
 
 <?php
       if ($Qbanners->valueInt('status') === 1) {
-        echo '<i class="fa fa-circle text-success" title="' . IMAGE_ICON_STATUS_GREEN . '"></i>&nbsp;<a href="' . OSCOM::link(FILENAME_BANNER_MANAGER, 'page=' . $_GET['page'] . '&bID=' . $Qbanners->valueInt('banners_id') . '&action=setflag&flag=0') . '"><i class="fa fa-circle-o text-danger" title="' . IMAGE_ICON_STATUS_RED_LIGHT . '"></i></a>';
+        echo '<i class="fa fa-circle text-success" title="' . OSCOM::getDef('image_icon_status_green') . '"></i>&nbsp;<a href="' . OSCOM::link(FILENAME_BANNER_MANAGER, 'page=' . $_GET['page'] . '&bID=' . $Qbanners->valueInt('banners_id') . '&action=setflag&flag=0') . '"><i class="fa fa-circle-o text-danger" title="' . OSCOM::getDef('image_icon_status_red_light') . '"></i></a>';
       } else {
-        echo '<a href="' . OSCOM::link(FILENAME_BANNER_MANAGER, 'page=' . $_GET['page'] . '&bID=' . $Qbanners->valueInt('banners_id') . '&action=setflag&flag=1') . '"><i class="fa fa-circle-o text-success" title="' . IMAGE_ICON_STATUS_GREEN_LIGHT . '"></i></a>&nbsp;<i class="fa fa-circle text-danger" title="' . IMAGE_ICON_STATUS_RED . '"></i>';
+        echo '<a href="' . OSCOM::link(FILENAME_BANNER_MANAGER, 'page=' . $_GET['page'] . '&bID=' . $Qbanners->valueInt('banners_id') . '&action=setflag&flag=1') . '"><i class="fa fa-circle-o text-success" title="' . OSCOM::getDef('image_icon_status_green_light') . '"></i></a>&nbsp;<i class="fa fa-circle text-danger" title="' . OSCOM::getDef('image_icon_status_red') . '"></i>';
       }
 ?>
 
       </td>
       <td class="action">
-        <?= '<a href="' . OSCOM::link(FILENAME_BANNER_STATISTICS, 'page=' . $_GET['page'] . '&bID=' . $Qbanners->valueInt('banners_id')) . '"><i class="fa fa-line-chart" title="' . ICON_STATISTICS . '"></i></a>'; ?>
-        <?= '<a href="' . OSCOM::link(FILENAME_BANNER_MANAGER, 'page=' . $_GET['page'] . '&bID=' . $Qbanners->valueInt('banners_id') . '&action=new') . '"><i class="fa fa-pencil" title="' . IMAGE_EDIT . '"></i></a>'; ?>
-        <?= '<a href="' . OSCOM::link(FILENAME_BANNER_MANAGER, 'page=' . $_GET['page'] . '&bID=' . $Qbanners->valueInt('banners_id') . '&action=delete') . '"><i class="fa fa-trash" title="' . IMAGE_DELETE . '"></i></a>'; ?>
+        <?= '<a href="' . OSCOM::link(FILENAME_BANNER_STATISTICS, 'page=' . $_GET['page'] . '&bID=' . $Qbanners->valueInt('banners_id')) . '"><i class="fa fa-line-chart" title="' . OSCOM::getDef('icon_statistics') . '"></i></a>'; ?>
+        <?= '<a href="' . OSCOM::link(FILENAME_BANNER_MANAGER, 'page=' . $_GET['page'] . '&bID=' . $Qbanners->valueInt('banners_id') . '&action=new') . '"><i class="fa fa-pencil" title="' . OSCOM::getDef('image_edit') . '"></i></a>'; ?>
+        <?= '<a href="' . OSCOM::link(FILENAME_BANNER_MANAGER, 'page=' . $_GET['page'] . '&bID=' . $Qbanners->valueInt('banners_id') . '&action=delete') . '"><i class="fa fa-trash" title="' . OSCOM::getDef('image_delete') . '"></i></a>'; ?>
       </td>
     </tr>
 
@@ -443,7 +443,7 @@
 
 <div>
   <span class="pull-right"><?= $Qbanners->getPageSetLinks(); ?></span>
-  <span><?= $Qbanners->getPageSetLabel(TEXT_DISPLAY_NUMBER_OF_BANNERS); ?></span>
+  <span><?= $Qbanners->getPageSetLabel(OSCOM::getDef('text_display_number_of_banners')); ?></span>
 </div>
 
 <script>

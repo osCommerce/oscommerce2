@@ -1,0 +1,2 @@
+module_security_check_extended_version_check_title = Version Check
+module_security_check_extended_version_check_error = A new version check was performed more than 30 days ago. Please perform the check to see if a new version is available.

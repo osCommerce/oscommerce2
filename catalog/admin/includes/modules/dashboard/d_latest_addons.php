@@ -23,8 +23,8 @@
     var $enabled = false;
 
     function d_latest_addons() {
-      $this->title = MODULE_ADMIN_DASHBOARD_LATEST_ADDONS_TITLE;
-      $this->description = MODULE_ADMIN_DASHBOARD_LATEST_ADDONS_DESCRIPTION;
+      $this->title = OSCOM::getDef('module_admin_dashboard_latest_addons_title');
+      $this->description = OSCOM::getDef('module_admin_dashboard_latest_addons_description');
 
       if ( defined('MODULE_ADMIN_DASHBOARD_LATEST_ADDONS_STATUS') ) {
         $this->sort_order = MODULE_ADMIN_DASHBOARD_LATEST_ADDONS_SORT_ORDER;
@@ -46,8 +46,8 @@
       $output = '<table class="table table-hover">
                    <thead>
                      <tr class="info">
-                       <th>' . MODULE_ADMIN_DASHBOARD_LATEST_ADDONS_TITLE . '</th>
-                       <th class="text-right">' . MODULE_ADMIN_DASHBOARD_LATEST_ADDONS_DATE . '</th>
+                       <th>' . OSCOM::getDef('module_admin_dashboard_latest_addons_title') . '</th>
+                       <th class="text-right">' . OSCOM::getDef('module_admin_dashboard_latest_addons_date') . '</th>
                      </tr>
                    </thead>
                    <tbody>';
@@ -61,12 +61,12 @@
         }
       } else {
         $output .= '    <tr>
-                          <td colspan="2">' . MODULE_ADMIN_DASHBOARD_LATEST_ADDONS_FEED_ERROR . '</td>
+                          <td colspan="2">' . OSCOM::getDef('module_admin_dashboard_latest_addons_feed_error') . '</td>
                         </tr>';
       }
 
       $output .= '    <tr>
-                        <td class="text-right" colspan="2"><a href="http://addons.oscommerce.com" target="_blank">' . HTML::image(OSCOM::linkImage('icon_oscommerce.png'), MODULE_ADMIN_DASHBOARD_LATEST_ADDONS_ICON_SITE) . '</a>&nbsp;<a href="http://feeds.feedburner.com/osCommerce_Contributions" target="_blank">' . HTML::image(OSCOM::linkImage('icon_rss.png'), MODULE_ADMIN_DASHBOARD_LATEST_ADDONS_ICON_RSS) . '</a></td>
+                        <td class="text-right" colspan="2"><a href="http://addons.oscommerce.com" target="_blank">' . HTML::image(OSCOM::linkImage('icon_oscommerce.png'), OSCOM::getDef('module_admin_dashboard_latest_addons_icon_site')) . '</a>&nbsp;<a href="http://feeds.feedburner.com/osCommerce_Contributions" target="_blank">' . HTML::image(OSCOM::linkImage('icon_rss.png'), OSCOM::getDef('module_admin_dashboard_latest_addons_icon_rss')) . '</a></td>
                       </tr>
                     </tbody>
                   </table>';

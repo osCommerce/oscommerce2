@@ -1,0 +1,14 @@
+heading_title = Zones
+table_heading_country_name = Country
+table_heading_zone_name = Zones
+table_heading_zone_code = Code
+table_heading_action = Action
+text_info_edit_intro = Please make any necessary changes
+text_info_zones_name = Zones Name:
+text_info_zones_code = Zones Code:
+text_info_country_name = Country:
+text_info_insert_intro = Please enter the new zone with its related data
+text_info_delete_intro = Are you sure you want to delete this zone?
+text_info_heading_new_zone = New Zone
+text_info_heading_edit_zone = Edit Zone
+text_info_heading_delete_zone = Delete Zone

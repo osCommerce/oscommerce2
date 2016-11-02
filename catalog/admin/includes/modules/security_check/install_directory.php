@@ -29,7 +29,7 @@
     }
 
     function getMessage() {
-      return WARNING_INSTALL_DIRECTORY_EXISTS;
+      return OSCOM::getDef('warning_install_directory_exists');
     }
   }
 ?>

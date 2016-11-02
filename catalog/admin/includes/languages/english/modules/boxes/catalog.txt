@@ -1,0 +1,8 @@
+admin_menu_shop_catalog = Catalog
+admin_menu_shop_catalog_categories = Categories/Products
+box_heading_catalog = Catalog
+box_catalog_categories_products_attributes = Products Attributes
+box_catalog_manufacturers = Manufacturers
+box_catalog_reviews = Reviews
+box_catalog_specials = Specials
+box_catalog_products_expected = Products Expected

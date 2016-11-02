@@ -1,0 +1,6 @@
+table_heading_configuration_title = Title
+table_heading_configuration_value = Value
+table_heading_action = Action
+text_info_edit_intro = Please make any necessary changes
+text_info_date_added = Date Added:
+text_info_last_modified = Last Modified:

@@ -1,0 +1,3 @@
+module_admin_dashboard_admin_logins_title = Last Administrator Logins
+module_admin_dashboard_admin_logins_description = Show the last successful and failed administrator logins
+module_admin_dashboard_admin_logins_date = Date

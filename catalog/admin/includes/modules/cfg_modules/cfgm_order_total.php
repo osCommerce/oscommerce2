@@ -24,7 +24,7 @@
     function __construct() {
       $this->directory = OSCOM::getConfig('dir_root', $this->site) . 'includes/modules/order_total/';
       $this->language_directory = OSCOM::getConfig('dir_root', $this->site) . 'includes/languages/';
-      $this->title = MODULE_CFG_MODULE_ORDER_TOTAL_TITLE;
+      $this->title = OSCOM::getDef('module_cfg_module_order_total_title');
     }
   }
 ?>

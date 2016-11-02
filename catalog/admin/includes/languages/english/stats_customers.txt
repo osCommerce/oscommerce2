@@ -1,0 +1,4 @@
+heading_title = Best Customer Orders-Total
+table_heading_number = No.
+table_heading_customers = Customers
+table_heading_total_purchased = Total Purchased

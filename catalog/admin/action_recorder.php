@@ -46,7 +46,7 @@
   }
 
   $modules_array = array();
-  $modules_list_array = array(array('id' => '', 'text' => TEXT_ALL_MODULES));
+  $modules_list_array = array(array('id' => '', 'text' => OSCOM::getDef('text_all_modules')));
 
   $Qmodules = $OSCOM_Db->get('action_recorder', 'distinct module', null, 'module');
 
@@ -82,7 +82,7 @@
           }
         }
 
-        $OSCOM_MessageStack->add(sprintf(SUCCESS_EXPIRED_ENTRIES, $expired_entries), 'success');
+        $OSCOM_MessageStack->add(sprintf(OSCOM::getDef('success_expired_entries'), $expired_entries), 'success');
 
         OSCOM::redirect(FILENAME_ACTION_RECORDER);
 
@@ -94,14 +94,14 @@
 ?>
 
 <div class="pull-right">
-  <?= HTML::button(IMAGE_DELETE, 'fa fa-trash', OSCOM::link('action_recorder.php', 'action=expire' . (isset($_GET['module']) && in_array($_GET['module'], $modules_array) ? '&module=' . $_GET['module'] : '')), null, 'btn-danger'); ?>
+  <?= HTML::button(OSCOM::getDef('image_delete'), 'fa fa-trash', OSCOM::link('action_recorder.php', 'action=expire' . (isset($_GET['module']) && in_array($_GET['module'], $modules_array) ? '&module=' . $_GET['module'] : '')), null, 'btn-danger'); ?>
 </div>
 
-<h2><i class="fa fa-tasks"></i> <a href="<?= OSCOM::link('action_recorder.php'); ?>"><?= HEADING_TITLE; ?></a></h2>
+<h2><i class="fa fa-tasks"></i> <a href="<?= OSCOM::link('action_recorder.php'); ?>"><?= OSCOM::getDef('heading_title'); ?></a></h2>
 
 <?php
   echo HTML::form('search', OSCOM::link('action_recorder.php'), 'get', 'class="form-inline"', ['session_id' => true]) .
-       HTML::inputField('search', null, 'placeholder="' . TEXT_FILTER_SEARCH . '"') .
+       HTML::inputField('search', null, 'placeholder="' . OSCOM::getDef('text_filter_search') . '"') .
        HTML::selectField('module', $modules_list_array, null, 'onchange="this.form.submit();"') .
        '</form>';
 ?>
@@ -109,10 +109,10 @@
 <table class="oscom-table table table-hover">
   <thead>
     <tr class="info">
-      <th><?= TABLE_HEADING_MODULE; ?></th>
-      <th><?= TABLE_HEADING_CUSTOMER; ?></th>
-      <th><?= TABLE_HEADING_IDENTIFIER; ?></th>
-      <th class="text-right"><?= TABLE_HEADING_DATE_ADDED; ?></th>
+      <th><?= OSCOM::getDef('table_heading_module'); ?></th>
+      <th><?= OSCOM::getDef('table_heading_customer'); ?></th>
+      <th><?= OSCOM::getDef('table_heading_identifier'); ?></th>
+      <th class="text-right"><?= OSCOM::getDef('table_heading_date_added'); ?></th>
     </tr>
   </thead>
   <tbody>
@@ -176,7 +176,7 @@
 
 <div>
   <span class="pull-right"><?= $Qactions->getPageSetLinks((isset($_GET['module']) && in_array($_GET['module'], $modules_array) && is_object($GLOBALS[$_GET['module']]) ? 'module=' . $_GET['module'] : null) . '&' . (isset($_GET['search']) && !empty($_GET['search']) ? 'search=' . $_GET['search'] : null)); ?></span>
-  <span><?= $Qactions->getPageSetLabel(TEXT_DISPLAY_NUMBER_OF_ENTRIES); ?></span>
+  <span><?= $Qactions->getPageSetLabel(OSCOM::getDef('text_display_number_of_entries')); ?></span>
 </div>
 
 <?php

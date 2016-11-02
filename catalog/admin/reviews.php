@@ -69,7 +69,7 @@
       <tr>
         <td width="100%"><table border="0" width="100%" cellspacing="0" cellpadding="0">
           <tr>
-            <td class="pageHeading"><?php echo HEADING_TITLE; ?></td>
+            <td class="pageHeading"><?php echo OSCOM::getDef('heading_title'); ?></td>
           </tr>
         </table></td>
       </tr>
@@ -125,29 +125,29 @@
       <tr><?php echo HTML::form('review', OSCOM::link(FILENAME_REVIEWS, 'page=' . $_GET['page'] . '&rID=' . $_GET['rID'] . '&action=preview')); ?>
         <td><table border="0" width="100%" cellspacing="0" cellpadding="0">
           <tr>
-            <td class="main" valign="top"><strong><?php echo ENTRY_PRODUCT; ?></strong> <?php echo $rInfo->products_name; ?><br /><strong><?php echo ENTRY_FROM; ?></strong> <?php echo $rInfo->customers_name; ?><br /><br /><strong><?php echo ENTRY_DATE; ?></strong> <?php echo DateTime::toShort($rInfo->date_added); ?></td>
+            <td class="main" valign="top"><strong><?php echo OSCOM::getDef('entry_product'); ?></strong> <?php echo $rInfo->products_name; ?><br /><strong><?php echo OSCOM::getDef('entry_from'); ?></strong> <?php echo $rInfo->customers_name; ?><br /><br /><strong><?php echo OSCOM::getDef('entry_date'); ?></strong> <?php echo DateTime::toShort($rInfo->date_added); ?></td>
             <td class="main" align="right" valign="top"><?php echo HTML::image(OSCOM::linkImage('Shop/' . $rInfo->products_image), $rInfo->products_name, SMALL_IMAGE_WIDTH, SMALL_IMAGE_HEIGHT, 'hspace="5" vspace="5"'); ?></td>
           </tr>
           <tr>
-            <td class="main" colspan="2"><strong><?php echo TEXT_INFO_REVIEW_STATUS; ?></strong> <?php echo HTML::radioField('reviews_status', '1', $in_status) . '&nbsp;' . TEXT_REVIEW_PUBLISHED . '&nbsp;' . HTML::radioField('reviews_status', '0', $out_status) . '&nbsp;' . TEXT_REVIEW_NOT_PUBLISHED; ?></td>
+            <td class="main" colspan="2"><strong><?php echo OSCOM::getDef('text_info_review_status'); ?></strong> <?php echo HTML::radioField('reviews_status', '1', $in_status) . '&nbsp;' . OSCOM::getDef('text_review_published') . '&nbsp;' . HTML::radioField('reviews_status', '0', $out_status) . '&nbsp;' . OSCOM::getDef('text_review_not_published'); ?></td>
           </tr>
         </table></td>
       </tr>
       <tr>
         <td><table width="100%" border="0" cellspacing="0" cellpadding="0">
           <tr>
-            <td class="main" valign="top"><strong><?php echo ENTRY_REVIEW; ?></strong><br /><br /><?php echo HTML::textareaField('reviews_text', '60', '15', $rInfo->reviews_text); ?></td>
+            <td class="main" valign="top"><strong><?php echo OSCOM::getDef('entry_review'); ?></strong><br /><br /><?php echo HTML::textareaField('reviews_text', '60', '15', $rInfo->reviews_text); ?></td>
           </tr>
           <tr>
-            <td class="smallText" align="right"><?php echo ENTRY_REVIEW_TEXT; ?></td>
+            <td class="smallText" align="right"><?php echo OSCOM::getDef('entry_review_text'); ?></td>
           </tr>
         </table></td>
       </tr>
       <tr>
-        <td class="main"><strong><?php echo ENTRY_RATING; ?></strong>&nbsp;<?php echo TEXT_BAD; ?>&nbsp;<?php for ($i=1; $i<=5; $i++) echo HTML::radioField('reviews_rating', $i, $rInfo->reviews_rating == $i) . '&nbsp;'; echo TEXT_GOOD; ?></td>
+        <td class="main"><strong><?php echo OSCOM::getDef('entry_rating'); ?></strong>&nbsp;<?php echo OSCOM::getDef('text_bad'); ?>&nbsp;<?php for ($i=1; $i<=5; $i++) echo HTML::radioField('reviews_rating', $i, $rInfo->reviews_rating == $i) . '&nbsp;'; echo OSCOM::getDef('text_good'); ?></td>
       </tr>
       <tr>
-        <td align="right" class="smallText"><?php echo HTML::button(IMAGE_PREVIEW, 'fa fa-file-o') . HTML::button(IMAGE_CANCEL, 'fa fa-close', OSCOM::link(FILENAME_REVIEWS, 'page=' . $_GET['page'] . '&rID=' . $_GET['rID'])); ?></td>
+        <td align="right" class="smallText"><?php echo HTML::button(OSCOM::getDef('image_preview'), 'fa fa-file-o') . HTML::button(OSCOM::getDef('image_cancel'), 'fa fa-close', OSCOM::link(FILENAME_REVIEWS, 'page=' . $_GET['page'] . '&rID=' . $_GET['rID'])); ?></td>
       </form></tr>
 <?php
     } else {
@@ -160,7 +160,7 @@
       <tr><?php if (tep_not_null($_POST)) { echo HTML::form('update', OSCOM::link(FILENAME_REVIEWS, 'page=' . $_GET['page'] . '&rID=' . $_GET['rID'] . '&action=update')); } ?>
         <td><table border="0" width="100%" cellspacing="0" cellpadding="0">
           <tr>
-            <td class="main" valign="top"><strong><?php echo ENTRY_PRODUCT; ?></strong> <?php echo $rInfo->products_name; ?><br /><strong><?php echo ENTRY_FROM; ?></strong> <?php echo $rInfo->customers_name; ?><br /><br /><strong><?php echo ENTRY_DATE; ?></strong> <?php echo DateTime::toShort($rInfo->date_added); ?></td>
+            <td class="main" valign="top"><strong><?php echo OSCOM::getDef('entry_product'); ?></strong> <?php echo $rInfo->products_name; ?><br /><strong><?php echo OSCOM::getDef('entry_from'); ?></strong> <?php echo $rInfo->customers_name; ?><br /><br /><strong><?php echo OSCOM::getDef('entry_date'); ?></strong> <?php echo DateTime::toShort($rInfo->date_added); ?></td>
             <td class="main" align="right" valign="top"><?php echo HTML::image(OSCOM::linkImage('Shop/' . $rInfo->products_image), $rInfo->products_name, SMALL_IMAGE_WIDTH, SMALL_IMAGE_HEIGHT, 'hspace="5" vspace="5"'); ?></td>
           </tr>
         </table>
@@ -168,12 +168,12 @@
       <tr>
         <td><table width="100%" border="0" cellspacing="0" cellpadding="0">
           <tr>
-            <td valign="top" class="main"><strong><?php echo ENTRY_REVIEW; ?></strong><br /><br /><?php echo nl2br(HTML::output(tep_break_string($rInfo->reviews_text, 15))); ?></td>
+            <td valign="top" class="main"><strong><?php echo OSCOM::getDef('entry_review'); ?></strong><br /><br /><?php echo nl2br(HTML::output(tep_break_string($rInfo->reviews_text, 15))); ?></td>
           </tr>
         </table></td>
       </tr>
       <tr>
-        <td class="main"><strong><?php echo ENTRY_RATING; ?></strong>&nbsp;<?php echo HTML::image(OSCOM::linkImage('Shop/stars_' . $rInfo->reviews_rating . '.gif'), sprintf(TEXT_OF_5_STARS, $rInfo->reviews_rating)); ?>&nbsp;<small>[<?php echo sprintf(TEXT_OF_5_STARS, $rInfo->reviews_rating); ?>]</small></td>
+        <td class="main"><strong><?php echo OSCOM::getDef('entry_rating'); ?></strong>&nbsp;<?php echo HTML::image(OSCOM::linkImage('Shop/stars_' . $rInfo->reviews_rating . '.gif'), sprintf(OSCOM::getDef('text_of_5_stars'), $rInfo->reviews_rating)); ?>&nbsp;<small>[<?php echo sprintf(OSCOM::getDef('text_of_5_stars'), $rInfo->reviews_rating); ?>]</small></td>
       </tr>
 <?php
       if (tep_not_null($_POST)) {
@@ -182,7 +182,7 @@
         echo HTML::hiddenField('reviews_status', $rInfo->reviews_status);
 ?>
       <tr>
-        <td align="right" class="smallText"><?php echo HTML::button(IMAGE_SAVE, 'fa fa-save') . HTML::button(IMAGE_CANCEL, 'fa fa-close', OSCOM::link(FILENAME_REVIEWS, 'page=' . $_GET['page'] . '&rID=' . $rInfo->reviews_id)); ?></td>
+        <td align="right" class="smallText"><?php echo HTML::button(OSCOM::getDef('image_save'), 'fa fa-save') . HTML::button(OSCOM::getDef('image_cancel'), 'fa fa-close', OSCOM::link(FILENAME_REVIEWS, 'page=' . $_GET['page'] . '&rID=' . $rInfo->reviews_id)); ?></td>
       </form></tr>
 <?php
       } else {
@@ -195,7 +195,7 @@
         }
 ?>
       <tr>
-        <td align="right" class="smallText"><?php echo HTML::button(IMAGE_BACK, 'fa fa-chevron-left', OSCOM::link($back_url, $back_url_params)); ?></td>
+        <td align="right" class="smallText"><?php echo HTML::button(OSCOM::getDef('image_back'), 'fa fa-chevron-left', OSCOM::link($back_url, $back_url_params)); ?></td>
       </tr>
 <?php
       }
@@ -207,11 +207,11 @@
           <tr>
             <td valign="top"><table border="0" width="100%" cellspacing="0" cellpadding="2">
               <tr class="dataTableHeadingRow">
-                <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_PRODUCTS; ?></td>
-                <td class="dataTableHeadingContent" align="right"><?php echo TABLE_HEADING_RATING; ?></td>
-                <td class="dataTableHeadingContent" align="right"><?php echo TABLE_HEADING_DATE_ADDED; ?></td>
-                <td class="dataTableHeadingContent" align="center"><?php echo TABLE_HEADING_STATUS; ?></td>
-                <td class="dataTableHeadingContent" align="right"><?php echo TABLE_HEADING_ACTION; ?>&nbsp;</td>
+                <td class="dataTableHeadingContent"><?php echo OSCOM::getDef('table_heading_products'); ?></td>
+                <td class="dataTableHeadingContent" align="right"><?php echo OSCOM::getDef('table_heading_rating'); ?></td>
+                <td class="dataTableHeadingContent" align="right"><?php echo OSCOM::getDef('table_heading_date_added'); ?></td>
+                <td class="dataTableHeadingContent" align="center"><?php echo OSCOM::getDef('table_heading_status'); ?></td>
+                <td class="dataTableHeadingContent" align="right"><?php echo OSCOM::getDef('table_heading_action'); ?>&nbsp;</td>
               </tr>
 <?php
     $Qreviews = $OSCOM_Db->prepare('select SQL_CALC_FOUND_ROWS reviews_id, products_id, date_added, last_modified, reviews_rating, reviews_status from :table_reviews order by date_added desc limit :page_set_offset, :page_set_max_results');
@@ -264,18 +264,18 @@
         echo '              <tr class="dataTableRow" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)" onclick="document.location.href=\'' . OSCOM::link(FILENAME_REVIEWS, 'page=' . $_GET['page'] . '&rID=' . $Qreviews->valueInt('reviews_id')) . '\'">' . "\n";
       }
 ?>
-                <td class="dataTableContent"><?php echo '<a href="' . OSCOM::link(FILENAME_REVIEWS, 'page=' . $_GET['page'] . '&rID=' . $Qreviews->valueInt('reviews_id') . '&action=preview') . '">' . HTML::image(OSCOM::linkImage('icons/preview.gif'), ICON_PREVIEW) . '</a>&nbsp;' . tep_get_products_name($Qreviews->valueInt('products_id')); ?></td>
+                <td class="dataTableContent"><?php echo '<a href="' . OSCOM::link(FILENAME_REVIEWS, 'page=' . $_GET['page'] . '&rID=' . $Qreviews->valueInt('reviews_id') . '&action=preview') . '">' . HTML::image(OSCOM::linkImage('icons/preview.gif'), OSCOM::getDef('icon_preview')) . '</a>&nbsp;' . tep_get_products_name($Qreviews->valueInt('products_id')); ?></td>
                 <td class="dataTableContent" align="right"><?php echo HTML::image(OSCOM::linkImage('Shop/stars_' . $Qreviews->valueInt('reviews_rating') . '.gif')); ?></td>
                 <td class="dataTableContent" align="right"><?php echo DateTime::toShort($Qreviews->value('date_added')); ?></td>
                 <td class="dataTableContent" align="center">
 <?php
       if ($Qreviews->valueInt('reviews_status') === 1) {
-        echo HTML::image(OSCOM::linkImage('icon_status_green.gif'), IMAGE_ICON_STATUS_GREEN, 10, 10) . '&nbsp;&nbsp;<a href="' . OSCOM::link(FILENAME_REVIEWS, 'action=setflag&flag=0&rID=' . $Qreviews->valueInt('reviews_id') . '&page=' . $_GET['page']) . '">' . HTML::image(OSCOM::linkImage('icon_status_red_light.gif'), IMAGE_ICON_STATUS_RED_LIGHT, 10, 10) . '</a>';
+        echo HTML::image(OSCOM::linkImage('icon_status_green.gif'), OSCOM::getDef('image_icon_status_green'), 10, 10) . '&nbsp;&nbsp;<a href="' . OSCOM::link(FILENAME_REVIEWS, 'action=setflag&flag=0&rID=' . $Qreviews->valueInt('reviews_id') . '&page=' . $_GET['page']) . '">' . HTML::image(OSCOM::linkImage('icon_status_red_light.gif'), OSCOM::getDef('image_icon_status_red_light'), 10, 10) . '</a>';
       } else {
-        echo '<a href="' . OSCOM::link(FILENAME_REVIEWS, 'action=setflag&flag=1&rID=' . $Qreviews->valueInt('reviews_id') . '&page=' . $_GET['page']) . '">' . HTML::image(OSCOM::linkImage('icon_status_green_light.gif'), IMAGE_ICON_STATUS_GREEN_LIGHT, 10, 10) . '</a>&nbsp;&nbsp;' . HTML::image(OSCOM::linkImage('icon_status_red.gif'), IMAGE_ICON_STATUS_RED, 10, 10);
+        echo '<a href="' . OSCOM::link(FILENAME_REVIEWS, 'action=setflag&flag=1&rID=' . $Qreviews->valueInt('reviews_id') . '&page=' . $_GET['page']) . '">' . HTML::image(OSCOM::linkImage('icon_status_green_light.gif'), OSCOM::getDef('image_icon_status_green_light'), 10, 10) . '</a>&nbsp;&nbsp;' . HTML::image(OSCOM::linkImage('icon_status_red.gif'), OSCOM::getDef('image_icon_status_red'), 10, 10);
       }
 ?></td>
-                <td class="dataTableContent" align="right"><?php if ( (is_object($rInfo)) && ($Qreviews->valueInt('reviews_id') === (int)$rInfo->reviews_id) ) { echo HTML::image(OSCOM::linkImage('icon_arrow_right.gif')); } else { echo '<a href="' . OSCOM::link(FILENAME_REVIEWS, 'page=' . $_GET['page'] . '&rID=' . $Qreviews->valueInt('reviews_id')) . '">' . HTML::image(OSCOM::linkImage('icon_info.gif'), IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
+                <td class="dataTableContent" align="right"><?php if ( (is_object($rInfo)) && ($Qreviews->valueInt('reviews_id') === (int)$rInfo->reviews_id) ) { echo HTML::image(OSCOM::linkImage('icon_arrow_right.gif')); } else { echo '<a href="' . OSCOM::link(FILENAME_REVIEWS, 'page=' . $_GET['page'] . '&rID=' . $Qreviews->valueInt('reviews_id')) . '">' . HTML::image(OSCOM::linkImage('icon_info.gif'), OSCOM::getDef('image_icon_info')) . '</a>'; } ?>&nbsp;</td>
               </tr>
 <?php
     }
@@ -283,7 +283,7 @@
               <tr>
                 <td colspan="5"><table border="0" width="100%" cellspacing="0" cellpadding="2">
                   <tr>
-                    <td class="smallText" valign="top"><?php echo $Qreviews->getPageSetLabel(TEXT_DISPLAY_NUMBER_OF_REVIEWS); ?></td>
+                    <td class="smallText" valign="top"><?php echo $Qreviews->getPageSetLabel(OSCOM::getDef('text_display_number_of_reviews')); ?></td>
                     <td class="smallText" align="right"><?php echo $Qreviews->getPageSetLinks(); ?></td>
                   </tr>
                 </table></td>
@@ -295,26 +295,26 @@
 
     switch ($action) {
       case 'delete':
-        $heading[] = array('text' => '<strong>' . TEXT_INFO_HEADING_DELETE_REVIEW . '</strong>');
+        $heading[] = array('text' => '<strong>' . OSCOM::getDef('text_info_heading_delete_review') . '</strong>');
 
         $contents = array('form' => HTML::form('reviews', OSCOM::link(FILENAME_REVIEWS, 'page=' . $_GET['page'] . '&rID=' . $rInfo->reviews_id . '&action=deleteconfirm')));
-        $contents[] = array('text' => TEXT_INFO_DELETE_REVIEW_INTRO);
+        $contents[] = array('text' => OSCOM::getDef('text_info_delete_review_intro'));
         $contents[] = array('text' => '<br /><strong>' . $rInfo->products_name . '</strong>');
-        $contents[] = array('align' => 'center', 'text' => '<br />' . HTML::button(IMAGE_DELETE, 'fa fa-trash') . HTML::button(IMAGE_CANCEL, 'fa fa-close', OSCOM::link(FILENAME_REVIEWS, 'page=' . $_GET['page'] . '&rID=' . $rInfo->reviews_id)));
+        $contents[] = array('align' => 'center', 'text' => '<br />' . HTML::button(OSCOM::getDef('image_delete'), 'fa fa-trash') . HTML::button(OSCOM::getDef('image_cancel'), 'fa fa-close', OSCOM::link(FILENAME_REVIEWS, 'page=' . $_GET['page'] . '&rID=' . $rInfo->reviews_id)));
         break;
       default:
       if (isset($rInfo) && is_object($rInfo)) {
         $heading[] = array('text' => '<strong>' . $rInfo->products_name . '</strong>');
 
-        $contents[] = array('align' => 'center', 'text' => HTML::button(IMAGE_EDIT, 'fa fa-edit', OSCOM::link(FILENAME_REVIEWS, 'page=' . $_GET['page'] . '&rID=' . $rInfo->reviews_id . '&action=edit')) . HTML::button(IMAGE_DELETE, 'fa fa-trash', OSCOM::link(FILENAME_REVIEWS, 'page=' . $_GET['page'] . '&rID=' . $rInfo->reviews_id . '&action=delete')));
-        $contents[] = array('text' => '<br />' . TEXT_INFO_DATE_ADDED . ' ' . DateTime::toShort($rInfo->date_added));
-        if (tep_not_null($rInfo->last_modified)) $contents[] = array('text' => TEXT_INFO_LAST_MODIFIED . ' ' . DateTime::toShort($rInfo->last_modified));
+        $contents[] = array('align' => 'center', 'text' => HTML::button(OSCOM::getDef('image_edit'), 'fa fa-edit', OSCOM::link(FILENAME_REVIEWS, 'page=' . $_GET['page'] . '&rID=' . $rInfo->reviews_id . '&action=edit')) . HTML::button(OSCOM::getDef('image_delete'), 'fa fa-trash', OSCOM::link(FILENAME_REVIEWS, 'page=' . $_GET['page'] . '&rID=' . $rInfo->reviews_id . '&action=delete')));
+        $contents[] = array('text' => '<br />' . OSCOM::getDef('text_info_date_added') . ' ' . DateTime::toShort($rInfo->date_added));
+        if (tep_not_null($rInfo->last_modified)) $contents[] = array('text' => OSCOM::getDef('text_info_last_modified') . ' ' . DateTime::toShort($rInfo->last_modified));
         $contents[] = array('text' => '<br />' . tep_info_image($rInfo->products_image, $rInfo->products_name, SMALL_IMAGE_WIDTH, SMALL_IMAGE_HEIGHT));
-        $contents[] = array('text' => '<br />' . TEXT_INFO_REVIEW_AUTHOR . ' ' . $rInfo->customers_name);
-        $contents[] = array('text' => TEXT_INFO_REVIEW_RATING . ' ' . HTML::image(OSCOM::linkImage('Shop/stars_' . $rInfo->reviews_rating . '.gif')));
-        $contents[] = array('text' => TEXT_INFO_REVIEW_READ . ' ' . $rInfo->reviews_read);
-        $contents[] = array('text' => '<br />' . TEXT_INFO_REVIEW_SIZE . ' ' . $rInfo->reviews_text_size . ' bytes');
-        $contents[] = array('text' => '<br />' . TEXT_INFO_PRODUCTS_AVERAGE_RATING . ' ' . number_format($rInfo->average_rating, 2) . '%');
+        $contents[] = array('text' => '<br />' . OSCOM::getDef('text_info_review_author') . ' ' . $rInfo->customers_name);
+        $contents[] = array('text' => OSCOM::getDef('text_info_review_rating') . ' ' . HTML::image(OSCOM::linkImage('Shop/stars_' . $rInfo->reviews_rating . '.gif')));
+        $contents[] = array('text' => OSCOM::getDef('text_info_review_read') . ' ' . $rInfo->reviews_read);
+        $contents[] = array('text' => '<br />' . OSCOM::getDef('text_info_review_size') . ' ' . $rInfo->reviews_text_size . ' bytes');
+        $contents[] = array('text' => '<br />' . OSCOM::getDef('text_info_products_average_rating') . ' ' . number_format($rInfo->average_rating, 2) . '%');
       }
         break;
     }

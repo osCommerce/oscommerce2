@@ -1,0 +1,16 @@
+heading_title = Banner Statistics
+table_heading_source = Source
+table_heading_views = Views
+table_heading_clicks = Clicks
+text_banners_data = D<br />a<br />t<br />a
+text_banners_daily_statistics = %s Daily Statistics For %s %s
+text_banners_monthly_statistics = %s Monthly Statistics For %s
+text_banners_yearly_statistics = %s Yearly Statistics
+statistics_type_daily = Daily
+statistics_type_monthly = Monthly
+statistics_type_yearly = Yearly
+title_type = Type:
+title_year = Year:
+title_month = Month:
+error_graphs_directory_does_not_exist = Error: Graphs directory does not exist. Please create a \'graphs\' directory inside \'images\'.
+error_graphs_directory_not_writeable = Error: Graphs directory is not writeable.

@@ -30,7 +30,7 @@
                         'is_dir' => is_dir($path . $filename),
                         'writable' => FileSystem::isWritable($path . $filename),
                         'size' => filesize($path . $filename),
-                        'last_modified' => strftime(DATE_TIME_FORMAT, filemtime($path . $filename)));
+                        'last_modified' => strftime(OSCOM::getDef('date_time_format'), filemtime($path . $filename)));
 
           $result[] = $file;
 
@@ -95,7 +95,7 @@
       <tr>
         <td><table border="0" width="100%" cellspacing="0" cellpadding="0">
           <tr><?php echo HTML::form('lng', OSCOM::link(FILENAME_DEFINE_LANGUAGE), 'get', null, ['session_id' => true]); ?>
-            <td class="pageHeading"><?php echo HEADING_TITLE; ?></td>
+            <td class="pageHeading"><?php echo OSCOM::getDef('heading_title'); ?></td>
             <td class="pageHeading" align="right"><?php echo HTML::selectField('lngdir', $languages_array, $_GET['lngdir'], 'onchange="this.form.submit();"'); ?></td>
           </form></tr>
         </table></td>
@@ -113,7 +113,7 @@
       $file_writeable = true;
       if (!FileSystem::isWritable($file)) {
         $file_writeable = false;
-        $OSCOM_MessageStack->add(sprintf(ERROR_FILE_NOT_WRITEABLE, $file), 'error', 'defineLanguage');
+        $OSCOM_MessageStack->add(sprintf(OSCOM::getDef('error_file_not_writeable'), $file), 'error', 'defineLanguage');
         echo $OSCOM_MessageStack->get('defineLanguage');
       }
 
@@ -127,21 +127,21 @@
                 <td class="main"><?php echo HTML::textareaField('file_contents', '80', '25', $contents, (($file_writeable) ? '' : 'readonly') . ' style="width: 100%;"'); ?></td>
               </tr>
               <tr>
-                <td class="smallText" align="right"><?php if ($file_writeable == true) { echo HTML::button(IMAGE_SAVE, 'fa fa-save') . HTML::button(IMAGE_CANCEL, 'fa fa-close', OSCOM::link(FILENAME_DEFINE_LANGUAGE, 'lngdir=' . $_GET['lngdir'])); } else { echo HTML::button(IMAGE_BACK, 'fa fa-chevron-left', OSCOM::link(FILENAME_DEFINE_LANGUAGE, 'lngdir=' . $_GET['lngdir'])); } ?></td>
+                <td class="smallText" align="right"><?php if ($file_writeable == true) { echo HTML::button(OSCOM::getDef('image_save'), 'fa fa-save') . HTML::button(OSCOM::getDef('image_cancel'), 'fa fa-close', OSCOM::link(FILENAME_DEFINE_LANGUAGE, 'lngdir=' . $_GET['lngdir'])); } else { echo HTML::button(OSCOM::getDef('image_back'), 'fa fa-chevron-left', OSCOM::link(FILENAME_DEFINE_LANGUAGE, 'lngdir=' . $_GET['lngdir'])); } ?></td>
               </tr>
             </table></td>
           </form></tr>
           <tr>
-            <td class="main"><?php echo TEXT_EDIT_NOTE; ?></td>
+            <td class="main"><?php echo OSCOM::getDef('text_edit_note'); ?></td>
           </tr>
 <?php
     } else {
 ?>
           <tr>
-            <td class="main"><strong><?php echo TEXT_FILE_DOES_NOT_EXIST; ?></strong></td>
+            <td class="main"><strong><?php echo OSCOM::getDef('text_file_does_not_exist'); ?></strong></td>
           </tr>
           <tr>
-            <td><?php echo HTML::button(IMAGE_BACK, 'fa fa-chevron-left', OSCOM::link(FILENAME_DEFINE_LANGUAGE, 'lngdir=' . $_GET['lngdir'])); ?></td>
+            <td><?php echo HTML::button(OSCOM::getDef('image_back'), 'fa fa-chevron-left', OSCOM::link(FILENAME_DEFINE_LANGUAGE, 'lngdir=' . $_GET['lngdir'])); ?></td>
           </tr>
 <?php
     }
@@ -152,14 +152,14 @@
           <tr>
             <td><table border="0" width="100%" cellspacing="0" cellpadding="2">
               <tr class="dataTableHeadingRow">
-                <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_FILES; ?></td>
-                <td class="dataTableHeadingContent" align="center"><?php echo TABLE_HEADING_WRITABLE; ?></td>
-                <td class="dataTableHeadingContent" align="right"><?php echo TABLE_HEADING_LAST_MODIFIED; ?></td>
+                <td class="dataTableHeadingContent"><?php echo OSCOM::getDef('table_heading_files'); ?></td>
+                <td class="dataTableHeadingContent" align="center"><?php echo OSCOM::getDef('table_heading_writable'); ?></td>
+                <td class="dataTableHeadingContent" align="right"><?php echo OSCOM::getDef('table_heading_last_modified'); ?></td>
               </tr>
               <tr class="dataTableRow" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)">
                 <td class="dataTableContent"><a href="<?php echo OSCOM::link(FILENAME_DEFINE_LANGUAGE, 'lngdir=' . $_GET['lngdir'] . '&filename=' . $filename); ?>"><strong><?php echo $filename; ?></strong></a></td>
                 <td class="dataTableContent" align="center"><?php echo HTML::image(OSCOM::linkImage('icons/' . (FileSystem::isWritable(OSCOM::getConfig('dir_root', 'Shop') . 'includes/languages/' . $filename) ? 'tick.gif' : 'cross.gif'))); ?></td>
-                <td class="dataTableContent" align="right"><?php echo strftime(DATE_TIME_FORMAT, filemtime(OSCOM::getConfig('dir_root', 'Shop') . 'includes/languages/' . $filename)); ?></td>
+                <td class="dataTableContent" align="right"><?php echo strftime(OSCOM::getDef('date_time_format'), filemtime(OSCOM::getConfig('dir_root', 'Shop') . 'includes/languages/' . $filename)); ?></td>
               </tr>
 <?php
     foreach (tep_opendir(OSCOM::getConfig('dir_root', 'Shop') . 'includes/languages/' . $_GET['lngdir']) as $file) {

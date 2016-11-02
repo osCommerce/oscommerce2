@@ -1,0 +1,17 @@
+heading_title = Orders Status
+table_heading_orders_status = Orders Status
+table_heading_public_status = Public Status
+table_heading_downloads_status = Downloads Status
+table_heading_action = Action
+text_info_edit_intro = Please make any necessary changes
+text_info_orders_status_name = Orders Status:
+text_info_insert_intro = Please enter the new orders status with its related data
+text_info_delete_intro = Are you sure you want to delete this order status?
+text_info_heading_new_orders_status = New Orders Status
+text_info_heading_edit_orders_status = Edit Orders Status
+text_info_heading_delete_orders_status = Delete Orders Status
+text_set_public_status = Show the order to the customer at this order status level
+text_set_downloads_status = Allow downloads of virtual products at this order status level
+error_remove_default_order_status = Error: The default order status can not be removed. Please set another order status as default, and try again.
+error_status_used_in_orders = Error: This order status is currently used in orders.
+error_status_used_in_history = Error: This order status is currently used in the order status history.

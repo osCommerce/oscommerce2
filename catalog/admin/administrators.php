@@ -32,7 +32,7 @@
             'user_password' => Hash::encrypt($password)
           ]);
         } else {
-          $OSCOM_MessageStack->add(ERROR_ADMINISTRATOR_EXISTS, 'error');
+          $OSCOM_MessageStack->add(OSCOM::getDef('error_administrator_exists'), 'error');
         }
 
         OSCOM::redirect(FILENAME_ADMINISTRATORS);
@@ -93,14 +93,14 @@
 ?>
 
 <div class="pull-right">
-  <?= HTML::button(IMAGE_INSERT, 'fa fa-plus', OSCOM::link('administrators.php', 'action=new'), null, 'btn-info'); ?>
+  <?= HTML::button(OSCOM::getDef('image_insert'), 'fa fa-plus', OSCOM::link('administrators.php', 'action=new'), null, 'btn-info'); ?>
 </div>
 
 <?php
   }
 ?>
 
-<h2><i class="fa fa-users"></i> <a href="<?= OSCOM::link('administrators.php'); ?>"><?= HEADING_TITLE; ?></a></h2>
+<h2><i class="fa fa-users"></i> <a href="<?= OSCOM::link('administrators.php'); ?>"><?= OSCOM::getDef('heading_title'); ?></a></h2>
 
 <?php
   if (!empty($action)) {
@@ -118,31 +118,31 @@
               $heading[] = array('text' => HTML::outputProtected($aInfo->user_name));
 
               $contents = array('form' => HTML::form('administrator', OSCOM::link(FILENAME_ADMINISTRATORS, 'aID=' . $aInfo->id . '&action=save'), 'post', 'autocomplete="off"'));
-              $contents[] = array('text' => TEXT_INFO_EDIT_INTRO);
-              $contents[] = array('text' => TEXT_INFO_USERNAME . '<br />' . HTML::inputField('username', $aInfo->user_name));
-              $contents[] = array('text' => TEXT_INFO_NEW_PASSWORD . '<br />' . HTML::passwordField('password'));
-              $contents[] = array('text' => HTML::button(IMAGE_SAVE, 'fa fa-save', null, null, 'btn-success') . HTML::button(IMAGE_CANCEL, null, OSCOM::link(FILENAME_ADMINISTRATORS), null, 'btn-link'));
+              $contents[] = array('text' => OSCOM::getDef('text_info_edit_intro'));
+              $contents[] = array('text' => OSCOM::getDef('text_info_username') . '<br />' . HTML::inputField('username', $aInfo->user_name));
+              $contents[] = array('text' => OSCOM::getDef('text_info_new_password') . '<br />' . HTML::passwordField('password'));
+              $contents[] = array('text' => HTML::button(OSCOM::getDef('image_save'), 'fa fa-save', null, null, 'btn-success') . HTML::button(OSCOM::getDef('image_cancel'), null, OSCOM::link(FILENAME_ADMINISTRATORS), null, 'btn-link'));
               break;
 
             case 'delete':
               $heading[] = array('text' => HTML::outputProtected($aInfo->user_name));
 
               $contents = array('form' => HTML::form('administrator', OSCOM::link(FILENAME_ADMINISTRATORS, 'aID=' . $aInfo->id . '&action=deleteconfirm')));
-              $contents[] = array('text' => TEXT_INFO_DELETE_INTRO);
+              $contents[] = array('text' => OSCOM::getDef('text_info_delete_intro'));
               $contents[] = array('text' => '<strong>' . HTML::outputProtected($aInfo->user_name) . '</strong>');
-              $contents[] = array('text' => HTML::button(IMAGE_DELETE, 'fa fa-trash', null, null, 'btn-danger') . HTML::button(IMAGE_CANCEL, null, OSCOM::link(FILENAME_ADMINISTRATORS), null, 'btn-link'));
+              $contents[] = array('text' => HTML::button(OSCOM::getDef('image_delete'), 'fa fa-trash', null, null, 'btn-danger') . HTML::button(OSCOM::getDef('image_cancel'), null, OSCOM::link(FILENAME_ADMINISTRATORS), null, 'btn-link'));
               break;
           }
         }
       }
     } else {
-      $heading[] = array('text' => TEXT_INFO_HEADING_NEW_ADMINISTRATOR);
+      $heading[] = array('text' => OSCOM::getDef('text_info_heading_new_administrator'));
 
       $contents = array('form' => HTML::form('administrator', OSCOM::link(FILENAME_ADMINISTRATORS, 'action=insert'), 'post', 'autocomplete="off"'));
-      $contents[] = array('text' => TEXT_INFO_INSERT_INTRO);
-      $contents[] = array('text' => TEXT_INFO_USERNAME . '<br />' . HTML::inputField('username'));
-      $contents[] = array('text' => TEXT_INFO_PASSWORD . '<br />' . HTML::passwordField('password'));
-      $contents[] = array('text' => HTML::button(IMAGE_SAVE, 'fa fa-save', null, null, 'btn-success') . HTML::button(IMAGE_CANCEL, null, OSCOM::link(FILENAME_ADMINISTRATORS), null, 'btn-link'));
+      $contents[] = array('text' => OSCOM::getDef('text_info_insert_intro'));
+      $contents[] = array('text' => OSCOM::getDef('text_info_username') . '<br />' . HTML::inputField('username'));
+      $contents[] = array('text' => OSCOM::getDef('text_info_password') . '<br />' . HTML::passwordField('password'));
+      $contents[] = array('text' => HTML::button(OSCOM::getDef('image_save'), 'fa fa-save', null, null, 'btn-success') . HTML::button(OSCOM::getDef('image_cancel'), null, OSCOM::link(FILENAME_ADMINISTRATORS), null, 'btn-link'));
     }
 
     if (tep_not_null($heading) && tep_not_null($contents)) {
@@ -158,7 +158,7 @@
 <table class="oscom-table table table-hover">
   <thead>
     <tr class="info">
-      <th><?= TABLE_HEADING_ADMINISTRATORS; ?></th>
+      <th><?= OSCOM::getDef('table_heading_administrators'); ?></th>
       <th class="action"></th>
     </tr>
   </thead>
@@ -172,7 +172,7 @@
 
     <tr>
       <td><?= $Qadmins->valueProtected('user_name'); ?></td>
-      <td class="action"><a href="<?= OSCOM::link('administrators.php', 'aID=' . $Qadmins->valueInt('id') . '&action=edit'); ?>"><i class="fa fa-pencil" title="<?= IMAGE_EDIT; ?>"></i></a><a href="<?= OSCOM::link('administrators.php', 'aID=' . $Qadmins->valueInt('id') . '&action=delete'); ?>"><i class="fa fa-trash" title="<?= IMAGE_DELETE; ?>"></i></a></td>
+      <td class="action"><a href="<?= OSCOM::link('administrators.php', 'aID=' . $Qadmins->valueInt('id') . '&action=edit'); ?>"><i class="fa fa-pencil" title="<?= OSCOM::getDef('image_edit'); ?>"></i></a><a href="<?= OSCOM::link('administrators.php', 'aID=' . $Qadmins->valueInt('id') . '&action=delete'); ?>"><i class="fa fa-trash" title="<?= OSCOM::getDef('image_delete'); ?>"></i></a></td>
     </tr>
 
 <?php

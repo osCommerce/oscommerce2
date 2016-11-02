@@ -177,9 +177,9 @@
     if (tep_db_num_rows($products)) {
 ?>
                   <tr class="dataTableHeadingRow">
-                    <td class="dataTableHeadingContent" align="center">&nbsp;<?php echo TABLE_HEADING_ID; ?>&nbsp;</td>
-                    <td class="dataTableHeadingContent">&nbsp;<?php echo TABLE_HEADING_PRODUCT; ?>&nbsp;</td>
-                    <td class="dataTableHeadingContent">&nbsp;<?php echo TABLE_HEADING_OPT_VALUE; ?>&nbsp;</td>
+                    <td class="dataTableHeadingContent" align="center">&nbsp;<?php echo OSCOM::getDef('table_heading_id'); ?>&nbsp;</td>
+                    <td class="dataTableHeadingContent">&nbsp;<?php echo OSCOM::getDef('table_heading_product'); ?>&nbsp;</td>
+                    <td class="dataTableHeadingContent">&nbsp;<?php echo OSCOM::getDef('table_heading_opt_value'); ?>&nbsp;</td>
                   </tr>
 <?php
       $rows = 0;
@@ -195,19 +195,19 @@
       }
 ?>
                   <tr>
-                    <td colspan="3" class="main"><br /><?php echo TEXT_WARNING_OF_DELETE; ?></td>
+                    <td colspan="3" class="main"><br /><?php echo OSCOM::getDef('text_warning_of_delete'); ?></td>
                   </tr>
                   <tr>
-                    <td align="right" colspan="3" class="smallText"><br /><?php echo HTML::button(IMAGE_BACK, 'fa fa-chevron-left', OSCOM::link(FILENAME_PRODUCTS_ATTRIBUTES, $page_info)); ?>&nbsp;</td>
+                    <td align="right" colspan="3" class="smallText"><br /><?php echo HTML::button(OSCOM::getDef('image_back'), 'fa fa-chevron-left', OSCOM::link(FILENAME_PRODUCTS_ATTRIBUTES, $page_info)); ?>&nbsp;</td>
                   </tr>
 <?php
     } else {
 ?>
                   <tr>
-                    <td class="main" colspan="3"><br /><?php echo TEXT_OK_TO_DELETE; ?></td>
+                    <td class="main" colspan="3"><br /><?php echo OSCOM::getDef('text_ok_to_delete'); ?></td>
                   </tr>
                   <tr>
-                    <td class="smallText" align="right" colspan="3"><br /><?php echo HTML::button(IMAGE_DELETE, 'fa fa-trash', OSCOM::link(FILENAME_PRODUCTS_ATTRIBUTES, 'action=delete_option&option_id=' . $_GET['option_id'] . '&' . $page_info)) . HTML::button(IMAGE_CANCEL, 'fa fa-close', OSCOM::link(FILENAME_PRODUCTS_ATTRIBUTES, $page_info)); ?>&nbsp;</td>
+                    <td class="smallText" align="right" colspan="3"><br /><?php echo HTML::button(OSCOM::getDef('image_delete'), 'fa fa-trash', OSCOM::link(FILENAME_PRODUCTS_ATTRIBUTES, 'action=delete_option&option_id=' . $_GET['option_id'] . '&' . $page_info)) . HTML::button(OSCOM::getDef('image_cancel'), 'fa fa-close', OSCOM::link(FILENAME_PRODUCTS_ATTRIBUTES, $page_info)); ?>&nbsp;</td>
                   </tr>
 <?php
     }
@@ -218,22 +218,22 @@
   } else {
 ?>
               <tr>
-                <td colspan="3" class="pageHeading">&nbsp;<?php echo HEADING_TITLE_OPT; ?>&nbsp;</td>
+                <td colspan="3" class="pageHeading">&nbsp;<?php echo OSCOM::getDef('heading_title_opt'); ?>&nbsp;</td>
               </tr>
               <tr>
                 <td colspan="3" class="smallText" align="right">
 <?php
     $options = "select * from " . TABLE_PRODUCTS_OPTIONS . " where language_id = '" . (int)$languages_id . "' order by products_options_id";
-    $options_split = new splitPageResults($option_page, MAX_ROW_LISTS_OPTIONS, $options, $options_query_numrows);
+    $options_split = new splitPageResults($option_page, OSCOM::getDef('max_row_lists_options'), $options, $options_query_numrows);
 
-    echo $options_split->display_links($options_query_numrows, MAX_ROW_LISTS_OPTIONS, MAX_DISPLAY_PAGE_LINKS, $option_page, 'value_page=' . $value_page . '&attribute_page=' . $attribute_page, 'option_page');
+    echo $options_split->display_links($options_query_numrows, OSCOM::getDef('max_row_lists_options'), MAX_DISPLAY_PAGE_LINKS, $option_page, 'value_page=' . $value_page . '&attribute_page=' . $attribute_page, 'option_page');
 ?>
                 </td>
               </tr>
               <tr class="dataTableHeadingRow">
-                <td class="dataTableHeadingContent">&nbsp;<?php echo TABLE_HEADING_ID; ?>&nbsp;</td>
-                <td class="dataTableHeadingContent">&nbsp;<?php echo TABLE_HEADING_OPT_NAME; ?>&nbsp;</td>
-                <td class="dataTableHeadingContent" align="center">&nbsp;<?php echo TABLE_HEADING_ACTION; ?>&nbsp;</td>
+                <td class="dataTableHeadingContent">&nbsp;<?php echo OSCOM::getDef('table_heading_id'); ?>&nbsp;</td>
+                <td class="dataTableHeadingContent">&nbsp;<?php echo OSCOM::getDef('table_heading_opt_name'); ?>&nbsp;</td>
+                <td class="dataTableHeadingContent" align="center">&nbsp;<?php echo OSCOM::getDef('table_heading_action'); ?>&nbsp;</td>
               </tr>
 <?php
     $next_id = 1;
@@ -255,14 +255,14 @@
 ?>
                 <td align="center" class="smallText">&nbsp;<?php echo $options_values['products_options_id']; ?><input type="hidden" name="option_id" value="<?php echo $options_values['products_options_id']; ?>">&nbsp;</td>
                 <td class="smallText"><?php echo $inputs; ?></td>
-                <td align="center" class="smallText">&nbsp;<?php echo HTML::button(IMAGE_SAVE, 'fa fa-save') . HTML::button(IMAGE_CANCEL, 'fa fa-close', OSCOM::link(FILENAME_PRODUCTS_ATTRIBUTES, $page_info)); ?>&nbsp;</td>
+                <td align="center" class="smallText">&nbsp;<?php echo HTML::button(OSCOM::getDef('image_save'), 'fa fa-save') . HTML::button(OSCOM::getDef('image_cancel'), 'fa fa-close', OSCOM::link(FILENAME_PRODUCTS_ATTRIBUTES, $page_info)); ?>&nbsp;</td>
 <?php
         echo '</form>' . "\n";
       } else {
 ?>
                 <td align="center" class="smallText">&nbsp;<?php echo $options_values["products_options_id"]; ?>&nbsp;</td>
                 <td class="smallText">&nbsp;<?php echo $options_values["products_options_name"]; ?>&nbsp;</td>
-                <td align="center" class="smallText">&nbsp;<?php echo HTML::button(IMAGE_EDIT, 'fa fa-edit', OSCOM::link(FILENAME_PRODUCTS_ATTRIBUTES, 'action=update_option&option_id=' . $options_values['products_options_id'] . '&' . $page_info)) . HTML::button(IMAGE_DELETE, 'fa fa-trash', OSCOM::link(FILENAME_PRODUCTS_ATTRIBUTES, 'action=delete_product_option&option_id=' . $options_values['products_options_id'] . '&' . $page_info)); ?>&nbsp;</td>
+                <td align="center" class="smallText">&nbsp;<?php echo HTML::button(OSCOM::getDef('image_edit'), 'fa fa-edit', OSCOM::link(FILENAME_PRODUCTS_ATTRIBUTES, 'action=update_option&option_id=' . $options_values['products_options_id'] . '&' . $page_info)) . HTML::button(OSCOM::getDef('image_delete'), 'fa fa-trash', OSCOM::link(FILENAME_PRODUCTS_ATTRIBUTES, 'action=delete_product_option&option_id=' . $options_values['products_options_id'] . '&' . $page_info)); ?>&nbsp;</td>
 <?php
       }
 ?>
@@ -285,7 +285,7 @@
 ?>
                 <td align="center" class="smallText">&nbsp;<?php echo $next_id; ?>&nbsp;</td>
                 <td class="smallText"><?php echo $inputs; ?></td>
-                <td align="center" class="smallText">&nbsp;<?php echo HTML::button(IMAGE_INSERT, 'fa fa-plus'); ?>&nbsp;</td>
+                <td align="center" class="smallText">&nbsp;<?php echo HTML::button(OSCOM::getDef('image_insert'), 'fa fa-plus'); ?>&nbsp;</td>
 <?php
       echo '</form>';
 ?>
@@ -313,9 +313,9 @@
     if (tep_db_num_rows($products)) {
 ?>
                   <tr class="dataTableHeadingRow">
-                    <td class="dataTableHeadingContent" align="center">&nbsp;<?php echo TABLE_HEADING_ID; ?>&nbsp;</td>
-                    <td class="dataTableHeadingContent">&nbsp;<?php echo TABLE_HEADING_PRODUCT; ?>&nbsp;</td>
-                    <td class="dataTableHeadingContent">&nbsp;<?php echo TABLE_HEADING_OPT_NAME; ?>&nbsp;</td>
+                    <td class="dataTableHeadingContent" align="center">&nbsp;<?php echo OSCOM::getDef('table_heading_id'); ?>&nbsp;</td>
+                    <td class="dataTableHeadingContent">&nbsp;<?php echo OSCOM::getDef('table_heading_product'); ?>&nbsp;</td>
+                    <td class="dataTableHeadingContent">&nbsp;<?php echo OSCOM::getDef('table_heading_opt_name'); ?>&nbsp;</td>
                   </tr>
 <?php
       while ($products_values = tep_db_fetch_array($products)) {
@@ -330,19 +330,19 @@
       }
 ?>
                   <tr>
-                    <td class="main" colspan="3"><br /><?php echo TEXT_WARNING_OF_DELETE; ?></td>
+                    <td class="main" colspan="3"><br /><?php echo OSCOM::getDef('text_warning_of_delete'); ?></td>
                   </tr>
                   <tr>
-                    <td class="smallText" align="right" colspan="3"><br /><?php echo HTML::button(IMAGE_BACK, 'fa fa-chevron-left', OSCOM::link(FILENAME_PRODUCTS_ATTRIBUTES, $page_info)); ?>&nbsp;</td>
+                    <td class="smallText" align="right" colspan="3"><br /><?php echo HTML::button(OSCOM::getDef('image_back'), 'fa fa-chevron-left', OSCOM::link(FILENAME_PRODUCTS_ATTRIBUTES, $page_info)); ?>&nbsp;</td>
                   </tr>
 <?php
     } else {
 ?>
                   <tr>
-                    <td class="main" colspan="3"><br /><?php echo TEXT_OK_TO_DELETE; ?></td>
+                    <td class="main" colspan="3"><br /><?php echo OSCOM::getDef('text_ok_to_delete'); ?></td>
                   </tr>
                   <tr>
-                    <td class="smallText" align="right" colspan="3"><br /><?php echo HTML::button(IMAGE_DELETE, 'fa fa-trash', OSCOM::link(FILENAME_PRODUCTS_ATTRIBUTES, 'action=delete_value&value_id=' . $_GET['value_id'] . '&' . $page_info)) . HTML::button(IMAGE_CANCEL, 'fa fa-close', OSCOM::link(FILENAME_PRODUCTS_ATTRIBUTES, $page_info)); ?>&nbsp;</td>
+                    <td class="smallText" align="right" colspan="3"><br /><?php echo HTML::button(OSCOM::getDef('image_delete'), 'fa fa-trash', OSCOM::link(FILENAME_PRODUCTS_ATTRIBUTES, 'action=delete_value&value_id=' . $_GET['value_id'] . '&' . $page_info)) . HTML::button(OSCOM::getDef('image_cancel'), 'fa fa-close', OSCOM::link(FILENAME_PRODUCTS_ATTRIBUTES, $page_info)); ?>&nbsp;</td>
                   </tr>
 <?php
     }
@@ -353,23 +353,23 @@
   } else {
 ?>
               <tr>
-                <td colspan="4" class="pageHeading">&nbsp;<?php echo HEADING_TITLE_VAL; ?>&nbsp;</td>
+                <td colspan="4" class="pageHeading">&nbsp;<?php echo OSCOM::getDef('heading_title_val'); ?>&nbsp;</td>
               </tr>
               <tr>
                 <td colspan="4" class="smallText" align="right">
 <?php
     $values = "select pov.products_options_values_id, pov.products_options_values_name, pov2po.products_options_id from " . TABLE_PRODUCTS_OPTIONS_VALUES . " pov left join " . TABLE_PRODUCTS_OPTIONS_VALUES_TO_PRODUCTS_OPTIONS . " pov2po on pov.products_options_values_id = pov2po.products_options_values_id where pov.language_id = '" . (int)$languages_id . "' order by pov.products_options_values_id";
-    $values_split = new splitPageResults($value_page, MAX_ROW_LISTS_OPTIONS, $values, $values_query_numrows);
+    $values_split = new splitPageResults($value_page, OSCOM::getDef('max_row_lists_options'), $values, $values_query_numrows);
 
-    echo $values_split->display_links($values_query_numrows, MAX_ROW_LISTS_OPTIONS, MAX_DISPLAY_PAGE_LINKS, $value_page, 'option_page=' . $option_page . '&attribute_page=' . $attribute_page, 'value_page');
+    echo $values_split->display_links($values_query_numrows, OSCOM::getDef('max_row_lists_options'), MAX_DISPLAY_PAGE_LINKS, $value_page, 'option_page=' . $option_page . '&attribute_page=' . $attribute_page, 'value_page');
 ?>
                 </td>
               </tr>
               <tr class="dataTableHeadingRow">
-                <td class="dataTableHeadingContent">&nbsp;<?php echo TABLE_HEADING_ID; ?>&nbsp;</td>
-                <td class="dataTableHeadingContent">&nbsp;<?php echo TABLE_HEADING_OPT_NAME; ?>&nbsp;</td>
-                <td class="dataTableHeadingContent">&nbsp;<?php echo TABLE_HEADING_OPT_VALUE; ?>&nbsp;</td>
-                <td class="dataTableHeadingContent" align="center">&nbsp;<?php echo TABLE_HEADING_ACTION; ?>&nbsp;</td>
+                <td class="dataTableHeadingContent">&nbsp;<?php echo OSCOM::getDef('table_heading_id'); ?>&nbsp;</td>
+                <td class="dataTableHeadingContent">&nbsp;<?php echo OSCOM::getDef('table_heading_opt_name'); ?>&nbsp;</td>
+                <td class="dataTableHeadingContent">&nbsp;<?php echo OSCOM::getDef('table_heading_opt_value'); ?>&nbsp;</td>
+                <td class="dataTableHeadingContent" align="center">&nbsp;<?php echo OSCOM::getDef('table_heading_action'); ?>&nbsp;</td>
               </tr>
 <?php
     $next_id = 1;
@@ -405,7 +405,7 @@
 ?>
                 </select>&nbsp;</td>
                 <td class="smallText"><?php echo $inputs; ?></td>
-                <td align="center" class="smallText">&nbsp;<?php echo HTML::button(IMAGE_SAVE, 'fa fa-save') . HTML::button(IMAGE_CANCEL, 'fa fa-close', OSCOM::link(FILENAME_PRODUCTS_ATTRIBUTES, $page_info)); ?>&nbsp;</td>
+                <td align="center" class="smallText">&nbsp;<?php echo HTML::button(OSCOM::getDef('image_save'), 'fa fa-save') . HTML::button(OSCOM::getDef('image_cancel'), 'fa fa-close', OSCOM::link(FILENAME_PRODUCTS_ATTRIBUTES, $page_info)); ?>&nbsp;</td>
 <?php
         echo '</form>';
       } else {
@@ -413,7 +413,7 @@
                 <td align="center" class="smallText">&nbsp;<?php echo $values_values["products_options_values_id"]; ?>&nbsp;</td>
                 <td align="center" class="smallText">&nbsp;<?php echo $options_name; ?>&nbsp;</td>
                 <td class="smallText">&nbsp;<?php echo $values_name; ?>&nbsp;</td>
-                <td align="center" class="smallText">&nbsp;<?php echo HTML::button(IMAGE_EDIT, 'fa fa-edit', OSCOM::link(FILENAME_PRODUCTS_ATTRIBUTES, 'action=update_option_value&value_id=' . $values_values['products_options_values_id'] . '&' . $page_info)) . HTML::button(IMAGE_DELETE, 'fa fa-trash', OSCOM::link(FILENAME_PRODUCTS_ATTRIBUTES, 'action=delete_option_value&value_id=' . $values_values['products_options_values_id'] . '&' . $page_info)); ?>&nbsp;</td>
+                <td align="center" class="smallText">&nbsp;<?php echo HTML::button(OSCOM::getDef('image_edit'), 'fa fa-edit', OSCOM::link(FILENAME_PRODUCTS_ATTRIBUTES, 'action=update_option_value&value_id=' . $values_values['products_options_values_id'] . '&' . $page_info)) . HTML::button(OSCOM::getDef('image_delete'), 'fa fa-trash', OSCOM::link(FILENAME_PRODUCTS_ATTRIBUTES, 'action=delete_option_value&value_id=' . $values_values['products_options_values_id'] . '&' . $page_info)); ?>&nbsp;</td>
 <?php
       }
       $max_values_id_query = tep_db_query("select max(products_options_values_id) + 1 as next_id from " . TABLE_PRODUCTS_OPTIONS_VALUES);
@@ -444,7 +444,7 @@
 ?>
                 </select>&nbsp;</td>
                 <td class="smallText"><input type="hidden" name="value_id" value="<?php echo $next_id; ?>"><?php echo $inputs; ?></td>
-                <td align="center" class="smallText">&nbsp;<?php echo HTML::button(IMAGE_INSERT, 'fa fa-plus'); ?>&nbsp;</td>
+                <td align="center" class="smallText">&nbsp;<?php echo HTML::button(OSCOM::getDef('image_insert'), 'fa fa-plus'); ?>&nbsp;</td>
 <?php
       echo '</form>';
 ?>
@@ -465,7 +465,7 @@
       <tr>
         <td width="100%"><table border="0" width="100%" cellspacing="0" cellpadding="0">
           <tr>
-            <td class="pageHeading">&nbsp;<?php echo HEADING_TITLE_ATRIB; ?>&nbsp;</td>
+            <td class="pageHeading">&nbsp;<?php echo OSCOM::getDef('heading_title_atrib'); ?>&nbsp;</td>
           </tr>
         </table></td>
       </tr>
@@ -482,22 +482,22 @@
             <td class="smallText" align="right">
 <?php
   $attributes = "select pa.* from " . TABLE_PRODUCTS_ATTRIBUTES . " pa left join " . TABLE_PRODUCTS_DESCRIPTION . " pd on pa.products_id = pd.products_id and pd.language_id = '" . (int)$languages_id . "' order by pd.products_name";
-  $attributes_split = new splitPageResults($attribute_page, MAX_ROW_LISTS_OPTIONS, $attributes, $attributes_query_numrows);
+  $attributes_split = new splitPageResults($attribute_page, OSCOM::getDef('max_row_lists_options'), $attributes, $attributes_query_numrows);
 
-  echo $attributes_split->display_links($attributes_query_numrows, MAX_ROW_LISTS_OPTIONS, MAX_DISPLAY_PAGE_LINKS, $attribute_page, 'option_page=' . $option_page . '&value_page=' . $value_page, 'attribute_page');
+  echo $attributes_split->display_links($attributes_query_numrows, OSCOM::getDef('max_row_lists_options'), MAX_DISPLAY_PAGE_LINKS, $attribute_page, 'option_page=' . $option_page . '&value_page=' . $value_page, 'attribute_page');
 ?>
             </td>
           </tr>
         </table>
         <form name="attributes" action="<?php echo OSCOM::link(FILENAME_PRODUCTS_ATTRIBUTES, 'action=' . $form_action . '&' . $page_info); ?>" method="post"><table border="0" width="100%" cellspacing="0" cellpadding="2">
           <tr class="dataTableHeadingRow">
-            <td class="dataTableHeadingContent">&nbsp;<?php echo TABLE_HEADING_ID; ?>&nbsp;</td>
-            <td class="dataTableHeadingContent">&nbsp;<?php echo TABLE_HEADING_PRODUCT; ?>&nbsp;</td>
-            <td class="dataTableHeadingContent">&nbsp;<?php echo TABLE_HEADING_OPT_NAME; ?>&nbsp;</td>
-            <td class="dataTableHeadingContent">&nbsp;<?php echo TABLE_HEADING_OPT_VALUE; ?>&nbsp;</td>
-            <td class="dataTableHeadingContent" align="right">&nbsp;<?php echo TABLE_HEADING_OPT_PRICE; ?>&nbsp;</td>
-            <td class="dataTableHeadingContent" align="center">&nbsp;<?php echo TABLE_HEADING_OPT_PRICE_PREFIX; ?>&nbsp;</td>
-            <td class="dataTableHeadingContent" align="center">&nbsp;<?php echo TABLE_HEADING_ACTION; ?>&nbsp;</td>
+            <td class="dataTableHeadingContent">&nbsp;<?php echo OSCOM::getDef('table_heading_id'); ?>&nbsp;</td>
+            <td class="dataTableHeadingContent">&nbsp;<?php echo OSCOM::getDef('table_heading_product'); ?>&nbsp;</td>
+            <td class="dataTableHeadingContent">&nbsp;<?php echo OSCOM::getDef('table_heading_opt_name'); ?>&nbsp;</td>
+            <td class="dataTableHeadingContent">&nbsp;<?php echo OSCOM::getDef('table_heading_opt_value'); ?>&nbsp;</td>
+            <td class="dataTableHeadingContent" align="right">&nbsp;<?php echo OSCOM::getDef('table_heading_opt_price'); ?>&nbsp;</td>
+            <td class="dataTableHeadingContent" align="center">&nbsp;<?php echo OSCOM::getDef('table_heading_opt_price_prefix'); ?>&nbsp;</td>
+            <td class="dataTableHeadingContent" align="center">&nbsp;<?php echo OSCOM::getDef('table_heading_action'); ?>&nbsp;</td>
           </tr>
 <?php
   $next_id = 1;
@@ -551,7 +551,7 @@
             </select>&nbsp;</td>
             <td align="right" class="smallText">&nbsp;<input type="text" name="value_price" value="<?php echo $attributes_values['options_values_price']; ?>" size="6">&nbsp;</td>
             <td align="center" class="smallText">&nbsp;<input type="text" name="price_prefix" value="<?php echo $attributes_values['price_prefix']; ?>" size="2">&nbsp;</td>
-            <td align="center" class="smallText">&nbsp;<?php echo HTML::button(IMAGE_SAVE, 'fa fa-save') . HTML::button(IMAGE_CANCEL, 'fa fa-close', OSCOM::link(FILENAME_PRODUCTS_ATTRIBUTES, $page_info)); ?>&nbsp;</td>
+            <td align="center" class="smallText">&nbsp;<?php echo HTML::button(OSCOM::getDef('image_save'), 'fa fa-save') . HTML::button(OSCOM::getDef('image_cancel'), 'fa fa-close', OSCOM::link(FILENAME_PRODUCTS_ATTRIBUTES, $page_info)); ?>&nbsp;</td>
 <?php
       if (DOWNLOAD_ENABLED == 'true') {
         $download_query_raw ="select products_attributes_filename, products_attributes_maxdays, products_attributes_maxcount
@@ -570,12 +570,12 @@
             <td colspan="5">
               <table>
                 <tr class="<?php echo (!($rows % 2)? 'attributes-even' : 'attributes-odd');?>">
-                  <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_DOWNLOAD; ?>&nbsp;</td>
-                  <td class="smallText"><?php echo TABLE_TEXT_FILENAME; ?></td>
+                  <td class="dataTableHeadingContent"><?php echo OSCOM::getDef('table_heading_download'); ?>&nbsp;</td>
+                  <td class="smallText"><?php echo OSCOM::getDef('table_text_filename'); ?></td>
                   <td class="smallText"><?php echo HTML::inputField('products_attributes_filename', $products_attributes_filename, 'size="15"'); ?>&nbsp;</td>
-                  <td class="smallText"><?php echo TABLE_TEXT_MAX_DAYS; ?></td>
+                  <td class="smallText"><?php echo OSCOM::getDef('table_text_max_days'); ?></td>
                   <td class="smallText"><?php echo HTML::inputField('products_attributes_maxdays', $products_attributes_maxdays, 'size="5"'); ?>&nbsp;</td>
-                  <td class="smallText"><?php echo TABLE_TEXT_MAX_COUNT; ?></td>
+                  <td class="smallText"><?php echo OSCOM::getDef('table_text_max_count'); ?></td>
                   <td class="smallText"><?php echo HTML::inputField('products_attributes_maxcount', $products_attributes_maxcount, 'size="5"'); ?>&nbsp;</td>
                 </tr>
               </table>
@@ -594,7 +594,7 @@
             <td class="smallText">&nbsp;<strong><?php echo $values_name; ?></strong>&nbsp;</td>
             <td align="right" class="smallText">&nbsp;<strong><?php echo $attributes_values["options_values_price"]; ?></strong>&nbsp;</td>
             <td align="center" class="smallText">&nbsp;<strong><?php echo $attributes_values["price_prefix"]; ?></strong>&nbsp;</td>
-            <td align="center" class="smallText">&nbsp;<?php echo HTML::button(IMAGE_DELETE, 'fa fa-trash', OSCOM::link(FILENAME_PRODUCTS_ATTRIBUTES, 'action=delete_attribute&attribute_id=' . $_GET['attribute_id'] . '&' . $page_info)) . HTML::button(IMAGE_CANCEL, 'fa fa-close', OSCOM::link(FILENAME_PRODUCTS_ATTRIBUTES, $page_info)); ?>&nbsp;</td>
+            <td align="center" class="smallText">&nbsp;<?php echo HTML::button(OSCOM::getDef('image_delete'), 'fa fa-trash', OSCOM::link(FILENAME_PRODUCTS_ATTRIBUTES, 'action=delete_attribute&attribute_id=' . $_GET['attribute_id'] . '&' . $page_info)) . HTML::button(OSCOM::getDef('image_cancel'), 'fa fa-close', OSCOM::link(FILENAME_PRODUCTS_ATTRIBUTES, $page_info)); ?>&nbsp;</td>
 <?php
     } else {
 ?>
@@ -604,7 +604,7 @@
             <td class="smallText">&nbsp;<?php echo $values_name; ?>&nbsp;</td>
             <td align="right" class="smallText">&nbsp;<?php echo $attributes_values["options_values_price"]; ?>&nbsp;</td>
             <td align="center" class="smallText">&nbsp;<?php echo $attributes_values["price_prefix"]; ?>&nbsp;</td>
-            <td align="center" class="smallText">&nbsp;<?php echo HTML::button(IMAGE_EDIT, 'fa fa-edit', OSCOM::link(FILENAME_PRODUCTS_ATTRIBUTES, 'action=update_attribute&attribute_id=' . $attributes_values['products_attributes_id'] . '&' . $page_info)) . HTML::button(IMAGE_DELETE, 'fa fa-trash', OSCOM::link(FILENAME_PRODUCTS_ATTRIBUTES, 'action=delete_product_attribute&attribute_id=' . $attributes_values['products_attributes_id'] . '&' . $page_info)); ?>&nbsp;</td>
+            <td align="center" class="smallText">&nbsp;<?php echo HTML::button(OSCOM::getDef('image_edit'), 'fa fa-edit', OSCOM::link(FILENAME_PRODUCTS_ATTRIBUTES, 'action=update_attribute&attribute_id=' . $attributes_values['products_attributes_id'] . '&' . $page_info)) . HTML::button(OSCOM::getDef('image_delete'), 'fa fa-trash', OSCOM::link(FILENAME_PRODUCTS_ATTRIBUTES, 'action=delete_product_attribute&attribute_id=' . $attributes_values['products_attributes_id'] . '&' . $page_info)); ?>&nbsp;</td>
 <?php
     }
     $max_attributes_id_query = tep_db_query("select max(products_attributes_id) + 1 as next_id from " . TABLE_PRODUCTS_ATTRIBUTES);
@@ -644,7 +644,7 @@
             </select>&nbsp;</td>
             <td align="right" class="smallText">&nbsp;<input type="text" name="value_price" size="6">&nbsp;</td>
             <td align="right" class="smallText">&nbsp;<input type="text" name="price_prefix" size="2" value="+">&nbsp;</td>
-            <td align="center" class="smallText">&nbsp;<?php echo HTML::button(IMAGE_INSERT, 'fa fa-plus'); ?>&nbsp;</td>
+            <td align="center" class="smallText">&nbsp;<?php echo HTML::button(OSCOM::getDef('image_insert'), 'fa fa-plus'); ?>&nbsp;</td>
           </tr>
 <?php
       if (DOWNLOAD_ENABLED == 'true') {
@@ -656,12 +656,12 @@
             <td colspan="5">
               <table>
                 <tr class="<?php echo (!($rows % 2)? 'attributes-even' : 'attributes-odd');?>">
-                  <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_DOWNLOAD; ?>&nbsp;</td>
-                  <td class="smallText"><?php echo TABLE_TEXT_FILENAME; ?></td>
+                  <td class="dataTableHeadingContent"><?php echo OSCOM::getDef('table_heading_download'); ?>&nbsp;</td>
+                  <td class="smallText"><?php echo OSCOM::getDef('table_text_filename'); ?></td>
                   <td class="smallText"><?php echo HTML::inputField('products_attributes_filename', $products_attributes_filename, 'size="15"'); ?>&nbsp;</td>
-                  <td class="smallText"><?php echo TABLE_TEXT_MAX_DAYS; ?></td>
+                  <td class="smallText"><?php echo OSCOM::getDef('table_text_max_days'); ?></td>
                   <td class="smallText"><?php echo HTML::inputField('products_attributes_maxdays', $products_attributes_maxdays, 'size="5"'); ?>&nbsp;</td>
-                  <td class="smallText"><?php echo TABLE_TEXT_MAX_COUNT; ?></td>
+                  <td class="smallText"><?php echo OSCOM::getDef('table_text_max_count'); ?></td>
                   <td class="smallText"><?php echo HTML::inputField('products_attributes_maxcount', $products_attributes_maxcount, 'size="5"'); ?>&nbsp;</td>
                 </tr>
               </table>

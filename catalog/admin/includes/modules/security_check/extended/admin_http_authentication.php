@@ -23,7 +23,7 @@
 
       $this->lang->loadDefinitions('modules/security_check/extended/admin_http_authentication');
 
-      $this->title = MODULE_SECURITY_CHECK_EXTENDED_ADMIN_HTTP_AUTHENTICATION_TITLE;
+      $this->title = OSCOM::getDef('module_security_check_extended_admin_http_authentication_title');
     }
 
     function pass() {
@@ -32,7 +32,7 @@
     }
 
     function getMessage() {
-      return MODULE_SECURITY_CHECK_EXTENDED_ADMIN_HTTP_AUTHENTICATION_ERROR;
+      return OSCOM::getDef('module_security_check_extended_admin_http_authentication_error');
     }
   }
 ?>

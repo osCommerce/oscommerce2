@@ -1,0 +1,1 @@
+module_cfg_module_action_recorder_title = Action Recorder
