@@ -16,6 +16,8 @@ module_login_introduction = <ul>
 module_login_error_curl = This module requires cURL to be enabled in PHP and will not load until it has been enabled on this webserver.
 module_login_error_credentials = This module will not load until the Client ID and Secret parameters have been configured. Please edit and configure the settings of the PayPal App.
 
+module_login_notice_paypal_app_return_url = The following url must be configured as your Return URL in the PayPal REST App settings that was created for Log In with PayPal:<br /><br />:return_url
+
 module_login_template_title = Log In with PayPal
 module_login_template_content = Have a PayPal account? Securely log in with PayPal to shop even faster!
 module_login_template_sandbox_alert = Test Mode: The Sandbox server is currently selected.
