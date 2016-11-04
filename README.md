@@ -1,6 +1,5 @@
-osCommerce Online Merchant v2.x
-===============================
+# osCommerce Online Merchant v2.4.x
 
-Website: http://www.oscommerce.com
+Website: https://www.oscommerce.com
 
 Support Forums: http://forums.oscommerce.com
