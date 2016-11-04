@@ -31,6 +31,6 @@ class ErrorHandler
 
     public static function getDirectory()
     {
-        return realpath(OSCOM::BASE_DIR . 'Work/Logs');
+        return OSCOM::BASE_DIR . 'Work/Logs/';
     }
 }

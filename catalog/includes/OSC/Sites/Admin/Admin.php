@@ -11,7 +11,6 @@ namespace OSC\Sites\Admin;
 use OSC\OM\Apps;
 use OSC\OM\Cookies;
 use OSC\OM\Db;
-use OSC\OM\ErrorHandler;
 use OSC\OM\Hooks;
 use OSC\OM\Language;
 use OSC\OM\MessageStack;
@@ -121,12 +120,6 @@ class Admin extends \OSC\OM\SitesAbstract
 
         if ($OSCOM_Language->definitionsExist(pathinfo($current_page, PATHINFO_FILENAME))) {
             $OSCOM_Language->loadDefinitions(pathinfo($current_page, PATHINFO_FILENAME));
-        }
-
-        if (isset($_SESSION['admin'])) {
-            if (count(glob(ErrorHandler::getDirectory() . '/errors-*.txt')) > 0) {
-                Registry::get('MessageStack')->add('Errors have been logged. Please check: ' . ErrorHandler::getDirectory(), 'error');
-            }
         }
 
         $oscTemplate = new \oscTemplate();

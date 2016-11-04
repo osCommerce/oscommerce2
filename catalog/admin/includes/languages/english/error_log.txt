@@ -1,0 +1,15 @@
+heading_title = Error Log
+
+table_heading_filename = Error Log
+table_heading_filesize = File Size
+
+button_delete_all = Delete All
+button_view = View
+
+log_directory = <strong>Log Directory:</strong> {{path}}
+
+ms_success_delete = The error log file ({{log}}) was successfully deleted.
+ms_error_delete = The error log file ({{log}}) could not be deleted.
+
+ms_success_delete_all = All error log files were successfully deleted.
+ms_error_delete_all = Not all error log files could be deleted.
