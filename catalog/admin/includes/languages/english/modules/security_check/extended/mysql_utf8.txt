@@ -1,0 +1,2 @@
+module_security_check_extended_mysql_utf8_title = MySQL UTF-8
+module_security_check_extended_mysql_utf8_error = Some database tables need to be converted to UTF-8 (utf8_unicode_ci). Please review the tables under Tools -&gt; Database Tables.

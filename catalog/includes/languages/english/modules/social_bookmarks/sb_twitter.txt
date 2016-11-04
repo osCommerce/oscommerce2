@@ -1,0 +1,3 @@
+module_social_bookmarks_twitter_title = Twitter
+module_social_bookmarks_twitter_description = Share products on Twitter.
+module_social_bookmarks_twitter_public_title = Share on Twitter

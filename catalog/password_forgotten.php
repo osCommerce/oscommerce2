@@ -42,29 +42,29 @@
           $reset_key_url = str_replace('&amp;', '&', $reset_key_url);
         }
 
-        $passwordEmail = new Mail($email_address, $Qcheck->value('customers_firstname') . ' ' . $Qcheck->value('customers_lastname'), STORE_OWNER_EMAIL_ADDRESS, STORE_OWNER, EMAIL_PASSWORD_RESET_SUBJECT);
-        $passwordEmail->setBody(sprintf(EMAIL_PASSWORD_RESET_BODY, $reset_key_url));
+        $passwordEmail = new Mail($email_address, $Qcheck->value('customers_firstname') . ' ' . $Qcheck->value('customers_lastname'), STORE_OWNER_EMAIL_ADDRESS, STORE_OWNER, OSCOM::getDef('email_password_reset_subject'));
+        $passwordEmail->setBody(sprintf(OSCOM::getDef('email_password_reset_body'), $reset_key_url));
         $passwordEmail->send();
 
         $password_reset_initiated = true;
       } else {
         $actionRecorder->record(false);
 
-        $messageStack->add('password_forgotten', sprintf(ERROR_ACTION_RECORDER, (defined('MODULE_ACTION_RECORDER_RESET_PASSWORD_MINUTES') ? (int)MODULE_ACTION_RECORDER_RESET_PASSWORD_MINUTES : 5)));
+        $messageStack->add('password_forgotten', sprintf(OSCOM::getDef('error_action_recorder'), (defined('MODULE_ACTION_RECORDER_RESET_PASSWORD_MINUTES') ? (int)MODULE_ACTION_RECORDER_RESET_PASSWORD_MINUTES : 5)));
       }
     } else {
-      $messageStack->add('password_forgotten', TEXT_NO_EMAIL_ADDRESS_FOUND);
+      $messageStack->add('password_forgotten', OSCOM::getDef('text_no_email_address_found'));
     }
   }
 
-  $breadcrumb->add(NAVBAR_TITLE_1, OSCOM::link('login.php'));
-  $breadcrumb->add(NAVBAR_TITLE_2, OSCOM::link('password_forgotten.php'));
+  $breadcrumb->add(OSCOM::getDef('navbar_title_1'), OSCOM::link('login.php'));
+  $breadcrumb->add(OSCOM::getDef('navbar_title_2'), OSCOM::link('password_forgotten.php'));
 
   require($oscTemplate->getFile('template_top.php'));
 ?>
 
 <div class="page-header">
-  <h1><?php echo HEADING_TITLE; ?></h1>
+  <h1><?php echo OSCOM::getDef('heading_title'); ?></h1>
 </div>
 
 <?php
@@ -77,7 +77,7 @@
 
 <div class="contentContainer">
   <div class="contentText">
-    <div class="alert alert-success"><?php echo TEXT_PASSWORD_RESET_INITIATED; ?></div>
+    <div class="alert alert-success"><?php echo OSCOM::getDef('text_password_reset_initiated'); ?></div>
   </div>
 </div>
 
@@ -89,20 +89,20 @@
 
 <div class="contentContainer">
   <div class="contentText">
-    <div class="alert alert-info"><?php echo TEXT_MAIN; ?></div>
+    <div class="alert alert-info"><?php echo OSCOM::getDef('text_main'); ?></div>
 
     <div class="form-group has-feedback">
-      <label for="inputEmail" class="control-label col-sm-3"><?php echo ENTRY_EMAIL_ADDRESS; ?></label>
+      <label for="inputEmail" class="control-label col-sm-3"><?php echo OSCOM::getDef('entry_email_address'); ?></label>
       <div class="col-sm-9">
-        <?php echo HTML::inputField('email_address', NULL, 'required aria-required="true" autofocus="autofocus" id="inputEmail" placeholder="' . ENTRY_EMAIL_ADDRESS_TEXT . '"', 'email'); ?>
-        <?php echo FORM_REQUIRED_INPUT; ?>
+        <?php echo HTML::inputField('email_address', NULL, 'required aria-required="true" autofocus="autofocus" id="inputEmail" placeholder="' . OSCOM::getDef('entry_email_address_text') . '"', 'email'); ?>
+        <?php echo OSCOM::getDef('form_required_input'); ?>
       </div>
     </div>
   </div>
 
   <div class="buttonSet row">
-    <div class="col-xs-6"><?php echo HTML::button(IMAGE_BUTTON_BACK, 'fa fa-angle-left', OSCOM::link('login.php')); ?></div>
-    <div class="col-xs-6 text-right"><?php echo HTML::button(IMAGE_BUTTON_CONTINUE, 'fa fa-angle-right', null, null, 'btn-success'); ?></div>
+    <div class="col-xs-6"><?php echo HTML::button(OSCOM::getDef('image_button_back'), 'fa fa-angle-left', OSCOM::link('login.php')); ?></div>
+    <div class="col-xs-6 text-right"><?php echo HTML::button(OSCOM::getDef('image_button_continue'), 'fa fa-angle-right', null, null, 'btn-success'); ?></div>
   </div>
 </div>
 

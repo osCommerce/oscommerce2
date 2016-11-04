@@ -33,7 +33,7 @@
     }
 
     function getMessage() {
-      return WARNING_DOWNLOAD_DIRECTORY_NON_EXISTENT;
+      return OSCOM::getDef('warning_download_directory_non_existent');
     }
   }
 ?>

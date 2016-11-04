@@ -1,0 +1,2 @@
+module_security_check_extended_admin_backup_file_title = admin/includes/backups/ File Access
+module_security_check_extended_admin_backup_file_http_200 = Backup files in 

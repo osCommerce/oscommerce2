@@ -34,16 +34,16 @@
 
     <div class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
-        <li><a><?= ADMIN_MENU_SHOP; ?> <span class="caret"></span></a>
+        <li><a><?= OSCOM::getDef('admin_menu_shop'); ?> <span class="caret"></span></a>
           <ul class="dropdown-menu">
 
 <?php
     foreach ($admin_menu['shop'] as $group => $links) {
-      echo '<li><a>' . HTML::outputProtected(constant(strtoupper('ADMIN_MENU_SHOP_' . $group))) . ' <span class="caret"></span></a>
+      echo '<li><a>' . HTML::outputProtected(OSCOM::getDef('admin_menu_shop_' . $group)) . ' <span class="caret"></span></a>
               <ul class="dropdown-menu">';
 
       foreach ($links as $code => $page) {
-        echo '<li><a href="' . (is_string($page) ? $page : $page['link']) . '">' . HTML::outputProtected(constant(strtoupper('ADMIN_MENU_SHOP_' . $group . '_' . $code))) . '</a></li>';
+        echo '<li><a href="' . (is_string($page) ? $page : $page['link']) . '">' . HTML::outputProtected(OSCOM::getDef('admin_menu_shop_' . $group . '_' . $code)) . '</a></li>';
       }
 
       echo '  </ul>
@@ -54,7 +54,7 @@
           </ul>
         </li>
 
-        <li><a><?= ADMIN_MENU_APPS; ?> <span class="caret"></span></a>
+        <li><a><?= OSCOM::getDef('admin_menu_apps'); ?> <span class="caret"></span></a>
           <ul class="dropdown-menu">
             <li><a href="<?= OSCOM::link('apps.php'); ?>">Manage</a></li>
 
@@ -78,7 +78,7 @@
 
           </ul>
         </li>
-        <li><a><?= ADMIN_MENU_LEGACY; ?> <span class="caret"></span></a>
+        <li><a><?= OSCOM::getDef('admin_menu_legacy'); ?> <span class="caret"></span></a>
           <ul class="dropdown-menu">
 
 <?php

@@ -1,0 +1,3 @@
+navbar_title = Privacy Notice
+heading_title = Privacy Notice
+text_information = Put here your Privacy Notice information.

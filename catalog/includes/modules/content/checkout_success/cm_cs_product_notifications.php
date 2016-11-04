@@ -11,6 +11,7 @@
 */
 
   use OSC\OM\HTML;
+  use OSC\OM\OSCOM;
   use OSC\OM\Registry;
 
   class cm_cs_product_notifications {
@@ -25,8 +26,8 @@
       $this->code = get_class($this);
       $this->group = basename(dirname(__FILE__));
 
-      $this->title = MODULE_CONTENT_CHECKOUT_SUCCESS_PRODUCT_NOTIFICATIONS_TITLE;
-      $this->description = MODULE_CONTENT_CHECKOUT_SUCCESS_PRODUCT_NOTIFICATIONS_DESCRIPTION;
+      $this->title = OSCOM::getDef('module_content_checkout_success_product_notifications_title');
+      $this->description = OSCOM::getDef('module_content_checkout_success_product_notifications_description');
 
       if ( defined('MODULE_CONTENT_CHECKOUT_SUCCESS_PRODUCT_NOTIFICATIONS_STATUS') ) {
         $this->sort_order = MODULE_CONTENT_CHECKOUT_SUCCESS_PRODUCT_NOTIFICATIONS_SORT_ORDER;

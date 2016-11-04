@@ -24,8 +24,8 @@
     var $enabled = false;
 
     function d_version_check() {
-      $this->title = MODULE_ADMIN_DASHBOARD_VERSION_CHECK_TITLE;
-      $this->description = MODULE_ADMIN_DASHBOARD_VERSION_CHECK_DESCRIPTION;
+      $this->title = OSCOM::getDef('module_admin_dashboard_version_check_title');
+      $this->description = OSCOM::getDef('module_admin_dashboard_version_check_description');
 
       if ( defined('MODULE_ADMIN_DASHBOARD_VERSION_CHECK_STATUS') ) {
         $this->sort_order = MODULE_ADMIN_DASHBOARD_VERSION_CHECK_SORT_ORDER;
@@ -53,26 +53,26 @@
           }
         }
       } else {
-        $date_last_checked = MODULE_ADMIN_DASHBOARD_VERSION_CHECK_NEVER;
+        $date_last_checked = OSCOM::getDef('module_admin_dashboard_version_check_never');
       }
 
       $output = '<table class="table table-hover">
                    <thead>
                      <tr class="info">
-                       <th>' . MODULE_ADMIN_DASHBOARD_VERSION_CHECK_TITLE . '</th>
-                       <th class="text-right">' . MODULE_ADMIN_DASHBOARD_VERSION_CHECK_DATE . '</th>
+                       <th>' . OSCOM::getDef('module_admin_dashboard_version_check_title') . '</th>
+                       <th class="text-right">' . OSCOM::getDef('module_admin_dashboard_version_check_date') . '</th>
                      </tr>
                    </thead>
                    <tbody>';
 
       if ($new_version == true) {
         $output .= '    <tr class="success">
-                          <td colspan="2">' . HTML::image(OSCOM::linkImage('icons/warning.gif'), ICON_WARNING) . '&nbsp;<strong>' . MODULE_ADMIN_DASHBOARD_VERSION_CHECK_UPDATE_AVAILABLE . '</strong></td>
+                          <td colspan="2">' . HTML::image(OSCOM::linkImage('icons/warning.gif'), OSCOM::getDef('icon_warning')) . '&nbsp;<strong>' . OSCOM::getDef('module_admin_dashboard_version_check_update_available') . '</strong></td>
                         </tr>';
       }
 
       $output .= '    <tr>
-                        <td><a href="' . OSCOM::link('online_update.php') . '">' . MODULE_ADMIN_DASHBOARD_VERSION_CHECK_CHECK_NOW . '</a></td>
+                        <td><a href="' . OSCOM::link('online_update.php') . '">' . OSCOM::getDef('module_admin_dashboard_version_check_check_now') . '</a></td>
                         <td class="text-right">' . $date_last_checked . '</td>
                       </tr>
                     </tbody>

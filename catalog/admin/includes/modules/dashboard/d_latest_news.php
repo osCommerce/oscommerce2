@@ -23,8 +23,8 @@
     var $enabled = false;
 
     function d_latest_news() {
-      $this->title = MODULE_ADMIN_DASHBOARD_LATEST_NEWS_TITLE;
-      $this->description = MODULE_ADMIN_DASHBOARD_LATEST_NEWS_DESCRIPTION;
+      $this->title = OSCOM::getDef('module_admin_dashboard_latest_news_title');
+      $this->description = OSCOM::getDef('module_admin_dashboard_latest_news_description');
 
       if ( defined('MODULE_ADMIN_DASHBOARD_LATEST_NEWS_STATUS') ) {
         $this->sort_order = MODULE_ADMIN_DASHBOARD_LATEST_NEWS_SORT_ORDER;
@@ -46,8 +46,8 @@
       $output = '<table class="table table-hover">
                    <thead>
                      <tr class="info">
-                       <th>' . MODULE_ADMIN_DASHBOARD_LATEST_NEWS_TITLE . '</th>
-                       <th class="text-right">' . MODULE_ADMIN_DASHBOARD_LATEST_NEWS_DATE . '</th>
+                       <th>' . OSCOM::getDef('module_admin_dashboard_latest_news_title') . '</th>
+                       <th class="text-right">' . OSCOM::getDef('module_admin_dashboard_latest_news_date') . '</th>
                      </tr>
                    </thead>
                    <tbody>';
@@ -61,12 +61,12 @@
         }
       } else {
         $output .= '    <tr>
-                          <td colspan="2">' . MODULE_ADMIN_DASHBOARD_LATEST_NEWS_FEED_ERROR . '</td>
+                          <td colspan="2">' . OSCOM::getDef('module_admin_dashboard_latest_news_feed_error') . '</td>
                         </tr>';
       }
 
       $output .= '    <tr>
-                        <td class="text-right" colspan="2"><a href="http://www.oscommerce.com/Us&News" target="_blank">' . HTML::image(OSCOM::linkImage('icon_oscommerce.png'), MODULE_ADMIN_DASHBOARD_LATEST_NEWS_ICON_NEWS) . '</a>&nbsp;<a href="http://www.oscommerce.com/newsletter/subscribe" target="_blank">' . HTML::image(OSCOM::linkImage('icon_newsletter.png'), MODULE_ADMIN_DASHBOARD_LATEST_NEWS_ICON_NEWSLETTER) . '</a>&nbsp;<a href="http://plus.google.com/+osCommerce" target="_blank">' . HTML::image(OSCOM::linkImage('icon_google_plus.png'), MODULE_ADMIN_DASHBOARD_LATEST_NEWS_ICON_GOOGLE_PLUS) . '</a>&nbsp;<a href="http://www.facebook.com/pages/osCommerce/33387373079" target="_blank">' . HTML::image(OSCOM::linkImage('icon_facebook.png'), MODULE_ADMIN_DASHBOARD_LATEST_NEWS_ICON_FACEBOOK) . '</a>&nbsp;<a href="http://twitter.com/osCommerce" target="_blank">' . HTML::image(OSCOM::linkImage('icon_twitter.png'), MODULE_ADMIN_DASHBOARD_LATEST_NEWS_ICON_TWITTER) . '</a>&nbsp;<a href="http://feeds.feedburner.com/osCommerceNewsAndBlogs" target="_blank">' . HTML::image(OSCOM::linkImage('icon_rss.png'), MODULE_ADMIN_DASHBOARD_LATEST_NEWS_ICON_RSS) . '</a></td>
+                        <td class="text-right" colspan="2"><a href="http://www.oscommerce.com/Us&News" target="_blank">' . HTML::image(OSCOM::linkImage('icon_oscommerce.png'), OSCOM::getDef('module_admin_dashboard_latest_news_icon_news')) . '</a>&nbsp;<a href="http://www.oscommerce.com/newsletter/subscribe" target="_blank">' . HTML::image(OSCOM::linkImage('icon_newsletter.png'), OSCOM::getDef('module_admin_dashboard_latest_news_icon_newsletter')) . '</a>&nbsp;<a href="http://plus.google.com/+osCommerce" target="_blank">' . HTML::image(OSCOM::linkImage('icon_google_plus.png'), OSCOM::getDef('module_admin_dashboard_latest_news_icon_google_plus')) . '</a>&nbsp;<a href="http://www.facebook.com/pages/osCommerce/33387373079" target="_blank">' . HTML::image(OSCOM::linkImage('icon_facebook.png'), OSCOM::getDef('module_admin_dashboard_latest_news_icon_facebook')) . '</a>&nbsp;<a href="http://twitter.com/osCommerce" target="_blank">' . HTML::image(OSCOM::linkImage('icon_twitter.png'), OSCOM::getDef('module_admin_dashboard_latest_news_icon_twitter')) . '</a>&nbsp;<a href="http://feeds.feedburner.com/osCommerceNewsAndBlogs" target="_blank">' . HTML::image(OSCOM::linkImage('icon_rss.png'), OSCOM::getDef('module_admin_dashboard_latest_news_icon_rss')) . '</a></td>
                       </tr>
                     </tbody>
                   </table>';

@@ -1,0 +1,2 @@
+module_header_tags_google_adwords_conversion_title = Google AdWords Conversion Tracking
+module_header_tags_google_adwords_conversion_description = Add Google AdWords Conversion Tracking to the Checkout Success page

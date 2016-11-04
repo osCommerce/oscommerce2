@@ -1,0 +1,3 @@
+module_social_bookmarks_pinterest_title = Pinterest
+module_social_bookmarks_pinterest_description = Share on Pinterest
+module_social_bookmarks_pinterest_public_title = Pin It

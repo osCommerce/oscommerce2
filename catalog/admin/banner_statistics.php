@@ -31,10 +31,10 @@
       if (FileSystem::isWritable(OSCOM::getConfig('dir_root') . 'images/graphs')) {
         $dir_ok = true;
       } else {
-        $OSCOM_MessageStack->add(ERROR_GRAPHS_DIRECTORY_NOT_WRITEABLE, 'error');
+        $OSCOM_MessageStack->add(OSCOM::getDef('error_graphs_directory_not_writeable'), 'error');
       }
     } else {
-      $OSCOM_MessageStack->add(ERROR_GRAPHS_DIRECTORY_DOES_NOT_EXIST, 'error');
+      $OSCOM_MessageStack->add(OSCOM::getDef('error_graphs_directory_does_not_exist'), 'error');
     }
   } else {
     $OSCOM_MessageStack->add('The "GD" extension must be enabled in your PHP configuration to generate images.', 'error');
@@ -58,23 +58,23 @@
   }
 
   $type_array = array(array('id' => 'daily',
-                            'text' => STATISTICS_TYPE_DAILY),
+                            'text' => OSCOM::getDef('statistics_type_daily')),
                       array('id' => 'monthly',
-                            'text' => STATISTICS_TYPE_MONTHLY));
+                            'text' => OSCOM::getDef('statistics_type_monthly')));
 
   if (!empty($years_array)) {
     $type_array[] = array('id' => 'yearly',
-                          'text' => STATISTICS_TYPE_YEARLY);
+                          'text' => OSCOM::getDef('statistics_type_yearly'));
   }
 
   require($oscTemplate->getFile('template_top.php'));
 ?>
 
 <div class="pull-right">
-  <?= HTML::button(IMAGE_BACK, 'fa fa-caret-left', OSCOM::link('banner_manager.php', 'page=' . $_GET['page']), null, 'btn-info'); ?>
+  <?= HTML::button(OSCOM::getDef('image_back'), 'fa fa-caret-left', OSCOM::link('banner_manager.php', 'page=' . $_GET['page']), null, 'btn-info'); ?>
 </div>
 
-<h2><i class="fa fa-line-chart"></i> <a href="<?= OSCOM::link('banner_statistics.php', 'page=' . $_GET['page'] . '&bID=' . (int)$_GET['bID']); ?>"><?= HEADING_TITLE; ?></a></h2>
+<h2><i class="fa fa-line-chart"></i> <a href="<?= OSCOM::link('banner_statistics.php', 'page=' . $_GET['page'] . '&bID=' . (int)$_GET['bID']); ?>"><?= OSCOM::getDef('heading_title'); ?></a></h2>
 
 <?= HTML::form('year', OSCOM::link(FILENAME_BANNER_STATISTICS), 'get', 'class="form-inline"', ['session_id' => true]); ?>
 
@@ -135,9 +135,9 @@
     <table class="table">
       <thead>
         <tr class="warning">
-          <th><?= TABLE_HEADING_SOURCE; ?></th>
-          <th class="text-right"><?= TABLE_HEADING_VIEWS; ?></th>
-          <th class="text-right"><?= TABLE_HEADING_CLICKS; ?></th>
+          <th><?= OSCOM::getDef('table_heading_source'); ?></th>
+          <th class="text-right"><?= OSCOM::getDef('table_heading_views'); ?></th>
+          <th class="text-right"><?= OSCOM::getDef('table_heading_clicks'); ?></th>
         </tr>
       </thead>
       <tbody>

@@ -22,14 +22,14 @@
 
   $OSCOM_Language->loadDefinitions('address_book');
 
-  $breadcrumb->add(NAVBAR_TITLE_1, OSCOM::link('account.php'));
-  $breadcrumb->add(NAVBAR_TITLE_2, OSCOM::link('address_book.php'));
+  $breadcrumb->add(OSCOM::getDef('navbar_title_1'), OSCOM::link('account.php'));
+  $breadcrumb->add(OSCOM::getDef('navbar_title_2'), OSCOM::link('address_book.php'));
 
   require($oscTemplate->getFile('template_top.php'));
 ?>
 
 <div class="page-header">
-  <h1><?php echo HEADING_TITLE; ?></h1>
+  <h1><?php echo OSCOM::getDef('heading_title'); ?></h1>
 </div>
 
 <?php
@@ -39,15 +39,15 @@
 ?>
 
 <div class="contentContainer">
-  <h2><?php echo PRIMARY_ADDRESS_TITLE; ?></h2>
+  <h2><?php echo OSCOM::getDef('primary_address_title'); ?></h2>
 
   <div class="contentText row">
     <div class="col-sm-8">
-      <div class="alert alert-warning"><?php echo PRIMARY_ADDRESS_DESCRIPTION; ?></div>
+      <div class="alert alert-warning"><?php echo OSCOM::getDef('primary_address_description'); ?></div>
     </div>
     <div class="col-sm-4">
       <div class="panel panel-primary">
-        <div class="panel-heading"><?php echo PRIMARY_ADDRESS_TITLE; ?></div>
+        <div class="panel-heading"><?php echo OSCOM::getDef('primary_address_title'); ?></div>
 
         <div class="panel-body">
           <?php echo tep_address_label($_SESSION['customer_id'], $_SESSION['customer_default_address_id'], true, ' ', '<br />'); ?>
@@ -58,9 +58,9 @@
 
   <div class="clearfix"></div>
 
-  <h2><?php echo ADDRESS_BOOK_TITLE; ?></h2>
+  <h2><?php echo OSCOM::getDef('address_book_title'); ?></h2>
 
-  <div class="alert alert-warning"><?php echo sprintf(TEXT_MAXIMUM_ENTRIES, MAX_ADDRESS_BOOK_ENTRIES); ?></div>
+  <div class="alert alert-warning"><?php echo sprintf(OSCOM::getDef('text_maximum_entries'), MAX_ADDRESS_BOOK_ENTRIES); ?></div>
 
   <div class="contentText row">
 <?php
@@ -73,11 +73,11 @@
 ?>
       <div class="col-sm-4">
         <div class="panel panel-<?php echo ($Qab->valueInt('address_book_id') == $_SESSION['customer_default_address_id']) ? 'primary' : 'default'; ?>">
-          <div class="panel-heading"><?php echo HTML::outputProtected($Qab->value('firstname') . ' ' . $Qab->value('lastname')); ?></strong><?php if ($Qab->valueInt('address_book_id') == $_SESSION['customer_default_address_id']) echo '&nbsp;<small><i>' . PRIMARY_ADDRESS . '</i></small>'; ?></div>
+          <div class="panel-heading"><?php echo HTML::outputProtected($Qab->value('firstname') . ' ' . $Qab->value('lastname')); ?></strong><?php if ($Qab->valueInt('address_book_id') == $_SESSION['customer_default_address_id']) echo '&nbsp;<small><i>' . OSCOM::getDef('primary_address') . '</i></small>'; ?></div>
           <div class="panel-body">
             <?php echo tep_address_format($format_id, $Qab->toArray(), true, ' ', '<br />'); ?>
           </div>
-          <div class="panel-footer text-center"><?php echo HTML::button(SMALL_IMAGE_BUTTON_EDIT, 'fa fa-file', OSCOM::link('address_book_process.php', 'edit=' . $Qab->valueInt('address_book_id'))) . ' ' . HTML::button(SMALL_IMAGE_BUTTON_DELETE, 'fa fa-trash', OSCOM::link('address_book_process.php', 'delete=' . $Qab->valueInt('address_book_id'))); ?></div>
+          <div class="panel-footer text-center"><?php echo HTML::button(OSCOM::getDef('small_image_button_edit'), 'fa fa-file', OSCOM::link('address_book_process.php', 'edit=' . $Qab->valueInt('address_book_id'))) . ' ' . HTML::button(OSCOM::getDef('small_image_button_delete'), 'fa fa-trash', OSCOM::link('address_book_process.php', 'delete=' . $Qab->valueInt('address_book_id'))); ?></div>
         </div>
       </div>
 <?php
@@ -88,11 +88,11 @@
   <div class="clearfix"></div>
 
   <div class="buttonSet row">
-    <div class="col-xs-6"><?php echo HTML::button(IMAGE_BUTTON_BACK, 'fa fa-angle-left', OSCOM::link('account.php')); ?></div>
+    <div class="col-xs-6"><?php echo HTML::button(OSCOM::getDef('image_button_back'), 'fa fa-angle-left', OSCOM::link('account.php')); ?></div>
 <?php
   if (tep_count_customer_address_book_entries() < MAX_ADDRESS_BOOK_ENTRIES) {
 ?>
-    <div class="col-xs-6 text-right"><?php echo HTML::button(IMAGE_BUTTON_ADD_ADDRESS, 'fa fa-home', OSCOM::link('address_book_process.php')); ?></div>
+    <div class="col-xs-6 text-right"><?php echo HTML::button(OSCOM::getDef('image_button_add_address'), 'fa fa-home', OSCOM::link('address_book_process.php')); ?></div>
 <?php
   }
 ?>

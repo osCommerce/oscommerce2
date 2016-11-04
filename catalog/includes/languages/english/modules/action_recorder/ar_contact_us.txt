@@ -1,0 +1,2 @@
+module_action_recorder_contact_us_title = Contact Us
+module_action_recorder_contact_us_description = Record usage of the Contact Us feature.

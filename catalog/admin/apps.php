@@ -86,7 +86,7 @@
   require($oscTemplate->getFile('template_top.php'));
 ?>
 
-<h2><i class="fa fa-th-large"></i> <a href="<?= OSCOM::link('apps.php'); ?>"><?= HEADING_TITLE; ?></a></h2>
+<h2><i class="fa fa-th-large"></i> <a href="<?= OSCOM::link('apps.php'); ?>"><?= OSCOM::getDef('heading_title'); ?></a></h2>
 
 <h3>Showcase Apps</h3>
 
@@ -97,9 +97,9 @@
 <table id="appsInstalledTable" class="oscom-table table table-hover">
   <thead>
     <tr class="info">
-      <th><?= TABLE_HEADING_APPS; ?></th>
-      <th><?= TABLE_HEADING_VENDOR; ?></th>
-      <th class="text-right"><?= TABLE_HEADING_VERSION; ?></th>
+      <th><?= OSCOM::getDef('table_heading_apps'); ?></th>
+      <th><?= OSCOM::getDef('table_heading_vendor'); ?></th>
+      <th class="text-right"><?= OSCOM::getDef('table_heading_version'); ?></th>
       <th class="action"></th>
     </tr>
   </thead>

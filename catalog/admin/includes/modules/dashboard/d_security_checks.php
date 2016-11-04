@@ -21,8 +21,8 @@
     var $enabled = false;
 
     function d_security_checks() {
-      $this->title = MODULE_ADMIN_DASHBOARD_SECURITY_CHECKS_TITLE;
-      $this->description = MODULE_ADMIN_DASHBOARD_SECURITY_CHECKS_DESCRIPTION;
+      $this->title = OSCOM::getDef('module_admin_dashboard_security_checks_title');
+      $this->description = OSCOM::getDef('module_admin_dashboard_security_checks_description');
 
       if ( defined('MODULE_ADMIN_DASHBOARD_SECURITY_CHECKS_STATUS') ) {
         $this->sort_order = MODULE_ADMIN_DASHBOARD_SECURITY_CHECKS_SORT_ORDER;
@@ -69,7 +69,7 @@
       }
 
       if (!$OSCOM_MessageStack->exists('securityCheckModule')) {
-        $OSCOM_MessageStack->add(MODULE_ADMIN_DASHBOARD_SECURITY_CHECKS_SUCCESS, 'success', 'securityCheckModule');
+        $OSCOM_MessageStack->add(OSCOM::getDef('module_admin_dashboard_security_checks_success'), 'success', 'securityCheckModule');
       }
 
       $output = $OSCOM_MessageStack->get('securityCheckModule');

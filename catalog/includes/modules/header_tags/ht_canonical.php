@@ -22,8 +22,8 @@
     var $enabled = false;
 
     function __construct() {
-      $this->title = MODULE_HEADER_TAGS_CANONICAL_TITLE;
-      $this->description = MODULE_HEADER_TAGS_CANONICAL_DESCRIPTION;
+      $this->title = OSCOM::getDef('module_header_tags_canonical_title');
+      $this->description = OSCOM::getDef('module_header_tags_canonical_description');
 
       if ( defined('MODULE_HEADER_TAGS_CANONICAL_STATUS') ) {
         $this->sort_order = MODULE_HEADER_TAGS_CANONICAL_SORT_ORDER;

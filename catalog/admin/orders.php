@@ -52,7 +52,7 @@
     if ($Qorders->fetch()) {
       $order = new order($Qorders->valueInt('orders_id'));
     } else {
-      $OSCOM_MessageStack->add(sprintf(ERROR_ORDER_DOES_NOT_EXIST, $oID), 'error');
+      $OSCOM_MessageStack->add(sprintf(OSCOM::getDef('error_order_does_not_exist'), $oID), 'error');
     }
   }
 
@@ -94,12 +94,12 @@
           if (isset($_POST['notify']) && ($_POST['notify'] == 'on')) {
             $notify_comments = '';
             if (isset($_POST['notify_comments']) && ($_POST['notify_comments'] == 'on')) {
-              $notify_comments = sprintf(EMAIL_TEXT_COMMENTS_UPDATE, $comments) . "\n\n";
+              $notify_comments = sprintf(OSCOM::getDef('email_text_comments_update'), $comments) . "\n\n";
             }
 
-            $email = STORE_NAME . "\n" . EMAIL_SEPARATOR . "\n" . EMAIL_TEXT_ORDER_NUMBER . ' ' . $oID . "\n" . EMAIL_TEXT_INVOICE_URL . ' ' . OSCOM::link('Shop/' . FILENAME_CATALOG_ACCOUNT_HISTORY_INFO, 'order_id=' . $oID) . "\n" . EMAIL_TEXT_DATE_ORDERED . ' ' . DateTime::toLong($Qcheck->value('date_purchased')) . "\n\n" . $notify_comments . sprintf(EMAIL_TEXT_STATUS_UPDATE, $orders_status_array[$status]);
+            $email = STORE_NAME . "\n" . OSCOM::getDef('email_separator') . "\n" . OSCOM::getDef('email_text_order_number') . ' ' . $oID . "\n" . OSCOM::getDef('email_text_invoice_url') . ' ' . OSCOM::link('Shop/' . FILENAME_CATALOG_ACCOUNT_HISTORY_INFO, 'order_id=' . $oID) . "\n" . OSCOM::getDef('email_text_date_ordered') . ' ' . DateTime::toLong($Qcheck->value('date_purchased')) . "\n\n" . $notify_comments . sprintf(OSCOM::getDef('email_text_status_update'), $orders_status_array[$status]);
 
-            $orderEmail = new Mail($Qcheck->value('customers_email_address'), $Qcheck->value('customers_name'), STORE_OWNER_EMAIL_ADDRESS, STORE_OWNER, EMAIL_TEXT_SUBJECT);
+            $orderEmail = new Mail($Qcheck->value('customers_email_address'), $Qcheck->value('customers_name'), STORE_OWNER_EMAIL_ADDRESS, STORE_OWNER, OSCOM::getDef('email_text_subject'));
             $orderEmail->setBody($email);
             $orderEmail->send();
 
@@ -118,9 +118,9 @@
         }
 
         if ($order_updated == true) {
-         $OSCOM_MessageStack->add(SUCCESS_ORDER_UPDATED, 'success');
+         $OSCOM_MessageStack->add(OSCOM::getDef('success_order_updated'), 'success');
         } else {
-          $OSCOM_MessageStack->add(WARNING_ORDER_NOT_UPDATED, 'warning');
+          $OSCOM_MessageStack->add(OSCOM::getDef('warning_order_not_updated'), 'warning');
         }
 
         OSCOM::redirect(FILENAME_ORDERS, tep_get_all_get_params(array('action')) . 'action=edit');
@@ -142,7 +142,7 @@
   require($oscTemplate->getFile('template_top.php'));
 ?>
 
-<h2><i class="fa fa-shopping-cart"></i> <a href="<?= OSCOM::link('orders.php'); ?>"><?= HEADING_TITLE; ?></a></h2>
+<h2><i class="fa fa-shopping-cart"></i> <a href="<?= OSCOM::link('orders.php'); ?>"><?= OSCOM::getDef('heading_title'); ?></a></h2>
 
 <?php
   if (!empty($action)) {
@@ -152,7 +152,7 @@
 
 <h3><?= '#' . $order->info['id'] . ' (' . strip_tags($order->info['total']) . ')'; ?></h3>
 
-<div style="text-align: right; padding-bottom: 15px;"><?= HTML::button(IMAGE_BACK, 'fa fa-chevron-left', OSCOM::link(FILENAME_ORDERS, tep_get_all_get_params(array('action'))), null, 'btn-info') . HTML::button(IMAGE_ORDERS_INVOICE, 'fa fa-file-text-o', OSCOM::link(FILENAME_ORDERS_INVOICE, 'oID=' . $_GET['oID']), array('newwindow' => true), 'btn-primary') . HTML::button(IMAGE_ORDERS_PACKINGSLIP, 'fa fa-clipboard', OSCOM::link(FILENAME_ORDERS_PACKINGSLIP, 'oID=' . $_GET['oID']), array('newwindow' => true), 'btn-primary'); ?></div>
+<div style="text-align: right; padding-bottom: 15px;"><?= HTML::button(OSCOM::getDef('image_back'), 'fa fa-chevron-left', OSCOM::link(FILENAME_ORDERS, tep_get_all_get_params(array('action'))), null, 'btn-info') . HTML::button(OSCOM::getDef('image_orders_invoice'), 'fa fa-file-text-o', OSCOM::link(FILENAME_ORDERS_INVOICE, 'oID=' . $_GET['oID']), array('newwindow' => true), 'btn-primary') . HTML::button(OSCOM::getDef('image_orders_packingslip'), 'fa fa-clipboard', OSCOM::link(FILENAME_ORDERS_PACKINGSLIP, 'oID=' . $_GET['oID']), array('newwindow' => true), 'btn-primary'); ?></div>
 
 <div id="orderTabs">
   <ul class="nav nav-tabs">
@@ -167,7 +167,7 @@
         <div class="col-sm-4">
           <div class="panel panel-info">
             <div class="panel-heading">
-              <h3 class="panel-title"><?= ENTRY_CUSTOMER; ?></h3>
+              <h3 class="panel-title"><?= OSCOM::getDef('entry_customer'); ?></h3>
             </div>
 
             <div class="panel-body">
@@ -180,7 +180,7 @@
         <div class="col-sm-4">
           <div class="panel panel-info">
             <div class="panel-heading">
-              <h3 class="panel-title"><?= ENTRY_SHIPPING_ADDRESS; ?></h3>
+              <h3 class="panel-title"><?= OSCOM::getDef('entry_shipping_address'); ?></h3>
             </div>
 
             <div class="panel-body">
@@ -192,7 +192,7 @@
         <div class="col-sm-4">
           <div class="panel panel-info">
             <div class="panel-heading">
-              <h3 class="panel-title"><?= ENTRY_BILLING_ADDRESS; ?></h3>
+              <h3 class="panel-title"><?= OSCOM::getDef('entry_billing_address'); ?></h3>
             </div>
 
             <div class="panel-body">
@@ -206,7 +206,7 @@
         <div class="col-sm-4">
           <div class="panel panel-info">
             <div class="panel-heading">
-              <h3 class="panel-title"><?= ENTRY_PAYMENT_METHOD; ?></h3>
+              <h3 class="panel-title"><?= OSCOM::getDef('entry_payment_method'); ?></h3>
             </div>
 
             <div class="panel-body">
@@ -219,19 +219,19 @@
               <table class="oscom-table table oscom-table-borderless table-condensed">
                 <tbody>
                   <tr>
-                    <td><?= ENTRY_CREDIT_CARD_TYPE; ?></td>
+                    <td><?= OSCOM::getDef('entry_credit_card_type'); ?></td>
                     <td><?= $order->info['cc_type']; ?></td>
                   </tr>
                   <tr>
-                    <td><?= ENTRY_CREDIT_CARD_OWNER; ?></td>
+                    <td><?= OSCOM::getDef('entry_credit_card_owner'); ?></td>
                     <td><?= $order->info['cc_owner']; ?></td>
                   </tr>
                   <tr>
-                    <td><?= ENTRY_CREDIT_CARD_NUMBER; ?></td>
+                    <td><?= OSCOM::getDef('entry_credit_card_number'); ?></td>
                     <td><?= $order->info['cc_number']; ?></td>
                   </tr>
                   <tr>
-                    <td><?= ENTRY_CREDIT_CARD_EXPIRES; ?></td>
+                    <td><?= OSCOM::getDef('entry_credit_card_expires'); ?></td>
                     <td><?= $order->info['cc_expires']; ?></td>
                   </tr>
                 </tbody>
@@ -247,7 +247,7 @@
         <div class="col-sm-4">
           <div class="panel panel-info">
             <div class="panel-heading">
-              <h3 class="panel-title"><?= ENTRY_STATUS; ?></h3>
+              <h3 class="panel-title"><?= OSCOM::getDef('entry_status'); ?></h3>
             </div>
 
             <div class="panel-body">
@@ -259,7 +259,7 @@
         <div class="col-sm-4">
           <div class="panel panel-info">
             <div class="panel-heading">
-              <h3 class="panel-title"><?= ENTRY_TOTAL; ?></h3>
+              <h3 class="panel-title"><?= OSCOM::getDef('entry_total'); ?></h3>
             </div>
 
             <div class="panel-body">
@@ -274,13 +274,13 @@
       <table class="oscom-table table table-hover">
         <thead>
           <tr class="info">
-            <th colspan="2"><?= TABLE_HEADING_PRODUCTS; ?></th>
-            <th><?= TABLE_HEADING_PRODUCTS_MODEL; ?></th>
-            <th class="text-right"><?= TABLE_HEADING_TAX; ?></th>
-            <th class="text-right"><?= TABLE_HEADING_PRICE_EXCLUDING_TAX; ?></th>
-            <th class="text-right"><?= TABLE_HEADING_PRICE_INCLUDING_TAX; ?></th>
-            <th class="text-right"><?= TABLE_HEADING_TOTAL_EXCLUDING_TAX; ?></th>
-            <th class="text-right"><?= TABLE_HEADING_TOTAL_INCLUDING_TAX; ?></th>
+            <th colspan="2"><?= OSCOM::getDef('table_heading_products'); ?></th>
+            <th><?= OSCOM::getDef('table_heading_products_model'); ?></th>
+            <th class="text-right"><?= OSCOM::getDef('table_heading_tax'); ?></th>
+            <th class="text-right"><?= OSCOM::getDef('table_heading_price_excluding_tax'); ?></th>
+            <th class="text-right"><?= OSCOM::getDef('table_heading_price_including_tax'); ?></th>
+            <th class="text-right"><?= OSCOM::getDef('table_heading_total_excluding_tax'); ?></th>
+            <th class="text-right"><?= OSCOM::getDef('table_heading_total_including_tax'); ?></th>
           </tr>
         </thead>
         <tbody>
@@ -333,13 +333,13 @@
       <?= HTML::form('status', OSCOM::link(FILENAME_ORDERS, tep_get_all_get_params(array('action')) . 'action=update_order')); ?>
 
         <div class="form-group">
-          <label for="inputOrderStatus" class="control-label"><?= ENTRY_STATUS; ?></label>
+          <label for="inputOrderStatus" class="control-label"><?= OSCOM::getDef('entry_status'); ?></label>
 
           <?= HTML::selectField('status', $orders_statuses, $order->info['orders_status'], 'id="inputOrderStatus" class="form-control"'); ?>
         </div>
 
         <div class="form-group">
-          <label for="inputOrderComment" class="control-label"><?= ENTRY_ADD_COMMENT; ?></label>
+          <label for="inputOrderComment" class="control-label"><?= OSCOM::getDef('entry_add_comment'); ?></label>
 
           <?= HTML::textareaField('comments', '60', '6', null, 'id="inputOrderComment" class="form-control"'); ?>
         </div>
@@ -347,7 +347,7 @@
         <div class="form-group">
           <div class="checkbox">
             <label>
-              <?= HTML::checkboxField('notify', '', true) . ' ' . ENTRY_NOTIFY_CUSTOMER; ?>
+              <?= HTML::checkboxField('notify', '', true) . ' ' . OSCOM::getDef('entry_notify_customer'); ?>
             </label>
           </div>
         </div>
@@ -355,23 +355,23 @@
         <div class="form-group">
           <div class="checkbox">
             <label>
-              <?= HTML::checkboxField('notify_comments', '', true) . ' ' . ENTRY_NOTIFY_COMMENTS; ?>
+              <?= HTML::checkboxField('notify_comments', '', true) . ' ' . OSCOM::getDef('entry_notify_comments'); ?>
             </label>
           </div>
         </div>
 
         <div class="form-group">
-          <?= HTML::button(IMAGE_UPDATE, 'fa fa-save', null, null, 'btn-success'); ?>
+          <?= HTML::button(OSCOM::getDef('image_update'), 'fa fa-save', null, null, 'btn-success'); ?>
         </div>
       </form>
 
       <table class="oscom-table table table-hover">
         <thead>
           <tr class="info">
-            <th><?= TABLE_HEADING_DATE_ADDED; ?></th>
-            <th><?= TABLE_HEADING_STATUS; ?></th>
-            <th><?= TABLE_HEADING_COMMENTS; ?></th>
-            <th class="text-right"><?= TABLE_HEADING_CUSTOMER_NOTIFIED; ?></th>
+            <th><?= OSCOM::getDef('table_heading_date_added'); ?></th>
+            <th><?= OSCOM::getDef('table_heading_status'); ?></th>
+            <th><?= OSCOM::getDef('table_heading_comments'); ?></th>
+            <th class="text-right"><?= OSCOM::getDef('table_heading_customer_notified'); ?></th>
           </tr>
         </thead>
         <tbody>
@@ -395,9 +395,9 @@
                '            <td class="text-right" valign="top">';
 
           if ($Qhistory->valueInt('customer_notified') === 1) {
-            echo HTML::image(OSCOM::linkImage('icons/tick.gif'), ICON_TICK);
+            echo HTML::image(OSCOM::linkImage('icons/tick.gif'), OSCOM::getDef('icon_tick'));
           } else {
-            echo HTML::image(OSCOM::linkImage('icons/cross.gif'), ICON_CROSS);
+            echo HTML::image(OSCOM::linkImage('icons/cross.gif'), OSCOM::getDef('icon_cross'));
           }
 
           echo '</td>' . "\n" .
@@ -405,7 +405,7 @@
         } while ($Qhistory->fetch());
       } else {
           echo '          <tr>' . "\n" .
-               '            <td colspan="4">' . TEXT_NO_ORDER_HISTORY . '</td>' . "\n" .
+               '            <td colspan="4">' . OSCOM::getDef('text_no_order_history') . '</td>' . "\n" .
                '          </tr>' . "\n";
       }
 ?>
@@ -425,12 +425,12 @@
       switch ($action) {
         case 'delete':
           if (isset($order)) {
-            $heading[] = array('text' => TEXT_INFO_HEADING_DELETE_ORDER);
+            $heading[] = array('text' => OSCOM::getDef('text_info_heading_delete_order'));
 
             $contents = array('form' => HTML::form('orders', OSCOM::link('orders.php', tep_get_all_get_params(array('action')) . '&action=deleteconfirm')));
-            $contents[] = array('text' => TEXT_INFO_DELETE_INTRO . '<br /><br /><strong>#' . $order->info['id'] . '</strong> ' . HTML::outputProtected($order->customer['name']) . ' (' . strip_tags($order->info['total']) . ')');
-            $contents[] = array('text' => HTML::checkboxField('restock') . ' ' . TEXT_INFO_RESTOCK_PRODUCT_QUANTITY);
-            $contents[] = array('text' => HTML::button(IMAGE_DELETE, 'fa fa-trash', null, null, 'btn-danger') . HTML::button(IMAGE_CANCEL, 'fa fa-close', OSCOM::link('orders.php', tep_get_all_get_params(array('action'))), null, 'btn-link'));
+            $contents[] = array('text' => OSCOM::getDef('text_info_delete_intro') . '<br /><br /><strong>#' . $order->info['id'] . '</strong> ' . HTML::outputProtected($order->customer['name']) . ' (' . strip_tags($order->info['total']) . ')');
+            $contents[] = array('text' => HTML::checkboxField('restock') . ' ' . OSCOM::getDef('text_info_restock_product_quantity'));
+            $contents[] = array('text' => HTML::button(OSCOM::getDef('image_delete'), 'fa fa-trash', null, null, 'btn-danger') . HTML::button(OSCOM::getDef('image_cancel'), 'fa fa-close', OSCOM::link('orders.php', tep_get_all_get_params(array('action'))), null, 'btn-link'));
           }
           break;
       }
@@ -445,21 +445,21 @@
 
   if ($show_listing === true) {
     echo HTML::form('orders', OSCOM::link('orders.php'), 'get', 'class="form-inline"', ['session_id' => true]) .
-         HTML::inputField('oID', null, 'placeholder="' . HEADING_TITLE_SEARCH . '"') . HTML::hiddenField('action', 'edit') .
+         HTML::inputField('oID', null, 'placeholder="' . OSCOM::getDef('heading_title_search') . '"') . HTML::hiddenField('action', 'edit') .
          '</form>' .
          HTML::form('status', OSCOM::link('orders.php'), 'get', 'class="form-inline"', ['session_id' => true]) .
-         HTML::selectField('status', array_merge(array(array('id' => '', 'text' => TEXT_ALL_ORDERS)), $orders_statuses), '', 'onchange="this.form.submit();"') .
+         HTML::selectField('status', array_merge(array(array('id' => '', 'text' => OSCOM::getDef('text_all_orders'))), $orders_statuses), '', 'onchange="this.form.submit();"') .
          '</form>';
 ?>
 
 <table class="oscom-table table table-hover">
   <thead>
     <tr class="info">
-      <th><?= TABLE_HEADING_CUSTOMERS; ?></th>
-      <th class="text-right"><?= TABLE_HEADING_ORDER_TOTAL; ?></th>
+      <th><?= OSCOM::getDef('table_heading_customers'); ?></th>
+      <th class="text-right"><?= OSCOM::getDef('table_heading_order_total'); ?></th>
       <th></th>
-      <th class="text-right"><?= TABLE_HEADING_DATE_PURCHASED; ?></th>
-      <th class="text-right"><?= TABLE_HEADING_STATUS; ?></th>
+      <th class="text-right"><?= OSCOM::getDef('table_heading_date_purchased'); ?></th>
+      <th class="text-right"><?= OSCOM::getDef('table_heading_status'); ?></th>
       <th class="action"></th>
     </tr>
   </thead>
@@ -494,10 +494,10 @@
       <td class="text-right"><?= DateTime::toShort($Qorders->value('date_purchased'), true); ?></td>
       <td class="text-right"><?= $Qorders->value('orders_status_name'); ?></td>
       <td class="action"><?=
-        '<a href="' . OSCOM::link('orders.php', tep_get_all_get_params(array('oID', 'action')) . 'oID=' . $Qorders->valueInt('orders_id') . '&action=edit') . '"><i class="fa fa-pencil" title="' . IMAGE_EDIT . '"></i></a>
-         <a href="' . OSCOM::link('orders.php', tep_get_all_get_params(array('oID', 'action')) . 'oID=' . $Qorders->valueInt('orders_id') . '&action=delete') . '"><i class="fa fa-trash" title="' . IMAGE_DELETE . '"></i></a>
-         <a href="' . OSCOM::link('invoice.php', 'oID=' . $Qorders->valueInt('orders_id')) . '" target="_blank"><i class="fa fa-file-text-o" title="' . IMAGE_ORDERS_INVOICE . '"></i></a>
-         <a href="' . OSCOM::link('packingslip.php', 'oID=' . $Qorders->valueInt('orders_id')) . '" target="_blank"><i class="fa fa-clipboard" title="' . IMAGE_ORDERS_PACKINGSLIP . '"></i></a>';
+        '<a href="' . OSCOM::link('orders.php', tep_get_all_get_params(array('oID', 'action')) . 'oID=' . $Qorders->valueInt('orders_id') . '&action=edit') . '"><i class="fa fa-pencil" title="' . OSCOM::getDef('image_edit') . '"></i></a>
+         <a href="' . OSCOM::link('orders.php', tep_get_all_get_params(array('oID', 'action')) . 'oID=' . $Qorders->valueInt('orders_id') . '&action=delete') . '"><i class="fa fa-trash" title="' . OSCOM::getDef('image_delete') . '"></i></a>
+         <a href="' . OSCOM::link('invoice.php', 'oID=' . $Qorders->valueInt('orders_id')) . '" target="_blank"><i class="fa fa-file-text-o" title="' . OSCOM::getDef('image_orders_invoice') . '"></i></a>
+         <a href="' . OSCOM::link('packingslip.php', 'oID=' . $Qorders->valueInt('orders_id')) . '" target="_blank"><i class="fa fa-clipboard" title="' . OSCOM::getDef('image_orders_packingslip') . '"></i></a>';
       ?></td>
     </tr>
 
@@ -510,7 +510,7 @@
 
 <div>
   <span class="pull-right"><?= $Qorders->getPageSetLinks(tep_get_all_get_params()); ?></span>
-  <span><?= $Qorders->getPageSetLabel(TEXT_DISPLAY_NUMBER_OF_ORDERS); ?></span>
+  <span><?= $Qorders->getPageSetLabel(OSCOM::getDef('text_display_number_of_orders')); ?></span>
 </div>
 
 <?php

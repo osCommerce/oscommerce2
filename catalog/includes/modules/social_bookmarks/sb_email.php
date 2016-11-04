@@ -23,9 +23,9 @@
     var $enabled = false;
 
     function __construct() {
-      $this->title = MODULE_SOCIAL_BOOKMARKS_EMAIL_TITLE;
-      $this->public_title = MODULE_SOCIAL_BOOKMARKS_EMAIL_PUBLIC_TITLE;
-      $this->description = MODULE_SOCIAL_BOOKMARKS_EMAIL_DESCRIPTION;
+      $this->title = OSCOM::getDef('module_social_bookmarks_email_title');
+      $this->public_title = OSCOM::getDef('module_social_bookmarks_email_public_title');
+      $this->description = OSCOM::getDef('module_social_bookmarks_email_description');
 
       if ( defined('MODULE_SOCIAL_BOOKMARKS_EMAIL_STATUS') ) {
         $this->sort_order = MODULE_SOCIAL_BOOKMARKS_EMAIL_SORT_ORDER;

@@ -207,7 +207,7 @@ class lastRSS {
                     // Strip HTML tags and other bullshit from DESCRIPTION
                     if ($this->stripHTML && $result['items'][$i]['description'])
                         $result['items'][$i]['description'] = strip_tags($this->unhtmlentities(strip_tags($result['items'][$i]['description'])));
-                    // Strip HTML tags and other bullshit from TITLE
+                    // Strip HTML tags and other bullshit from OSCOM::getDef('title')
                     if ($this->stripHTML && $result['items'][$i]['title'])
                         $result['items'][$i]['title'] = strip_tags($this->unhtmlentities(strip_tags($result['items'][$i]['title'])));
                     // If date_format is specified and pubDate is valid

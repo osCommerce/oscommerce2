@@ -80,7 +80,7 @@
 ?>
 
 <div class="pull-right">
-  <?= HTML::button(IMAGE_BACK, 'fa fa-chevron-left', OSCOM::link('error_log.php'), null, 'btn-info') . HTML::button(IMAGE_DELETE, 'fa fa-trash-o', OSCOM::link('error_log.php', 'action=delete&log=' . $log['key']), null, 'btn-danger'); ?>
+  <?= HTML::button(OSCOM::getDef('image_back'), 'fa fa-chevron-left', OSCOM::link('error_log.php'), null, 'btn-info') . HTML::button(OSCOM::getDef('image_delete'), 'fa fa-trash-o', OSCOM::link('error_log.php', 'action=delete&log=' . $log['key']), null, 'btn-danger'); ?>
 </div>
 
 <h2><i class="fa fa-exclamation-circle"></i> <a href="<?= OSCOM::link('error_log.php'); ?>"><?= OSCOM::getDef('heading_title'); ?></a></h2>

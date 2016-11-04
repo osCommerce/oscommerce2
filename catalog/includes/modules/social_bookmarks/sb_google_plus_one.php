@@ -27,9 +27,9 @@
     function __construct() {
       $this->lang = Registry::get('Language');
 
-      $this->title = MODULE_SOCIAL_BOOKMARKS_GOOGLE_PLUS_ONE_TITLE;
-      $this->public_title = MODULE_SOCIAL_BOOKMARKS_GOOGLE_PLUS_ONE_PUBLIC_TITLE;
-      $this->description = MODULE_SOCIAL_BOOKMARKS_GOOGLE_PLUS_ONE_DESCRIPTION;
+      $this->title = OSCOM::getDef('module_social_bookmarks_google_plus_one_title');
+      $this->public_title = OSCOM::getDef('module_social_bookmarks_google_plus_one_public_title');
+      $this->description = OSCOM::getDef('module_social_bookmarks_google_plus_one_description');
 
       if ( defined('MODULE_SOCIAL_BOOKMARKS_GOOGLE_PLUS_ONE_STATUS') ) {
         $this->sort_order = MODULE_SOCIAL_BOOKMARKS_GOOGLE_PLUS_ONE_SORT_ORDER;

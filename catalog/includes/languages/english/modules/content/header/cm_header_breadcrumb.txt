@@ -1,0 +1,2 @@
+module_content_header_breadcrumb_title = Breadcrumb
+module_content_header_breadcrumb_description = Adds a Breadrcumb Trail into the Header Area of your site.

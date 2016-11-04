@@ -26,9 +26,9 @@
       $this->code = get_class($this);
       $this->group = basename(dirname(__FILE__));
 
-      $this->title = MODULE_CONTENT_CUSTOMER_GREETING_TITLE;
-      $this->description = MODULE_CONTENT_CUSTOMER_GREETING_DESCRIPTION;
-      $this->description .= '<div class="secWarning">' . MODULE_CONTENT_BOOTSTRAP_ROW_DESCRIPTION . '</div>';
+      $this->title = OSCOM::getDef('module_content_customer_greeting_title');
+      $this->description = OSCOM::getDef('module_content_customer_greeting_description');
+      $this->description .= '<div class="secWarning">' . OSCOM::getDef('module_content_bootstrap_row_description') . '</div>';
 
       if ( defined('MODULE_CONTENT_CUSTOMER_GREETING_STATUS') ) {
         $this->sort_order = MODULE_CONTENT_CUSTOMER_GREETING_SORT_ORDER;
@@ -42,9 +42,9 @@
       $content_width = MODULE_CONTENT_CUSTOMER_GREETING_CONTENT_WIDTH;
 
       if (isset($_SESSION['customer_id'])) {
-        $customer_greeting = sprintf(MODULE_CONTENT_CUSTOMER_GREETING_PERSONAL, HTML::outputProtected($_SESSION['customer_first_name']), OSCOM::link('products_new.php'));
+        $customer_greeting = sprintf(OSCOM::getDef('module_content_customer_greeting_personal'), HTML::outputProtected($_SESSION['customer_first_name']), OSCOM::link('products_new.php'));
       } else {
-        $customer_greeting = sprintf(MODULE_CONTENT_CUSTOMER_GREETING_GUEST, OSCOM::link('login.php'), OSCOM::link('create_account.php'));
+        $customer_greeting = sprintf(OSCOM::getDef('module_content_customer_greeting_guest'), OSCOM::link('login.php'), OSCOM::link('create_account.php'));
       }
 
       ob_start();

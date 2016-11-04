@@ -24,7 +24,7 @@
 
       $this->lang->loadDefinitions('modules/security_check/extended/admin_backup_file');
 
-      $this->title = MODULE_SECURITY_CHECK_EXTENDED_ADMIN_BACKUP_FILE_TITLE;
+      $this->title = OSCOM::getDef('module_security_check_extended_admin_backup_file_title');
     }
 
     function pass() {
@@ -70,7 +70,7 @@
     }
 
     function getMessage() {
-      return MODULE_SECURITY_CHECK_EXTENDED_ADMIN_BACKUP_FILE_HTTP_200;
+      return OSCOM::getDef('module_security_check_extended_admin_backup_file_http_200');
     }
 
     function getHttpRequest($url) {

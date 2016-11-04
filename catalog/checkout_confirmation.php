@@ -65,7 +65,7 @@
   }
 
   if ( !isset($OSCOM_PM) || ($payment_modules->selected_module != $_SESSION['payment']) || ($OSCOM_PM->enabled == false) ) {
-    OSCOM::redirect('checkout_payment.php', 'error_message=' . urlencode(ERROR_NO_PAYMENT_MODULE_SELECTED));
+    OSCOM::redirect('checkout_payment.php', 'error_message=' . urlencode(OSCOM::getDef('error_no_payment_module_selected')));
   }
 
   if (is_array($payment_modules->modules)) {
@@ -96,14 +96,14 @@
 
   $OSCOM_Language->loadDefinitions('checkout_confirmation');
 
-  $breadcrumb->add(NAVBAR_TITLE_1, OSCOM::link('checkout_shipping.php'));
-  $breadcrumb->add(NAVBAR_TITLE_2);
+  $breadcrumb->add(OSCOM::getDef('navbar_title_1'), OSCOM::link('checkout_shipping.php'));
+  $breadcrumb->add(OSCOM::getDef('navbar_title_2'));
 
   require($oscTemplate->getFile('template_top.php'));
 ?>
 
 <div class="page-header">
-  <h1><?php echo HEADING_TITLE; ?></h1>
+  <h1><?php echo OSCOM::getDef('heading_title'); ?></h1>
 </div>
 
 <?php
@@ -124,7 +124,7 @@
   <div class="contentText">
 
     <div class="panel panel-default">
-      <div class="panel-heading"><?php echo '<strong>' . HEADING_PRODUCTS . '</strong>' . HTML::button(TEXT_EDIT, 'fa fa-edit', OSCOM::link('shopping_cart.php'), null, 'pull-right btn-info btn-xs' ); ?></div>
+      <div class="panel-heading"><?php echo '<strong>' . OSCOM::getDef('heading_products') . '</strong>' . HTML::button(OSCOM::getDef('text_edit'), 'fa fa-edit', OSCOM::link('shopping_cart.php'), null, 'pull-right btn-info btn-xs' ); ?></div>
       <div class="panel-body">
     <table width="100%" class="table-hover order_confirmation">
      <tbody>
@@ -182,7 +182,7 @@
       ?>
       <div class="col-sm-4">
         <div class="panel panel-info">
-          <div class="panel-heading"><?php echo '<strong>' . HEADING_DELIVERY_ADDRESS . '</strong>' . HTML::button(TEXT_EDIT, 'fa fa-edit', OSCOM::link('checkout_shipping_address.php'), null, 'pull-right btn-info btn-xs' ); ?></div>
+          <div class="panel-heading"><?php echo '<strong>' . OSCOM::getDef('heading_delivery_address') . '</strong>' . HTML::button(OSCOM::getDef('text_edit'), 'fa fa-edit', OSCOM::link('checkout_shipping_address.php'), null, 'pull-right btn-info btn-xs' ); ?></div>
           <div class="panel-body">
             <?php echo tep_address_format($order->delivery['format_id'], $order->delivery, 1, ' ', '<br />'); ?>
           </div>
@@ -193,7 +193,7 @@
     ?>
     <div class="col-sm-4">
       <div class="panel panel-warning">
-        <div class="panel-heading"><?php echo '<strong>' . HEADING_BILLING_ADDRESS . '</strong>' . HTML::button(TEXT_EDIT, 'fa fa-edit', OSCOM::link('checkout_payment_address.php'), null, 'pull-right btn-info btn-xs' ); ?></div>
+        <div class="panel-heading"><?php echo '<strong>' . OSCOM::getDef('heading_billing_address') . '</strong>' . HTML::button(OSCOM::getDef('text_edit'), 'fa fa-edit', OSCOM::link('checkout_payment_address.php'), null, 'pull-right btn-info btn-xs' ); ?></div>
         <div class="panel-body">
           <?php echo tep_address_format($order->billing['format_id'], $order->billing, 1, ' ', '<br />'); ?>
         </div>
@@ -204,7 +204,7 @@
       if ($order->info['shipping_method']) {
         ?>
         <div class="panel panel-info">
-          <div class="panel-heading"><?php echo '<strong>' . HEADING_SHIPPING_METHOD . '</strong>' . HTML::button(TEXT_EDIT, 'fa fa-edit', OSCOM::link('checkout_shipping.php'), null, 'pull-right btn-info btn-xs' ); ?></div>
+          <div class="panel-heading"><?php echo '<strong>' . OSCOM::getDef('heading_shipping_method') . '</strong>' . HTML::button(OSCOM::getDef('text_edit'), 'fa fa-edit', OSCOM::link('checkout_shipping.php'), null, 'pull-right btn-info btn-xs' ); ?></div>
           <div class="panel-body">
             <?php echo $order->info['shipping_method']; ?>
           </div>
@@ -213,7 +213,7 @@
       }
       ?>
       <div class="panel panel-warning">
-        <div class="panel-heading"><?php echo '<strong>' . HEADING_PAYMENT_METHOD . '</strong>' . HTML::button(TEXT_EDIT, 'fa fa-edit', OSCOM::link('checkout_payment.php'), null, 'pull-right btn-info btn-xs' ); ?></div>
+        <div class="panel-heading"><?php echo '<strong>' . OSCOM::getDef('heading_payment_method') . '</strong>' . HTML::button(OSCOM::getDef('text_edit'), 'fa fa-edit', OSCOM::link('checkout_payment.php'), null, 'pull-right btn-info btn-xs' ); ?></div>
         <div class="panel-body">
           <?php echo $order->info['payment_method']; ?>
         </div>
@@ -234,7 +234,7 @@
 
   <hr>
 
-  <h2><?php echo HEADING_PAYMENT_INFORMATION; ?></h2>
+  <h2><?php echo OSCOM::getDef('heading_payment_information'); ?></h2>
 
   <div class="contentText row">
 
@@ -274,7 +274,7 @@
 ?>
   <hr>
 
-  <h2><?php echo '<strong>' . HEADING_ORDER_COMMENTS . '</strong> ' . HTML::button(TEXT_EDIT, 'fa fa-edit', OSCOM::link('checkout_payment.php'), null, 'pull-right btn-info btn-xs' ); ?></h2>
+  <h2><?php echo '<strong>' . OSCOM::getDef('heading_order_comments') . '</strong> ' . HTML::button(OSCOM::getDef('text_edit'), 'fa fa-edit', OSCOM::link('checkout_payment.php'), null, 'pull-right btn-info btn-xs' ); ?></h2>
 
   <blockquote>
     <?php echo nl2br(HTML::outputProtected($order->info['comments'])) . HTML::hiddenField('comments', $order->info['comments']); ?>
@@ -290,7 +290,7 @@
       if (is_array($payment_modules->modules)) {
         echo $payment_modules->process_button();
       }
-      echo HTML::button(sprintf(IMAGE_BUTTON_PAY_TOTAL_NOW, $currencies->format($order->info['total'], true, $order->info['currency'], $order->info['currency_value'])), 'fa fa-ok', null, array('params' => 'data-button="payNow"'), 'btn-success');
+      echo HTML::button(sprintf(OSCOM::getDef('image_button_pay_total_now'), $currencies->format($order->info['total'], true, $order->info['currency'], $order->info['currency_value'])), 'fa fa-ok', null, array('params' => 'data-button="payNow"'), 'btn-success');
       ?>
     </div>
   </div>
@@ -302,15 +302,15 @@
       <div class="stepwizard-row">
         <div class="stepwizard-step">
           <a href="<?php echo OSCOM::link('checkout_shipping.php'); ?>"><button type="button" class="btn btn-default btn-circle">1</button></a>
-          <p><a href="<?php echo OSCOM::link('checkout_shipping.php'); ?>"><?php echo CHECKOUT_BAR_DELIVERY; ?></a></p>
+          <p><a href="<?php echo OSCOM::link('checkout_shipping.php'); ?>"><?php echo OSCOM::getDef('checkout_bar_delivery'); ?></a></p>
         </div>
         <div class="stepwizard-step">
           <a href="<?php echo OSCOM::link('checkout_payment.php'); ?>"><button type="button" class="btn btn-default btn-circle">2</button></a>
-          <p><a href="<?php echo OSCOM::link('checkout_payment.php'); ?>"><?php echo CHECKOUT_BAR_PAYMENT; ?></a></p>
+          <p><a href="<?php echo OSCOM::link('checkout_payment.php'); ?>"><?php echo OSCOM::getDef('checkout_bar_payment'); ?></a></p>
         </div>
         <div class="stepwizard-step">
           <button type="button" class="btn btn-primary btn-circle">3</button>
-          <p><?php echo CHECKOUT_BAR_CONFIRMATION; ?></p>
+          <p><?php echo OSCOM::getDef('checkout_bar_confirmation'); ?></p>
         </div>
       </div>
     </div>
@@ -321,7 +321,7 @@
 $('form[name="checkout_confirmation"] button[data-button="payNow"]').data('orig-button-text', $('form[name="checkout_confirmation"] button[data-button="payNow"]').html());
 
 $('form[name="checkout_confirmation"]').submit(function() {
-  $('form[name="checkout_confirmation"] button[data-button="payNow"]').html('<?php echo addslashes(IMAGE_BUTTON_PAY_TOTAL_PROCESSING); ?>').prop('disabled', true);
+  $('form[name="checkout_confirmation"] button[data-button="payNow"]').html('<?php echo addslashes(OSCOM::getDef('image_button_pay_total_processing')); ?>').prop('disabled', true);
 });
 </script>
 

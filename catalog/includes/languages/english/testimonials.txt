@@ -1,0 +1,4 @@
+navbar_title = Testimonials
+heading_title = Customer Testimonials
+text_no_testimonials = There are no Testimonials to display.
+text_display_number_of_testimonials = Displaying <b>%s</b> to <b>%s</b> (of <b>%s</b> Testimonials)

@@ -1,0 +1,2 @@
+heading_title = Hooks
+text_hooks_directory = Hooks Directory:

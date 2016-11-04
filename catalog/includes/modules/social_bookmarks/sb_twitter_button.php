@@ -23,9 +23,9 @@
     var $enabled = false;
 
     function __construct() {
-      $this->title = MODULE_SOCIAL_BOOKMARKS_TWITTER_BUTTON_TITLE;
-      $this->public_title = MODULE_SOCIAL_BOOKMARKS_TWITTER_BUTTON_PUBLIC_TITLE;
-      $this->description = MODULE_SOCIAL_BOOKMARKS_TWITTER_BUTTON_DESCRIPTION;
+      $this->title = OSCOM::getDef('module_social_bookmarks_twitter_button_title');
+      $this->public_title = OSCOM::getDef('module_social_bookmarks_twitter_button_public_title');
+      $this->description = OSCOM::getDef('module_social_bookmarks_twitter_button_description');
 
       if ( defined('MODULE_SOCIAL_BOOKMARKS_TWITTER_BUTTON_STATUS') ) {
         $this->sort_order = MODULE_SOCIAL_BOOKMARKS_TWITTER_BUTTON_SORT_ORDER;

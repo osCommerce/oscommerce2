@@ -1,0 +1,2 @@
+module_content_header_search_title = Search Box
+module_content_header_search_description = Adds your Search Box into the Header Area of your site.

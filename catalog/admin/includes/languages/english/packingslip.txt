@@ -1,0 +1,6 @@
+table_heading_comments = Comments
+table_heading_products_model = Model
+table_heading_products = Products
+entry_sold_to = SOLD TO:
+entry_ship_to = SHIP TO:
+entry_payment_method = Payment Method:

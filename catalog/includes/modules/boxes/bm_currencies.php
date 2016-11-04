@@ -23,8 +23,8 @@
     var $enabled = false;
 
     function __construct() {
-      $this->title = MODULE_BOXES_CURRENCIES_TITLE;
-      $this->description = MODULE_BOXES_CURRENCIES_DESCRIPTION;
+      $this->title = OSCOM::getDef('module_boxes_currencies_title');
+      $this->description = OSCOM::getDef('module_boxes_currencies_description');
 
       if ( defined('MODULE_BOXES_CURRENCIES_STATUS') ) {
         $this->sort_order = MODULE_BOXES_CURRENCIES_SORT_ORDER;

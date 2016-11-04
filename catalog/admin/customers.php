@@ -265,7 +265,7 @@
 
 function check_form() {
   var error = 0;
-  var error_message = "<?php echo JS_ERROR; ?>";
+  var error_message = "<?php echo OSCOM::getDef('js_error'); ?>";
 
   var customers_firstname = document.customers.customers_firstname.value;
   var customers_lastname = document.customers.customers_lastname.value;
@@ -280,40 +280,40 @@ function check_form() {
 <?php if (ACCOUNT_GENDER == 'true') { ?>
   if (document.customers.customers_gender[0].checked || document.customers.customers_gender[1].checked) {
   } else {
-    error_message = error_message + "<?php echo JS_GENDER; ?>";
+    error_message = error_message + "<?php echo OSCOM::getDef('js_gender'); ?>";
     error = 1;
   }
 <?php } ?>
 
   if (customers_firstname.length < <?php echo ENTRY_FIRST_NAME_MIN_LENGTH; ?>) {
-    error_message = error_message + "<?php echo JS_FIRST_NAME; ?>";
+    error_message = error_message + "<?php echo OSCOM::getDef('js_first_name'); ?>";
     error = 1;
   }
 
   if (customers_lastname.length < <?php echo ENTRY_LAST_NAME_MIN_LENGTH; ?>) {
-    error_message = error_message + "<?php echo JS_LAST_NAME; ?>";
+    error_message = error_message + "<?php echo OSCOM::getDef('js_last_name'); ?>";
     error = 1;
   }
 
 <?php if (ACCOUNT_DOB == 'true') { ?>
   if (customers_dob.length < <?php echo ENTRY_DOB_MIN_LENGTH; ?>) {
-    error_message = error_message + "<?php echo JS_DOB; ?>";
+    error_message = error_message + "<?php echo OSCOM::getDef('js_dob'); ?>";
     error = 1;
   }
 <?php } ?>
 
   if (entry_street_address.length < <?php echo ENTRY_STREET_ADDRESS_MIN_LENGTH; ?>) {
-    error_message = error_message + "<?php echo JS_ADDRESS; ?>";
+    error_message = error_message + "<?php echo OSCOM::getDef('js_address'); ?>";
     error = 1;
   }
 
   if (entry_postcode.length < <?php echo ENTRY_POSTCODE_MIN_LENGTH; ?>) {
-    error_message = error_message + "<?php echo JS_POST_CODE; ?>";
+    error_message = error_message + "<?php echo OSCOM::getDef('js_post_code'); ?>";
     error = 1;
   }
 
   if (entry_city.length < <?php echo ENTRY_CITY_MIN_LENGTH; ?>) {
-    error_message = error_message + "<?php echo JS_CITY; ?>";
+    error_message = error_message + "<?php echo OSCOM::getDef('js_city'); ?>";
     error = 1;
   }
 
@@ -322,7 +322,7 @@ function check_form() {
 ?>
   if (document.customers.elements['entry_state'].type != "hidden") {
     if (document.customers.entry_state.value.length < <?php echo ENTRY_STATE_MIN_LENGTH; ?>) {
-       error_message = error_message + "<?php echo JS_STATE; ?>";
+       error_message = error_message + "<?php echo OSCOM::getDef('js_state'); ?>";
        error = 1;
     }
   }
@@ -332,13 +332,13 @@ function check_form() {
 
   if (document.customers.elements['entry_country_id'].type != "hidden") {
     if (document.customers.entry_country_id.value == 0) {
-      error_message = error_message + "<?php echo JS_COUNTRY; ?>";
+      error_message = error_message + "<?php echo OSCOM::getDef('js_country'); ?>";
       error = 1;
     }
   }
 
   if (customers_telephone.length < <?php echo ENTRY_TELEPHONE_MIN_LENGTH; ?>) {
-    error_message = error_message + "<?php echo JS_TELEPHONE; ?>";
+    error_message = error_message + "<?php echo OSCOM::getDef('js_telephone'); ?>";
     error = 1;
   }
 
@@ -357,18 +357,18 @@ function check_form() {
     <table border="0" width="100%" cellspacing="0" cellpadding="2">
 <?php
   if ($action == 'edit' || $action == 'update') {
-    $newsletter_array = array(array('id' => '1', 'text' => ENTRY_NEWSLETTER_YES),
-                              array('id' => '0', 'text' => ENTRY_NEWSLETTER_NO));
+    $newsletter_array = array(array('id' => '1', 'text' => OSCOM::getDef('entry_newsletter_yes')),
+                              array('id' => '0', 'text' => OSCOM::getDef('entry_newsletter_no')));
 ?>
       <tr>
         <td><table border="0" width="100%" cellspacing="0" cellpadding="0">
           <tr>
-            <td class="pageHeading"><?php echo HEADING_TITLE; ?></td>
+            <td class="pageHeading"><?php echo OSCOM::getDef('heading_title'); ?></td>
           </tr>
         </table></td>
       </tr>
       <tr><?php echo HTML::form('customers', OSCOM::link(FILENAME_CUSTOMERS, tep_get_all_get_params(array('action')) . 'action=update'), 'post', 'onsubmit="return check_form();"') . HTML::hiddenField('customers_default_address_id', $cInfo->customers_default_address_id); ?>
-        <td class="formAreaTitle"><?php echo CATEGORY_PERSONAL; ?></td>
+        <td class="formAreaTitle"><?php echo OSCOM::getDef('category_personal'); ?></td>
       </tr>
       <tr>
         <td class="formArea"><table border="0" cellspacing="2" cellpadding="2">
@@ -376,18 +376,18 @@ function check_form() {
     if (ACCOUNT_GENDER == 'true') {
 ?>
           <tr>
-            <td class="main"><?php echo ENTRY_GENDER; ?></td>
+            <td class="main"><?php echo OSCOM::getDef('entry_gender'); ?></td>
             <td class="main">
 <?php
     if ($error == true) {
       if ($entry_gender_error == true) {
-        echo HTML::radioField('customers_gender', 'm', $cInfo->customers_gender == 'm') . '&nbsp;&nbsp;' . MALE . '&nbsp;&nbsp;' . HTML::radioField('customers_gender', 'f', $cInfo->customers_gender == 'f') . '&nbsp;&nbsp;' . FEMALE . '&nbsp;' . ENTRY_GENDER_ERROR;
+        echo HTML::radioField('customers_gender', 'm', $cInfo->customers_gender == 'm') . '&nbsp;&nbsp;' . OSCOM::getDef('male') . '&nbsp;&nbsp;' . HTML::radioField('customers_gender', 'f', $cInfo->customers_gender == 'f') . '&nbsp;&nbsp;' . OSCOM::getDef('female') . '&nbsp;' . OSCOM::getDef('entry_gender_error');
       } else {
-        echo ($cInfo->customers_gender == 'm') ? MALE : FEMALE;
+        echo ($cInfo->customers_gender == 'm') ? OSCOM::getDef('male') : OSCOM::getDef('female');
         echo HTML::hiddenField('customers_gender');
       }
     } else {
-      echo HTML::radioField('customers_gender', 'm', $cInfo->customers_gender == 'm') . '&nbsp;&nbsp;' . MALE . '&nbsp;&nbsp;' . HTML::radioField('customers_gender', 'f', $cInfo->customers_gender == 'f') . '&nbsp;&nbsp;' . FEMALE;
+      echo HTML::radioField('customers_gender', 'm', $cInfo->customers_gender == 'm') . '&nbsp;&nbsp;' . OSCOM::getDef('male') . '&nbsp;&nbsp;' . HTML::radioField('customers_gender', 'f', $cInfo->customers_gender == 'f') . '&nbsp;&nbsp;' . OSCOM::getDef('female');
     }
 ?></td>
           </tr>
@@ -395,32 +395,32 @@ function check_form() {
     }
 ?>
           <tr>
-            <td class="main"><?php echo ENTRY_FIRST_NAME; ?></td>
+            <td class="main"><?php echo OSCOM::getDef('entry_first_name'); ?></td>
             <td class="main">
 <?php
   if ($error == true) {
     if ($entry_firstname_error == true) {
-      echo HTML::inputField('customers_firstname', $cInfo->customers_firstname, 'maxlength="32"') . '&nbsp;' . ENTRY_FIRST_NAME_ERROR;
+      echo HTML::inputField('customers_firstname', $cInfo->customers_firstname, 'maxlength="32"') . '&nbsp;' . OSCOM::getDef('entry_first_name_error');
     } else {
       echo $cInfo->customers_firstname . HTML::hiddenField('customers_firstname');
     }
   } else {
-    echo HTML::inputField('customers_firstname', $cInfo->customers_firstname, 'maxlength="32"') . TEXT_FIELD_REQUIRED;
+    echo HTML::inputField('customers_firstname', $cInfo->customers_firstname, 'maxlength="32"') . OSCOM::getDef('text_field_required');
   }
 ?></td>
           </tr>
           <tr>
-            <td class="main"><?php echo ENTRY_LAST_NAME; ?></td>
+            <td class="main"><?php echo OSCOM::getDef('entry_last_name'); ?></td>
             <td class="main">
 <?php
   if ($error == true) {
     if ($entry_lastname_error == true) {
-      echo HTML::inputField('customers_lastname', $cInfo->customers_lastname, 'maxlength="32"') . '&nbsp;' . ENTRY_LAST_NAME_ERROR;
+      echo HTML::inputField('customers_lastname', $cInfo->customers_lastname, 'maxlength="32"') . '&nbsp;' . OSCOM::getDef('entry_last_name_error');
     } else {
       echo $cInfo->customers_lastname . HTML::hiddenField('customers_lastname');
     }
   } else {
-    echo HTML::inputField('customers_lastname', $cInfo->customers_lastname, 'maxlength="32"') . TEXT_FIELD_REQUIRED;
+    echo HTML::inputField('customers_lastname', $cInfo->customers_lastname, 'maxlength="32"') . OSCOM::getDef('text_field_required');
   }
 ?></td>
           </tr>
@@ -428,41 +428,41 @@ function check_form() {
     if (ACCOUNT_DOB == 'true') {
 ?>
           <tr>
-            <td class="main"><?php echo ENTRY_DATE_OF_BIRTH; ?></td>
+            <td class="main"><?php echo OSCOM::getDef('entry_date_of_birth'); ?></td>
             <td class="main">
 <?php
     if ($error == true) {
       if ($entry_date_of_birth_error == true) {
-        echo HTML::inputField('customers_dob', DateTime::toShort($cInfo->customers_dob), 'maxlength="10"') . '&nbsp;' . ENTRY_DATE_OF_BIRTH_ERROR;
+        echo HTML::inputField('customers_dob', DateTime::toShort($cInfo->customers_dob), 'maxlength="10"') . '&nbsp;' . OSCOM::getDef('entry_date_of_birth_error');
       } else {
         echo $cInfo->customers_dob . HTML::hiddenField('customers_dob');
       }
     } else {
-      echo HTML::inputField('customers_dob', DateTime::toShort($cInfo->customers_dob), 'maxlength="10" id="customers_dob"') . TEXT_FIELD_REQUIRED;
+      echo HTML::inputField('customers_dob', DateTime::toShort($cInfo->customers_dob), 'maxlength="10" id="customers_dob"') . OSCOM::getDef('text_field_required');
     }
 ?>
-              <script type="text/javascript">$('#customers_dob').datepicker({dateFormat: '<?php echo JQUERY_DATEPICKER_FORMAT; ?>', changeMonth: true, changeYear: true, yearRange: '-100:+0'});</script>
+              <script type="text/javascript">$('#customers_dob').datepicker({dateFormat: '<?php echo OSCOM::getDef('jquery_datepicker_format'); ?>', changeMonth: true, changeYear: true, yearRange: '-100:+0'});</script>
             </td>
           </tr>
 <?php
     }
 ?>
           <tr>
-            <td class="main"><?php echo ENTRY_EMAIL_ADDRESS; ?></td>
+            <td class="main"><?php echo OSCOM::getDef('entry_email_address'); ?></td>
             <td class="main">
 <?php
   if ($error == true) {
     if ($entry_email_address_error == true) {
-      echo HTML::inputField('customers_email_address', $cInfo->customers_email_address, 'maxlength="96"') . '&nbsp;' . ENTRY_EMAIL_ADDRESS_ERROR;
+      echo HTML::inputField('customers_email_address', $cInfo->customers_email_address, 'maxlength="96"') . '&nbsp;' . OSCOM::getDef('entry_email_address_error');
     } elseif ($entry_email_address_check_error == true) {
-      echo HTML::inputField('customers_email_address', $cInfo->customers_email_address, 'maxlength="96"') . '&nbsp;' . ENTRY_EMAIL_ADDRESS_CHECK_ERROR;
+      echo HTML::inputField('customers_email_address', $cInfo->customers_email_address, 'maxlength="96"') . '&nbsp;' . OSCOM::getDef('entry_email_address_check_error');
     } elseif ($entry_email_address_exists == true) {
-      echo HTML::inputField('customers_email_address', $cInfo->customers_email_address, 'maxlength="96"') . '&nbsp;' . ENTRY_EMAIL_ADDRESS_ERROR_EXISTS;
+      echo HTML::inputField('customers_email_address', $cInfo->customers_email_address, 'maxlength="96"') . '&nbsp;' . OSCOM::getDef('entry_email_address_error_exists');
     } else {
       echo $customers_email_address . HTML::hiddenField('customers_email_address');
     }
   } else {
-    echo HTML::inputField('customers_email_address', $cInfo->customers_email_address, 'maxlength="96"') . TEXT_FIELD_REQUIRED;
+    echo HTML::inputField('customers_email_address', $cInfo->customers_email_address, 'maxlength="96"') . OSCOM::getDef('text_field_required');
   }
 ?></td>
           </tr>
@@ -472,12 +472,12 @@ function check_form() {
     if (ACCOUNT_COMPANY == 'true') {
 ?>
       <tr>
-        <td class="formAreaTitle"><?php echo CATEGORY_COMPANY; ?></td>
+        <td class="formAreaTitle"><?php echo OSCOM::getDef('category_company'); ?></td>
       </tr>
       <tr>
         <td class="formArea"><table border="0" cellspacing="2" cellpadding="2">
           <tr>
-            <td class="main"><?php echo ENTRY_COMPANY; ?></td>
+            <td class="main"><?php echo OSCOM::getDef('entry_company'); ?></td>
             <td class="main">
 <?php
     if ($error == true) {
@@ -493,22 +493,22 @@ function check_form() {
     }
 ?>
       <tr>
-        <td class="formAreaTitle"><?php echo CATEGORY_ADDRESS; ?></td>
+        <td class="formAreaTitle"><?php echo OSCOM::getDef('category_address'); ?></td>
       </tr>
       <tr>
         <td class="formArea"><table border="0" cellspacing="2" cellpadding="2">
           <tr>
-            <td class="main"><?php echo ENTRY_STREET_ADDRESS; ?></td>
+            <td class="main"><?php echo OSCOM::getDef('entry_street_address'); ?></td>
             <td class="main">
 <?php
   if ($error == true) {
     if ($entry_street_address_error == true) {
-      echo HTML::inputField('entry_street_address', $cInfo->entry_street_address, 'maxlength="64"') . '&nbsp;' . ENTRY_STREET_ADDRESS_ERROR;
+      echo HTML::inputField('entry_street_address', $cInfo->entry_street_address, 'maxlength="64"') . '&nbsp;' . OSCOM::getDef('entry_street_address_error');
     } else {
       echo $cInfo->entry_street_address . HTML::hiddenField('entry_street_address');
     }
   } else {
-    echo HTML::inputField('entry_street_address', $cInfo->entry_street_address, 'maxlength="64"') . TEXT_FIELD_REQUIRED;
+    echo HTML::inputField('entry_street_address', $cInfo->entry_street_address, 'maxlength="64"') . OSCOM::getDef('text_field_required');
   }
 ?></td>
           </tr>
@@ -516,7 +516,7 @@ function check_form() {
     if (ACCOUNT_SUBURB == 'true') {
 ?>
           <tr>
-            <td class="main"><?php echo ENTRY_SUBURB; ?></td>
+            <td class="main"><?php echo OSCOM::getDef('entry_suburb'); ?></td>
             <td class="main">
 <?php
     if ($error == true) {
@@ -530,32 +530,32 @@ function check_form() {
     }
 ?>
           <tr>
-            <td class="main"><?php echo ENTRY_POST_CODE; ?></td>
+            <td class="main"><?php echo OSCOM::getDef('entry_post_code'); ?></td>
             <td class="main">
 <?php
   if ($error == true) {
     if ($entry_post_code_error == true) {
-      echo HTML::inputField('entry_postcode', $cInfo->entry_postcode, 'maxlength="8"') . '&nbsp;' . ENTRY_POST_CODE_ERROR;
+      echo HTML::inputField('entry_postcode', $cInfo->entry_postcode, 'maxlength="8"') . '&nbsp;' . OSCOM::getDef('entry_post_code_error');
     } else {
       echo $cInfo->entry_postcode . HTML::hiddenField('entry_postcode');
     }
   } else {
-    echo HTML::inputField('entry_postcode', $cInfo->entry_postcode, 'maxlength="8"') . TEXT_FIELD_REQUIRED;
+    echo HTML::inputField('entry_postcode', $cInfo->entry_postcode, 'maxlength="8"') . OSCOM::getDef('text_field_required');
   }
 ?></td>
           </tr>
           <tr>
-            <td class="main"><?php echo ENTRY_CITY; ?></td>
+            <td class="main"><?php echo OSCOM::getDef('entry_city'); ?></td>
             <td class="main">
 <?php
   if ($error == true) {
     if ($entry_city_error == true) {
-      echo HTML::inputField('entry_city', $cInfo->entry_city, 'maxlength="32"') . '&nbsp;' . ENTRY_CITY_ERROR;
+      echo HTML::inputField('entry_city', $cInfo->entry_city, 'maxlength="32"') . '&nbsp;' . OSCOM::getDef('entry_city_error');
     } else {
       echo $cInfo->entry_city . HTML::hiddenField('entry_city');
     }
   } else {
-    echo HTML::inputField('entry_city', $cInfo->entry_city, 'maxlength="32"') . TEXT_FIELD_REQUIRED;
+    echo HTML::inputField('entry_city', $cInfo->entry_city, 'maxlength="32"') . OSCOM::getDef('text_field_required');
   }
 ?></td>
           </tr>
@@ -563,7 +563,7 @@ function check_form() {
     if (ACCOUNT_STATE == 'true') {
 ?>
           <tr>
-            <td class="main"><?php echo ENTRY_STATE; ?></td>
+            <td class="main"><?php echo OSCOM::getDef('entry_state'); ?></td>
             <td class="main">
 <?php
     if ($error == true) {
@@ -577,9 +577,9 @@ function check_form() {
               'text' => $Qzones->value('zone_name')
             ];
           }
-          echo HTML::selectField('entry_state', $zones_array) . '&nbsp;' . ENTRY_STATE_ERROR;
+          echo HTML::selectField('entry_state', $zones_array) . '&nbsp;' . OSCOM::getDef('entry_state_error');
         } else {
-          echo HTML::inputField('entry_state', tep_get_zone_name($cInfo->entry_country_id, $cInfo->entry_zone_id, $cInfo->entry_state)) . '&nbsp;' . ENTRY_STATE_ERROR;
+          echo HTML::inputField('entry_state', tep_get_zone_name($cInfo->entry_country_id, $cInfo->entry_zone_id, $cInfo->entry_state)) . '&nbsp;' . OSCOM::getDef('entry_state_error');
         }
       } else {
         echo tep_get_zone_name($cInfo->entry_country_id, $cInfo->entry_zone_id, $cInfo->entry_state) . HTML::hiddenField('entry_zone_id') . HTML::hiddenField('entry_state');
@@ -594,12 +594,12 @@ function check_form() {
     }
 ?>
           <tr>
-            <td class="main"><?php echo ENTRY_COUNTRY; ?></td>
+            <td class="main"><?php echo OSCOM::getDef('entry_country'); ?></td>
             <td class="main">
 <?php
   if ($error == true) {
     if ($entry_country_error == true) {
-      echo HTML::selectField('entry_country_id', tep_get_countries(), $cInfo->entry_country_id) . '&nbsp;' . ENTRY_COUNTRY_ERROR;
+      echo HTML::selectField('entry_country_id', tep_get_countries(), $cInfo->entry_country_id) . '&nbsp;' . OSCOM::getDef('entry_country_error');
     } else {
       echo tep_get_country_name($cInfo->entry_country_id) . HTML::hiddenField('entry_country_id');
     }
@@ -611,27 +611,27 @@ function check_form() {
         </table></td>
       </tr>
       <tr>
-        <td class="formAreaTitle"><?php echo CATEGORY_CONTACT; ?></td>
+        <td class="formAreaTitle"><?php echo OSCOM::getDef('category_contact'); ?></td>
       </tr>
       <tr>
         <td class="formArea"><table border="0" cellspacing="2" cellpadding="2">
           <tr>
-            <td class="main"><?php echo ENTRY_TELEPHONE_NUMBER; ?></td>
+            <td class="main"><?php echo OSCOM::getDef('entry_telephone_number'); ?></td>
             <td class="main">
 <?php
   if ($error == true) {
     if ($entry_telephone_error == true) {
-      echo HTML::inputField('customers_telephone', $cInfo->customers_telephone, 'maxlength="32"') . '&nbsp;' . ENTRY_TELEPHONE_NUMBER_ERROR;
+      echo HTML::inputField('customers_telephone', $cInfo->customers_telephone, 'maxlength="32"') . '&nbsp;' . OSCOM::getDef('entry_telephone_number_error');
     } else {
       echo $cInfo->customers_telephone . HTML::hiddenField('customers_telephone');
     }
   } else {
-    echo HTML::inputField('customers_telephone', $cInfo->customers_telephone, 'maxlength="32"') . TEXT_FIELD_REQUIRED;
+    echo HTML::inputField('customers_telephone', $cInfo->customers_telephone, 'maxlength="32"') . OSCOM::getDef('text_field_required');
   }
 ?></td>
           </tr>
           <tr>
-            <td class="main"><?php echo ENTRY_FAX_NUMBER; ?></td>
+            <td class="main"><?php echo OSCOM::getDef('entry_fax_number'); ?></td>
             <td class="main">
 <?php
   if ($processed == true) {
@@ -644,19 +644,19 @@ function check_form() {
         </table></td>
       </tr>
       <tr>
-        <td class="formAreaTitle"><?php echo CATEGORY_OPTIONS; ?></td>
+        <td class="formAreaTitle"><?php echo OSCOM::getDef('category_options'); ?></td>
       </tr>
       <tr>
         <td class="formArea"><table border="0" cellspacing="2" cellpadding="2">
           <tr>
-            <td class="main"><?php echo ENTRY_NEWSLETTER; ?></td>
+            <td class="main"><?php echo OSCOM::getDef('entry_newsletter'); ?></td>
             <td class="main">
 <?php
   if ($processed == true) {
     if ($cInfo->customers_newsletter == '1') {
-      echo ENTRY_NEWSLETTER_YES;
+      echo OSCOM::getDef('entry_newsletter_yes');
     } else {
-      echo ENTRY_NEWSLETTER_NO;
+      echo OSCOM::getDef('entry_newsletter_no');
     }
     echo HTML::hiddenField('customers_newsletter');
   } else {
@@ -667,7 +667,7 @@ function check_form() {
         </table></td>
       </tr>
       <tr>
-        <td align="right" class="smallText"><?php echo HTML::button(IMAGE_SAVE, 'fa fa-save') . HTML::button(IMAGE_CANCEL, 'fa fa-close', OSCOM::link(FILENAME_CUSTOMERS, tep_get_all_get_params(array('action')))); ?></td>
+        <td align="right" class="smallText"><?php echo HTML::button(OSCOM::getDef('image_save'), 'fa fa-save') . HTML::button(OSCOM::getDef('image_cancel'), 'fa fa-close', OSCOM::link(FILENAME_CUSTOMERS, tep_get_all_get_params(array('action')))); ?></td>
       </tr></form>
 <?php
   } else {
@@ -675,8 +675,8 @@ function check_form() {
       <tr>
         <td><table border="0" width="100%" cellspacing="0" cellpadding="0">
           <tr><?php echo HTML::form('search', OSCOM::link(FILENAME_CUSTOMERS), 'get', null, ['session_id' => true]); ?>
-            <td class="pageHeading"><?php echo HEADING_TITLE; ?></td>
-            <td class="smallText" align="right"><?php echo HEADING_TITLE_SEARCH . ' ' . HTML::inputField('search'); ?></td>
+            <td class="pageHeading"><?php echo OSCOM::getDef('heading_title'); ?></td>
+            <td class="smallText" align="right"><?php echo OSCOM::getDef('heading_title_search') . ' ' . HTML::inputField('search'); ?></td>
           </form></tr>
         </table></td>
       </tr>
@@ -685,10 +685,10 @@ function check_form() {
           <tr>
             <td valign="top"><table border="0" width="100%" cellspacing="0" cellpadding="2">
               <tr class="dataTableHeadingRow">
-                <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_LASTNAME; ?></td>
-                <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_FIRSTNAME; ?></td>
-                <td class="dataTableHeadingContent" align="right"><?php echo TABLE_HEADING_ACCOUNT_CREATED; ?></td>
-                <td class="dataTableHeadingContent" align="right"><?php echo TABLE_HEADING_ACTION; ?>&nbsp;</td>
+                <td class="dataTableHeadingContent"><?php echo OSCOM::getDef('table_heading_lastname'); ?></td>
+                <td class="dataTableHeadingContent"><?php echo OSCOM::getDef('table_heading_firstname'); ?></td>
+                <td class="dataTableHeadingContent" align="right"><?php echo OSCOM::getDef('table_heading_account_created'); ?></td>
+                <td class="dataTableHeadingContent" align="right"><?php echo OSCOM::getDef('table_heading_action'); ?>&nbsp;</td>
               </tr>
 <?php
     $sql_query = 'select SQL_CALC_FOUND_ROWS c.customers_id, c.customers_lastname, c.customers_firstname, c.customers_email_address, a.entry_country_id from :table_customers c left join :table_address_book a on (c.customers_id = a.customers_id and c.customers_default_address_id = a.address_book_id)';
@@ -733,7 +733,7 @@ function check_form() {
                 <td class="dataTableContent"><?php echo $Qcustomers->value('customers_lastname'); ?></td>
                 <td class="dataTableContent"><?php echo $Qcustomers->value('customers_firstname'); ?></td>
                 <td class="dataTableContent" align="right"><?php echo DateTime::toShort($Qinfo->value('date_account_created')); ?></td>
-                <td class="dataTableContent" align="right"><?php if (isset($cInfo) && is_object($cInfo) && ($Qcustomers->valueInt('customers_id') === (int)$cInfo->customers_id)) { echo HTML::image(OSCOM::linkImage('icon_arrow_right.gif'), ''); } else { echo '<a href="' . OSCOM::link(FILENAME_CUSTOMERS, tep_get_all_get_params(array('cID')) . 'cID=' . $Qcustomers->valueInt('customers_id')) . '">' . HTML::image(OSCOM::linkImage('icon_info.gif'), IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
+                <td class="dataTableContent" align="right"><?php if (isset($cInfo) && is_object($cInfo) && ($Qcustomers->valueInt('customers_id') === (int)$cInfo->customers_id)) { echo HTML::image(OSCOM::linkImage('icon_arrow_right.gif'), ''); } else { echo '<a href="' . OSCOM::link(FILENAME_CUSTOMERS, tep_get_all_get_params(array('cID')) . 'cID=' . $Qcustomers->valueInt('customers_id')) . '">' . HTML::image(OSCOM::linkImage('icon_info.gif'), OSCOM::getDef('image_icon_info')) . '</a>'; } ?>&nbsp;</td>
               </tr>
 <?php
     }
@@ -741,14 +741,14 @@ function check_form() {
               <tr>
                 <td colspan="4"><table border="0" width="100%" cellspacing="0" cellpadding="2">
                   <tr>
-                    <td class="smallText" valign="top"><?php echo $Qcustomers->getPageSetLabel(TEXT_DISPLAY_NUMBER_OF_CUSTOMERS); ?></td>
+                    <td class="smallText" valign="top"><?php echo $Qcustomers->getPageSetLabel(OSCOM::getDef('text_display_number_of_customers')); ?></td>
                     <td class="smallText" align="right"><?php echo $Qcustomers->getPageSetLinks(); ?></td>
                   </tr>
 <?php
     if (isset($_GET['search']) && tep_not_null($_GET['search'])) {
 ?>
                   <tr>
-                    <td class="smallText" align="right" colspan="2"><?php echo HTML::button(IMAGE_RESET, 'fa fa-refresh', OSCOM::link(FILENAME_CUSTOMERS)); ?></td>
+                    <td class="smallText" align="right" colspan="2"><?php echo HTML::button(OSCOM::getDef('image_reset'), 'fa fa-refresh', OSCOM::link(FILENAME_CUSTOMERS)); ?></td>
                   </tr>
 <?php
     }
@@ -762,24 +762,24 @@ function check_form() {
 
   switch ($action) {
     case 'confirm':
-      $heading[] = array('text' => '<strong>' . TEXT_INFO_HEADING_DELETE_CUSTOMER . '</strong>');
+      $heading[] = array('text' => '<strong>' . OSCOM::getDef('text_info_heading_delete_customer') . '</strong>');
 
       $contents = array('form' => HTML::form('customers', OSCOM::link(FILENAME_CUSTOMERS, tep_get_all_get_params(array('cID', 'action')) . 'cID=' . $cInfo->customers_id . '&action=deleteconfirm')));
-      $contents[] = array('text' => TEXT_DELETE_INTRO . '<br /><br /><strong>' . $cInfo->customers_firstname . ' ' . $cInfo->customers_lastname . '</strong>');
-      if (isset($cInfo->number_of_reviews) && ($cInfo->number_of_reviews) > 0) $contents[] = array('text' => '<br />' . HTML::checkboxField('delete_reviews', 'on', true) . ' ' . sprintf(TEXT_DELETE_REVIEWS, $cInfo->number_of_reviews));
-      $contents[] = array('align' => 'center', 'text' => '<br />' . HTML::button(IMAGE_DELETE, 'fa fa-trash') . HTML::button(IMAGE_CANCEL, 'fa fa-close', OSCOM::link(FILENAME_CUSTOMERS, tep_get_all_get_params(array('cID', 'action')) . 'cID=' . $cInfo->customers_id)));
+      $contents[] = array('text' => OSCOM::getDef('text_delete_intro') . '<br /><br /><strong>' . $cInfo->customers_firstname . ' ' . $cInfo->customers_lastname . '</strong>');
+      if (isset($cInfo->number_of_reviews) && ($cInfo->number_of_reviews) > 0) $contents[] = array('text' => '<br />' . HTML::checkboxField('delete_reviews', 'on', true) . ' ' . sprintf(OSCOM::getDef('text_delete_reviews'), $cInfo->number_of_reviews));
+      $contents[] = array('align' => 'center', 'text' => '<br />' . HTML::button(OSCOM::getDef('image_delete'), 'fa fa-trash') . HTML::button(OSCOM::getDef('image_cancel'), 'fa fa-close', OSCOM::link(FILENAME_CUSTOMERS, tep_get_all_get_params(array('cID', 'action')) . 'cID=' . $cInfo->customers_id)));
       break;
     default:
       if (isset($cInfo) && is_object($cInfo)) {
         $heading[] = array('text' => '<strong>' . $cInfo->customers_firstname . ' ' . $cInfo->customers_lastname . '</strong>');
 
-        $contents[] = array('align' => 'center', 'text' => HTML::button(IMAGE_EDIT, 'fa fa-edit', OSCOM::link(FILENAME_CUSTOMERS, tep_get_all_get_params(array('cID', 'action')) . 'cID=' . $cInfo->customers_id . '&action=edit')) . HTML::button(IMAGE_DELETE, 'fa fa-trash', OSCOM::link(FILENAME_CUSTOMERS, tep_get_all_get_params(array('cID', 'action')) . 'cID=' . $cInfo->customers_id . '&action=confirm')) . HTML::button(IMAGE_ORDERS, 'fa fa-shopping-cart', OSCOM::link(FILENAME_ORDERS, 'cID=' . $cInfo->customers_id)) . HTML::button(IMAGE_EMAIL, 'fa fa-envelope', OSCOM::link(FILENAME_MAIL, 'customer=' . $cInfo->customers_email_address)));
-        $contents[] = array('text' => '<br />' . TEXT_DATE_ACCOUNT_CREATED . ' ' . DateTime::toShort($cInfo->date_account_created));
-        $contents[] = array('text' => '<br />' . TEXT_DATE_ACCOUNT_LAST_MODIFIED . ' ' . DateTime::toShort($cInfo->date_account_last_modified));
-        $contents[] = array('text' => '<br />' . TEXT_INFO_DATE_LAST_LOGON . ' '  . DateTime::toShort($cInfo->date_last_logon));
-        $contents[] = array('text' => '<br />' . TEXT_INFO_NUMBER_OF_LOGONS . ' ' . $cInfo->number_of_logons);
-        $contents[] = array('text' => '<br />' . TEXT_INFO_COUNTRY . ' ' . $cInfo->countries_name);
-        $contents[] = array('text' => '<br />' . TEXT_INFO_NUMBER_OF_REVIEWS . ' ' . $cInfo->number_of_reviews);
+        $contents[] = array('align' => 'center', 'text' => HTML::button(OSCOM::getDef('image_edit'), 'fa fa-edit', OSCOM::link(FILENAME_CUSTOMERS, tep_get_all_get_params(array('cID', 'action')) . 'cID=' . $cInfo->customers_id . '&action=edit')) . HTML::button(OSCOM::getDef('image_delete'), 'fa fa-trash', OSCOM::link(FILENAME_CUSTOMERS, tep_get_all_get_params(array('cID', 'action')) . 'cID=' . $cInfo->customers_id . '&action=confirm')) . HTML::button(OSCOM::getDef('image_orders'), 'fa fa-shopping-cart', OSCOM::link(FILENAME_ORDERS, 'cID=' . $cInfo->customers_id)) . HTML::button(OSCOM::getDef('image_email'), 'fa fa-envelope', OSCOM::link(FILENAME_MAIL, 'customer=' . $cInfo->customers_email_address)));
+        $contents[] = array('text' => '<br />' . OSCOM::getDef('text_date_account_created') . ' ' . DateTime::toShort($cInfo->date_account_created));
+        $contents[] = array('text' => '<br />' . OSCOM::getDef('text_date_account_last_modified') . ' ' . DateTime::toShort($cInfo->date_account_last_modified));
+        $contents[] = array('text' => '<br />' . OSCOM::getDef('text_info_date_last_logon') . ' '  . DateTime::toShort($cInfo->date_last_logon));
+        $contents[] = array('text' => '<br />' . OSCOM::getDef('text_info_number_of_logons') . ' ' . $cInfo->number_of_logons);
+        $contents[] = array('text' => '<br />' . OSCOM::getDef('text_info_country') . ' ' . $cInfo->countries_name);
+        $contents[] = array('text' => '<br />' . OSCOM::getDef('text_info_number_of_reviews') . ' ' . $cInfo->number_of_reviews);
       }
       break;
   }

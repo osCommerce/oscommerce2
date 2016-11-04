@@ -1,0 +1,3 @@
+module_social_bookmarks_facebook_like_title = Facebook Like
+module_social_bookmarks_facebook_like_description = Share products on Facebook Like.
+module_social_bookmarks_facebook_like_public_title = Share on Facebook

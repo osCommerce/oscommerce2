@@ -10,6 +10,7 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\OSCOM;
   use OSC\OM\Registry;
 
   class nb_shopping_cart {
@@ -21,8 +22,8 @@
     var $enabled = false;
 
     function __construct() {
-      $this->title = MODULE_NAVBAR_SHOPPING_CART_TITLE;
-      $this->description = MODULE_NAVBAR_SHOPPING_CART_DESCRIPTION;
+      $this->title = OSCOM::getDef('module_navbar_shopping_cart_title');
+      $this->description = OSCOM::getDef('module_navbar_shopping_cart_description');
 
       if ( defined('MODULE_NAVBAR_SHOPPING_CART_STATUS') ) {
         $this->sort_order = MODULE_NAVBAR_SHOPPING_CART_SORT_ORDER;

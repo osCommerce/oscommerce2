@@ -80,10 +80,10 @@
           }
 
           $contents = array('form' => HTML::form('configuration', OSCOM::link(FILENAME_CONFIGURATION, 'gID=' . $gID . '&cID=' . $cInfo->configuration_id . '&action=save')));
-          $contents[] = array('text' => TEXT_INFO_EDIT_INTRO);
+          $contents[] = array('text' => OSCOM::getDef('text_info_edit_intro'));
           $contents[] = array('text' => $cInfo->configuration_description);
           $contents[] = array('text' => $value_field);
-          $contents[] = array('text' => HTML::button(IMAGE_SAVE, 'fa fa-save', null, null, 'btn-success') . HTML::button(IMAGE_CANCEL, null, OSCOM::link(FILENAME_CONFIGURATION, 'gID=' . $gID), null, 'link'));
+          $contents[] = array('text' => HTML::button(OSCOM::getDef('image_save'), 'fa fa-save', null, null, 'btn-success') . HTML::button(OSCOM::getDef('image_cancel'), null, OSCOM::link(FILENAME_CONFIGURATION, 'gID=' . $gID), null, 'link'));
         }
       }
     }
@@ -101,8 +101,8 @@
 <table class="oscom-table table table-hover">
   <thead>
     <tr class="info">
-      <th><?= TABLE_HEADING_CONFIGURATION_TITLE; ?></th>
-      <th><?= TABLE_HEADING_CONFIGURATION_VALUE; ?></th>
+      <th><?= OSCOM::getDef('table_heading_configuration_title'); ?></th>
+      <th><?= OSCOM::getDef('table_heading_configuration_value'); ?></th>
       <th class="action"></th>
     </tr>
   </thead>
@@ -139,7 +139,7 @@
     <tr>
       <td><?= $Qcfg->value('configuration_title'); ?></td>
       <td><?= htmlspecialchars($cfgValue); ?></td>
-      <td class="action"><a href="<?= OSCOM::link('configuration.php', 'gID=' . $gID . '&cID=' . $Qcfg->valueInt('configuration_id') . '&action=edit'); ?>"><i class="fa fa-pencil" title="<?= IMAGE_EDIT; ?>"></i></a></td>
+      <td class="action"><a href="<?= OSCOM::link('configuration.php', 'gID=' . $gID . '&cID=' . $Qcfg->valueInt('configuration_id') . '&action=edit'); ?>"><i class="fa fa-pencil" title="<?= OSCOM::getDef('image_edit'); ?>"></i></a></td>
     </tr>
 
 <?php

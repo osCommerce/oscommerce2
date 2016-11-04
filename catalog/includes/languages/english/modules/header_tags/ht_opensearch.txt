@@ -1,0 +1,2 @@
+module_header_tags_opensearch_title = OpenSearch
+module_header_tags_opensearch_description = Allow the browser to search the shop via OpenSearch

@@ -56,9 +56,9 @@
         if (sizeof($this->extensions) > 0) {
           if (!in_array(strtolower(substr($file['name'], strrpos($file['name'], '.')+1)), $this->extensions)) {
             if ($this->message_location == 'direct') {
-              $OSCOM_MessageStack->add(ERROR_FILETYPE_NOT_ALLOWED, 'error');
+              $OSCOM_MessageStack->add(OSCOM::getDef('error_filetype_not_allowed'), 'error');
             } else {
-              $OSCOM_MessageStack->add(ERROR_FILETYPE_NOT_ALLOWED, 'error');
+              $OSCOM_MessageStack->add(OSCOM::getDef('error_filetype_not_allowed'), 'error');
             }
 
             return false;
@@ -72,9 +72,9 @@
         return $this->check_destination();
       } else {
         if ($this->message_location == 'direct') {
-          $OSCOM_MessageStack->add(WARNING_NO_FILE_UPLOADED, 'warning');
+          $OSCOM_MessageStack->add(OSCOM::getDef('warning_no_file_uploaded'), 'warning');
         } else {
-          $OSCOM_MessageStack->add(WARNING_NO_FILE_UPLOADED, 'warning');
+          $OSCOM_MessageStack->add(OSCOM::getDef('warning_no_file_uploaded'), 'warning');
         }
 
         return false;
@@ -90,17 +90,17 @@
         chmod($this->destination . $this->filename, $this->permissions);
 
         if ($this->message_location == 'direct') {
-          $OSCOM_MessageStack->add(SUCCESS_FILE_SAVED_SUCCESSFULLY, 'success');
+          $OSCOM_MessageStack->add(OSCOM::getDef('success_file_saved_successfully'), 'success');
         } else {
-          $OSCOM_MessageStack->add(SUCCESS_FILE_SAVED_SUCCESSFULLY, 'success');
+          $OSCOM_MessageStack->add(OSCOM::getDef('success_file_saved_successfully'), 'success');
         }
 
         return true;
       } else {
         if ($this->message_location == 'direct') {
-          $OSCOM_MessageStack->add(ERROR_FILE_NOT_SAVED, 'error');
+          $OSCOM_MessageStack->add(OSCOM::getDef('error_file_not_saved'), 'error');
         } else {
-          $OSCOM_MessageStack->add(ERROR_FILE_NOT_SAVED, 'error');
+          $OSCOM_MessageStack->add(OSCOM::getDef('error_file_not_saved'), 'error');
         }
 
         return false;
@@ -145,15 +145,15 @@
       if (!FileSystem::isWritable($this->destination)) {
         if (is_dir($this->destination)) {
           if ($this->message_location == 'direct') {
-            $OSCOM_MessageStack->add(sprintf(ERROR_DESTINATION_NOT_WRITEABLE, $this->destination), 'error');
+            $OSCOM_MessageStack->add(sprintf(OSCOM::getDef('error_destination_not_writeable'), $this->destination), 'error');
           } else {
-            $OSCOM_MessageStack->add(sprintf(ERROR_DESTINATION_NOT_WRITEABLE, $this->destination), 'error');
+            $OSCOM_MessageStack->add(sprintf(OSCOM::getDef('error_destination_not_writeable'), $this->destination), 'error');
           }
         } else {
           if ($this->message_location == 'direct') {
-            $OSCOM_MessageStack->add(sprintf(ERROR_DESTINATION_DOES_NOT_EXIST, $this->destination), 'error');
+            $OSCOM_MessageStack->add(sprintf(OSCOM::getDef('error_destination_does_not_exist'), $this->destination), 'error');
           } else {
-            $OSCOM_MessageStack->add(sprintf(ERROR_DESTINATION_DOES_NOT_EXIST, $this->destination), 'error');
+            $OSCOM_MessageStack->add(sprintf(OSCOM::getDef('error_destination_does_not_exist'), $this->destination), 'error');
           }
         }
 

@@ -36,7 +36,7 @@
               'configuration_key' => 'STORE_LOGO'
             ]);
 
-            $OSCOM_MessageStack->add(SUCCESS_LOGO_UPDATED, 'success');
+            $OSCOM_MessageStack->add(OSCOM::getDef('success_logo_updated'), 'success');
           } else {
             $error = true;
           }
@@ -52,7 +52,7 @@
   }
 
   if (!FileSystem::isWritable(OSCOM::getConfig('dir_root', 'Shop') . 'images/')) {
-    $OSCOM_MessageStack->add(sprintf(ERROR_IMAGES_DIRECTORY_NOT_WRITEABLE, OSCOM::link(FILENAME_SEC_DIR_PERMISSIONS)), 'error');
+    $OSCOM_MessageStack->add(sprintf(OSCOM::getDef('error_images_directory_not_writeable'), OSCOM::link(FILENAME_SEC_DIR_PERMISSIONS)), 'error');
   }
 
   require($oscTemplate->getFile('template_top.php'));
@@ -62,7 +62,7 @@
       <tr>
         <td width="100%"><table border="0" width="100%" cellspacing="0" cellpadding="0">
           <tr>
-            <td class="pageHeading"><?php echo HEADING_TITLE; ?></td>
+            <td class="pageHeading"><?php echo OSCOM::getDef('heading_title'); ?></td>
           </tr>
         </table></td>
       </tr>
@@ -73,15 +73,15 @@
         <td><?php echo HTML::form('logo', OSCOM::link(FILENAME_STORE_LOGO, 'action=save'), 'post', 'enctype="multipart/form-data"'); ?>
           <table border="0" cellspacing="0" cellpadding="2">
             <tr>
-              <td class="main" valign="top"><?php echo TEXT_LOGO_IMAGE; ?></td>
+              <td class="main" valign="top"><?php echo OSCOM::getDef('text_logo_image'); ?></td>
               <td class="main"><?php echo HTML::fileField('store_logo'); ?></td>
-              <td class="smallText"><?php echo HTML::button(IMAGE_SAVE, 'fa fa-save'); ?></td>
+              <td class="smallText"><?php echo HTML::button(OSCOM::getDef('image_save'), 'fa fa-save'); ?></td>
             </tr>
           </table>
         </form></td>
       </tr>
       <tr>
-        <td class="main"><?php echo TEXT_FORMAT_AND_LOCATION; ?></td>
+        <td class="main"><?php echo OSCOM::getDef('text_format_and_location'); ?></td>
       </tr>
       <tr>
         <td class="main"><?php echo OSCOM::getConfig('dir_root', 'Shop') . 'images/' . STORE_LOGO; ?></td>

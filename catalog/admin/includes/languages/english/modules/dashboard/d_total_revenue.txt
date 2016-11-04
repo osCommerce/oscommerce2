@@ -1,0 +1,3 @@
+module_admin_dashboard_total_revenue_title = New Revenue Chart (last 7 days)
+module_admin_dashboard_total_revenue_description = Show the new revenue chart of the last 7 days
+module_admin_dashboard_total_revenue_chart_link = New Revenue

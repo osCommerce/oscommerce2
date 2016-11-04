@@ -24,10 +24,10 @@
   $order = new order($oID);
 ?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<html <?php echo HTML_PARAMS; ?>>
+<html <?php echo OSCOM::getDef('html_params'); ?>>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=<?php echo CHARSET; ?>">
-<title><?php echo TITLE; ?></title>
+<meta http-equiv="Content-Type" content="text/html; charset=<?php echo OSCOM::getDef('charset'); ?>">
+<title><?php echo OSCOM::getDef('title'); ?></title>
 <link rel="stylesheet" type="text/css" href="<?= OSCOM::linkPublic('Templates/Sail/css/stylesheet.css'); ?>">
 </head>
 <body>
@@ -46,7 +46,7 @@
       <tr>
         <td valign="top"><table width="100%" border="0" cellspacing="0" cellpadding="2">
           <tr>
-            <td class="main"><strong><?php echo ENTRY_SOLD_TO; ?></strong></td>
+            <td class="main"><strong><?php echo OSCOM::getDef('entry_sold_to'); ?></strong></td>
           </tr>
           <tr>
             <td class="main"><?php echo tep_address_format($order->customer['format_id'], $order->billing, 1, '', '<br />'); ?></td>
@@ -63,7 +63,7 @@
         </table></td>
         <td valign="top"><table width="100%" border="0" cellspacing="0" cellpadding="2">
           <tr>
-            <td class="main"><strong><?php echo ENTRY_SHIP_TO; ?></strong></td>
+            <td class="main"><strong><?php echo OSCOM::getDef('entry_ship_to'); ?></strong></td>
           </tr>
           <tr>
             <td class="main"><?php echo tep_address_format($order->delivery['format_id'], $order->delivery, 1, '', '<br />'); ?></td>
@@ -75,7 +75,7 @@
   <tr>
     <td><table border="0" cellspacing="0" cellpadding="2">
       <tr>
-        <td class="main"><strong><?php echo ENTRY_PAYMENT_METHOD; ?></strong></td>
+        <td class="main"><strong><?php echo OSCOM::getDef('entry_payment_method'); ?></strong></td>
         <td class="main"><?php echo $order->info['payment_method']; ?></td>
       </tr>
     </table></td>
@@ -83,8 +83,8 @@
   <tr>
     <td><table border="0" width="100%" cellspacing="0" cellpadding="2">
       <tr class="dataTableHeadingRow">
-        <td class="dataTableHeadingContent" colspan="2"><?php echo TABLE_HEADING_PRODUCTS; ?></td>
-        <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_PRODUCTS_MODEL; ?></td>
+        <td class="dataTableHeadingContent" colspan="2"><?php echo OSCOM::getDef('table_heading_products'); ?></td>
+        <td class="dataTableHeadingContent"><?php echo OSCOM::getDef('table_heading_products_model'); ?></td>
       </tr>
 <?php
     for ($i=0, $n=sizeof($order->products); $i<$n; $i++) {

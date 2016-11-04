@@ -1,0 +1,4 @@
+module_navbar_hamburger_button_title = Hamburger Button
+module_navbar_hamburger_button_description = Show Hamburger Button in Navbar.  <div class="secWarning">This is a special button that shows when the viewport is small.<br><br>It opens and closes the Main Navbar Menu. You <strong>MUST</strong> install this.</div>
+module_navbar_hamburger_button_public_screenreader_text = <span class="sr-only">Toggle Navigation</span>
+module_navbar_hamburger_button_public_button_text = <span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span>

@@ -20,7 +20,7 @@ class DateTime
     public function __construct($datetime, $use_raw_pattern = false, $strict = false)
     {
         if ($use_raw_pattern === false) {
-            $pattern = DATE_TIME_FORMAT;
+            $pattern = OSCOM::getDef('date_time_format');
         } else {
             $pattern = $this->raw_pattern_date . ' ' . $this->raw_pattern_time;
         }
@@ -69,14 +69,14 @@ class DateTime
 
     public function getShort($with_time = false)
     {
-        $pattern = ($with_time === false) ? DATE_FORMAT_SHORT : DATE_TIME_FORMAT;
+        $pattern = ($with_time === false) ? OSCOM::getDef('date_format_short') : OSCOM::getDef('date_time_format');
 
         return strftime($pattern, $this->getTimestamp());
     }
 
     public function getLong()
     {
-        return strftime(DATE_FORMAT_LONG, $this->getTimestamp());
+        return strftime(OSCOM::getDef('date_format_long'), $this->getTimestamp());
     }
 
     public static function toShort($raw_datetime, $with_time = false, $strict = true)
@@ -86,7 +86,7 @@ class DateTime
         $date = new DateTime($raw_datetime, true, $strict);
 
         if ($date->isValid()) {
-            $pattern = ($with_time === false) ? DATE_FORMAT_SHORT : DATE_TIME_FORMAT;
+            $pattern = ($with_time === false) ? OSCOM::getDef('date_format_short') : OSCOM::getDef('date_time_format');
 
             $result = strftime($pattern, $date->getTimestamp());
         }
@@ -101,7 +101,7 @@ class DateTime
         $date = new DateTime($raw_datetime, true, $strict);
 
         if ($date->isValid()) {
-            $result = strftime(DATE_FORMAT_LONG, $date->getTimestamp());
+            $result = strftime(OSCOM::getDef('date_format_long'), $date->getTimestamp());
         }
 
         return $result;

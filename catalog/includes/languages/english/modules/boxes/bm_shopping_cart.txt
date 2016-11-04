@@ -1,0 +1,4 @@
+module_boxes_shopping_cart_title = Shopping Cart
+module_boxes_shopping_cart_description = Show shopping cart contents
+module_boxes_shopping_cart_box_title = Shopping Cart
+module_boxes_shopping_cart_box_cart_empty = 0 items

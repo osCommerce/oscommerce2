@@ -1,0 +1,7 @@
+module_boxes_information_title = Information
+module_boxes_information_description = Show information page links
+module_boxes_information_box_title = Information
+module_boxes_information_box_privacy = Privacy Notice
+module_boxes_information_box_conditions = Conditions of Use
+module_boxes_information_box_shipping = Shipping &amp; Returns
+module_boxes_information_box_contact = Contact Us

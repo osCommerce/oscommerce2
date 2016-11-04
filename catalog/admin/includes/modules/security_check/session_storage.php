@@ -32,9 +32,9 @@
     function getMessage() {
       if (OSCOM::getConfig('store_sessions') == '') {
         if (!is_dir(session_save_path())) {
-          return WARNING_SESSION_DIRECTORY_NON_EXISTENT;
+          return OSCOM::getDef('warning_session_directory_non_existent');
         } elseif (!FileSystem::isWritable(session_save_path())) {
-          return WARNING_SESSION_DIRECTORY_NOT_WRITEABLE;
+          return OSCOM::getDef('warning_session_directory_not_writeable');
         }
       }
     }

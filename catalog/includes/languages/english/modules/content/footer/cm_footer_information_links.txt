@@ -1,0 +1,7 @@
+module_content_footer_information_title = Information Links Block
+module_content_footer_information_description = Adds Information Links Block to the Footer Area of your site
+module_content_footer_information_heading_title = Information
+module_content_footer_information_shipping = Shipping & Returns
+module_content_footer_information_privacy = Privacy & Cookie Policy
+module_content_footer_information_conditions = Terms & Conditions
+module_content_footer_information_contact = Contact Us

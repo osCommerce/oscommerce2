@@ -1,0 +1,11 @@
+heading_title = Administrators
+table_heading_administrators = Administrators
+table_heading_action = Action
+text_info_insert_intro = Please enter the new administrator with its related data
+text_info_edit_intro = Please make any necessary changes
+text_info_delete_intro = Are you sure you want to delete this administrator?
+text_info_heading_new_administrator = New Administrator
+text_info_username = Username:
+text_info_new_password = New Password:
+text_info_password = Password:
+error_administrator_exists = Error: Administrator already exists.

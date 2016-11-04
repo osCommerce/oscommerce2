@@ -1,0 +1,3 @@
+module_navbar_testimonials_title = Testimonials
+module_navbar_testimonials_description = Show Testimonials Link in Navbar.
+module_navbar_testimonials_public_text = <li><a href="

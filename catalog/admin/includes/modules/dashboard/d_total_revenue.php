@@ -22,8 +22,8 @@
     var $enabled = false;
 
     function d_total_revenue() {
-      $this->title = MODULE_ADMIN_DASHBOARD_TOTAL_REVENUE_TITLE;
-      $this->description = MODULE_ADMIN_DASHBOARD_TOTAL_REVENUE_DESCRIPTION;
+      $this->title = OSCOM::getDef('module_admin_dashboard_total_revenue_title');
+      $this->description = OSCOM::getDef('module_admin_dashboard_total_revenue_description');
 
       if ( defined('MODULE_ADMIN_DASHBOARD_TOTAL_REVENUE_STATUS') ) {
         $this->sort_order = MODULE_ADMIN_DASHBOARD_TOTAL_REVENUE_SORT_ORDER;
@@ -47,7 +47,7 @@
 
       $days = array_reverse($days, true);
 
-      $chart_label = HTML::output(MODULE_ADMIN_DASHBOARD_TOTAL_REVENUE_CHART_LINK);
+      $chart_label = HTML::output(OSCOM::getDef('module_admin_dashboard_total_revenue_chart_link'));
       $chart_label_link = OSCOM::link(FILENAME_ORDERS);
 
       $data_labels = json_encode(array_keys($days));

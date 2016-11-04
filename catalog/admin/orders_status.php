@@ -93,15 +93,15 @@
         $remove_status = true;
         if ($oID == DEFAULT_ORDERS_STATUS_ID) {
           $remove_status = false;
-          $OSCOM_MessageStack->add(ERROR_REMOVE_DEFAULT_ORDER_STATUS, 'error');
+          $OSCOM_MessageStack->add(OSCOM::getDef('error_remove_default_order_status'), 'error');
         } elseif ($Qstatus->fetch() !== false) {
           $remove_status = false;
-          $OSCOM_MessageStack->add(ERROR_STATUS_USED_IN_ORDERS, 'error');
+          $OSCOM_MessageStack->add(OSCOM::getDef('error_status_used_in_orders'), 'error');
         } else {
           $Qhistory = $OSCOM_Db->get('orders_status_history', 'orders_status_id', ['orders_status_id' => (int)$oID], null, 1);
           if ($Qhistory->fetch() !== false) {
             $remove_status = false;
-            $OSCOM_MessageStack->add(ERROR_STATUS_USED_IN_HISTORY, 'error');
+            $OSCOM_MessageStack->add(OSCOM::getDef('error_status_used_in_history'), 'error');
           }
         }
         break;
@@ -115,7 +115,7 @@
       <tr>
         <td><table border="0" width="100%" cellspacing="0" cellpadding="0">
           <tr>
-            <td class="pageHeading"><?php echo HEADING_TITLE; ?></td>
+            <td class="pageHeading"><?php echo OSCOM::getDef('heading_title'); ?></td>
           </tr>
         </table></td>
       </tr>
@@ -124,10 +124,10 @@
           <tr>
             <td valign="top"><table border="0" width="100%" cellspacing="0" cellpadding="2">
               <tr class="dataTableHeadingRow">
-                <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_ORDERS_STATUS; ?></td>
-                <td class="dataTableHeadingContent" align="center"><?php echo TABLE_HEADING_PUBLIC_STATUS; ?></td>
-                <td class="dataTableHeadingContent" align="center"><?php echo TABLE_HEADING_DOWNLOADS_STATUS; ?></td>
-                <td class="dataTableHeadingContent" align="right"><?php echo TABLE_HEADING_ACTION; ?>&nbsp;</td>
+                <td class="dataTableHeadingContent"><?php echo OSCOM::getDef('table_heading_orders_status'); ?></td>
+                <td class="dataTableHeadingContent" align="center"><?php echo OSCOM::getDef('table_heading_public_status'); ?></td>
+                <td class="dataTableHeadingContent" align="center"><?php echo OSCOM::getDef('table_heading_downloads_status'); ?></td>
+                <td class="dataTableHeadingContent" align="right"><?php echo OSCOM::getDef('table_heading_action'); ?>&nbsp;</td>
               </tr>
 <?php
   $Qstatus = $OSCOM_Db->prepare('select SQL_CALC_FOUND_ROWS * from :table_orders_status where language_id = :language_id order by orders_status_id limit :page_set_offset, :page_set_max_results');
@@ -147,14 +147,14 @@
     }
 
     if ((int)DEFAULT_ORDERS_STATUS_ID == $Qstatus->valueInt('orders_status_id')) {
-      echo '                <td class="dataTableContent"><strong>' . $Qstatus->value('orders_status_name') . ' (' . TEXT_DEFAULT . ')</strong></td>' . "\n";
+      echo '                <td class="dataTableContent"><strong>' . $Qstatus->value('orders_status_name') . ' (' . OSCOM::getDef('text_default') . ')</strong></td>' . "\n";
     } else {
       echo '                <td class="dataTableContent">' . $Qstatus->value('orders_status_name') . '</td>' . "\n";
     }
 ?>
                 <td class="dataTableContent" align="center"><?php echo HTML::image(OSCOM::linkImage('icons/' . (($Qstatus->valueInt('public_flag') === 1) ? 'tick.gif' : 'cross.gif'))); ?></td>
                 <td class="dataTableContent" align="center"><?php echo HTML::image(OSCOM::linkImage('icons/' . (($Qstatus->valueInt('downloads_flag') === 1) ? 'tick.gif' : 'cross.gif'))); ?></td>
-                <td class="dataTableContent" align="right"><?php if (isset($oInfo) && is_object($oInfo) && ($Qstatus->valueInt('orders_status_id') === (int)$oInfo->orders_status_id)) { echo HTML::image(OSCOM::linkImage('icon_arrow_right.gif'), ''); } else { echo '<a href="' . OSCOM::link(FILENAME_ORDERS_STATUS, 'page=' . $_GET['page'] . '&oID=' . $Qstatus->valueInt('orders_status_id')) . '">' . HTML::image(OSCOM::linkImage('icon_info.gif'), IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
+                <td class="dataTableContent" align="right"><?php if (isset($oInfo) && is_object($oInfo) && ($Qstatus->valueInt('orders_status_id') === (int)$oInfo->orders_status_id)) { echo HTML::image(OSCOM::linkImage('icon_arrow_right.gif'), ''); } else { echo '<a href="' . OSCOM::link(FILENAME_ORDERS_STATUS, 'page=' . $_GET['page'] . '&oID=' . $Qstatus->valueInt('orders_status_id')) . '">' . HTML::image(OSCOM::linkImage('icon_info.gif'), OSCOM::getDef('image_icon_info')) . '</a>'; } ?>&nbsp;</td>
               </tr>
 <?php
   }
@@ -162,14 +162,14 @@
               <tr>
                 <td colspan="4"><table border="0" width="100%" cellspacing="0" cellpadding="2">
                   <tr>
-                    <td class="smallText" valign="top"><?php echo $Qstatus->getPageSetLabel(TEXT_DISPLAY_NUMBER_OF_ORDERS_STATUS); ?></td>
+                    <td class="smallText" valign="top"><?php echo $Qstatus->getPageSetLabel(OSCOM::getDef('text_display_number_of_orders_status')); ?></td>
                     <td class="smallText" align="right"><?php echo $Qstatus->getPageSetLinks(); ?></td>
                   </tr>
 <?php
   if (empty($action)) {
 ?>
                   <tr>
-                    <td class="smallText" colspan="2" align="right"><?php echo HTML::button(IMAGE_INSERT, 'fa fa-plus', OSCOM::link(FILENAME_ORDERS_STATUS, 'page=' . $_GET['page'] . '&action=new')); ?></td>
+                    <td class="smallText" colspan="2" align="right"><?php echo HTML::button(OSCOM::getDef('image_insert'), 'fa fa-plus', OSCOM::link(FILENAME_ORDERS_STATUS, 'page=' . $_GET['page'] . '&action=new')); ?></td>
                   </tr>
 <?php
   }
@@ -183,10 +183,10 @@
 
   switch ($action) {
     case 'new':
-      $heading[] = array('text' => '<strong>' . TEXT_INFO_HEADING_NEW_ORDERS_STATUS . '</strong>');
+      $heading[] = array('text' => '<strong>' . OSCOM::getDef('text_info_heading_new_orders_status') . '</strong>');
 
       $contents = array('form' => HTML::form('status', OSCOM::link(FILENAME_ORDERS_STATUS, 'page=' . $_GET['page'] . '&action=insert')));
-      $contents[] = array('text' => TEXT_INFO_INSERT_INTRO);
+      $contents[] = array('text' => OSCOM::getDef('text_info_insert_intro'));
 
       $orders_status_inputs_string = '';
       $languages = tep_get_languages();
@@ -194,17 +194,17 @@
         $orders_status_inputs_string .= '<br />' . HTML::image(OSCOM::link('Shop/includes/languages/' . $languages[$i]['directory'] . '/images/' . $languages[$i]['image']), $languages[$i]['name']) . '&nbsp;' . HTML::inputField('orders_status_name[' . $languages[$i]['id'] . ']');
       }
 
-      $contents[] = array('text' => '<br />' . TEXT_INFO_ORDERS_STATUS_NAME . $orders_status_inputs_string);
-      $contents[] = array('text' => '<br />' . HTML::checkboxField('public_flag', '1') . ' ' . TEXT_SET_PUBLIC_STATUS);
-      $contents[] = array('text' => HTML::checkboxField('downloads_flag', '1') . ' ' . TEXT_SET_DOWNLOADS_STATUS);
-      $contents[] = array('text' => '<br />' . HTML::checkboxField('default') . ' ' . TEXT_SET_DEFAULT);
-      $contents[] = array('align' => 'center', 'text' => '<br />' . HTML::button(IMAGE_SAVE, 'fa fa-save') . HTML::button(IMAGE_CANCEL, 'fa fa-close', OSCOM::link(FILENAME_ORDERS_STATUS, 'page=' . $_GET['page'])));
+      $contents[] = array('text' => '<br />' . OSCOM::getDef('text_info_orders_status_name') . $orders_status_inputs_string);
+      $contents[] = array('text' => '<br />' . HTML::checkboxField('public_flag', '1') . ' ' . OSCOM::getDef('text_set_public_status'));
+      $contents[] = array('text' => HTML::checkboxField('downloads_flag', '1') . ' ' . OSCOM::getDef('text_set_downloads_status'));
+      $contents[] = array('text' => '<br />' . HTML::checkboxField('default') . ' ' . OSCOM::getDef('text_set_default'));
+      $contents[] = array('align' => 'center', 'text' => '<br />' . HTML::button(OSCOM::getDef('image_save'), 'fa fa-save') . HTML::button(OSCOM::getDef('image_cancel'), 'fa fa-close', OSCOM::link(FILENAME_ORDERS_STATUS, 'page=' . $_GET['page'])));
       break;
     case 'edit':
-      $heading[] = array('text' => '<strong>' . TEXT_INFO_HEADING_EDIT_ORDERS_STATUS . '</strong>');
+      $heading[] = array('text' => '<strong>' . OSCOM::getDef('text_info_heading_edit_orders_status') . '</strong>');
 
       $contents = array('form' => HTML::form('status', OSCOM::link(FILENAME_ORDERS_STATUS, 'page=' . $_GET['page'] . '&oID=' . $oInfo->orders_status_id  . '&action=save')));
-      $contents[] = array('text' => TEXT_INFO_EDIT_INTRO);
+      $contents[] = array('text' => OSCOM::getDef('text_info_edit_intro'));
 
       $orders_status_inputs_string = '';
       $languages = tep_get_languages();
@@ -212,25 +212,25 @@
         $orders_status_inputs_string .= '<br />' . HTML::image(OSCOM::link('Shop/includes/languages/' . $languages[$i]['directory'] . '/images/' . $languages[$i]['image']), $languages[$i]['name']) . '&nbsp;' . HTML::inputField('orders_status_name[' . $languages[$i]['id'] . ']', tep_get_orders_status_name($oInfo->orders_status_id, $languages[$i]['id']));
       }
 
-      $contents[] = array('text' => '<br />' . TEXT_INFO_ORDERS_STATUS_NAME . $orders_status_inputs_string);
-      $contents[] = array('text' => '<br />' . HTML::checkboxField('public_flag', '1', $oInfo->public_flag) . ' ' . TEXT_SET_PUBLIC_STATUS);
-      $contents[] = array('text' => HTML::checkboxField('downloads_flag', '1', $oInfo->downloads_flag) . ' ' . TEXT_SET_DOWNLOADS_STATUS);
-      if (DEFAULT_ORDERS_STATUS_ID != $oInfo->orders_status_id) $contents[] = array('text' => '<br />' . HTML::checkboxField('default') . ' ' . TEXT_SET_DEFAULT);
-      $contents[] = array('align' => 'center', 'text' => '<br />' . HTML::button(IMAGE_SAVE, 'fa fa-save') . HTML::button(IMAGE_CANCEL, 'fa fa-close', OSCOM::link(FILENAME_ORDERS_STATUS, 'page=' . $_GET['page'] . '&oID=' . $oInfo->orders_status_id)));
+      $contents[] = array('text' => '<br />' . OSCOM::getDef('text_info_orders_status_name') . $orders_status_inputs_string);
+      $contents[] = array('text' => '<br />' . HTML::checkboxField('public_flag', '1', $oInfo->public_flag) . ' ' . OSCOM::getDef('text_set_public_status'));
+      $contents[] = array('text' => HTML::checkboxField('downloads_flag', '1', $oInfo->downloads_flag) . ' ' . OSCOM::getDef('text_set_downloads_status'));
+      if (DEFAULT_ORDERS_STATUS_ID != $oInfo->orders_status_id) $contents[] = array('text' => '<br />' . HTML::checkboxField('default') . ' ' . OSCOM::getDef('text_set_default'));
+      $contents[] = array('align' => 'center', 'text' => '<br />' . HTML::button(OSCOM::getDef('image_save'), 'fa fa-save') . HTML::button(OSCOM::getDef('image_cancel'), 'fa fa-close', OSCOM::link(FILENAME_ORDERS_STATUS, 'page=' . $_GET['page'] . '&oID=' . $oInfo->orders_status_id)));
       break;
     case 'delete':
-      $heading[] = array('text' => '<strong>' . TEXT_INFO_HEADING_DELETE_ORDERS_STATUS . '</strong>');
+      $heading[] = array('text' => '<strong>' . OSCOM::getDef('text_info_heading_delete_orders_status') . '</strong>');
 
       $contents = array('form' => HTML::form('status', OSCOM::link(FILENAME_ORDERS_STATUS, 'page=' . $_GET['page'] . '&oID=' . $oInfo->orders_status_id  . '&action=deleteconfirm')));
-      $contents[] = array('text' => TEXT_INFO_DELETE_INTRO);
+      $contents[] = array('text' => OSCOM::getDef('text_info_delete_intro'));
       $contents[] = array('text' => '<br /><strong>' . $oInfo->orders_status_name . '</strong>');
-      if ($remove_status) $contents[] = array('align' => 'center', 'text' => '<br />' . HTML::button(IMAGE_DELETE, 'fa fa-trash') . HTML::button(IMAGE_CANCEL, 'fa fa-close', OSCOM::link(FILENAME_ORDERS_STATUS, 'page=' . $_GET['page'] . '&oID=' . $oInfo->orders_status_id)));
+      if ($remove_status) $contents[] = array('align' => 'center', 'text' => '<br />' . HTML::button(OSCOM::getDef('image_delete'), 'fa fa-trash') . HTML::button(OSCOM::getDef('image_cancel'), 'fa fa-close', OSCOM::link(FILENAME_ORDERS_STATUS, 'page=' . $_GET['page'] . '&oID=' . $oInfo->orders_status_id)));
       break;
     default:
       if (isset($oInfo) && is_object($oInfo)) {
         $heading[] = array('text' => '<strong>' . $oInfo->orders_status_name . '</strong>');
 
-        $contents[] = array('align' => 'center', 'text' => HTML::button(IMAGE_EDIT, 'fa fa-edit', OSCOM::link(FILENAME_ORDERS_STATUS, 'page=' . $_GET['page'] . '&oID=' . $oInfo->orders_status_id . '&action=edit')) . HTML::button(IMAGE_DELETE, 'fa fa-trash', OSCOM::link(FILENAME_ORDERS_STATUS, 'page=' . $_GET['page'] . '&oID=' . $oInfo->orders_status_id . '&action=delete')));
+        $contents[] = array('align' => 'center', 'text' => HTML::button(OSCOM::getDef('image_edit'), 'fa fa-edit', OSCOM::link(FILENAME_ORDERS_STATUS, 'page=' . $_GET['page'] . '&oID=' . $oInfo->orders_status_id . '&action=edit')) . HTML::button(OSCOM::getDef('image_delete'), 'fa fa-trash', OSCOM::link(FILENAME_ORDERS_STATUS, 'page=' . $_GET['page'] . '&oID=' . $oInfo->orders_status_id . '&action=delete')));
 
         $orders_status_inputs_string = '';
         $languages = tep_get_languages();
