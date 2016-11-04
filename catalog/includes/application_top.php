@@ -98,7 +98,7 @@
     switch ( $_GET['action'] ) {
       // customer wants to update the product quantity in their shopping cart
       case 'update_product' : for ($i=0, $n=sizeof($_POST['products_id']); $i<$n; $i++) {
-                                $attributes = ($_POST['id'][$_POST['products_id'][$i]]) ? $_POST['id'][$_POST['products_id'][$i]] : '';
+                                $attributes = isset($_POST['id'][$_POST['products_id'][$i]]) ? $_POST['id'][$_POST['products_id'][$i]] : '';
                                 $_SESSION['cart']->add_cart($_POST['products_id'][$i], $_POST['cart_quantity'][$i], $attributes, false);
                                 $messageStack->add_session('product_action', sprintf(PRODUCT_ADDED, tep_get_products_name((int)$_POST['products_id'][$i])), 'success');
                               }
