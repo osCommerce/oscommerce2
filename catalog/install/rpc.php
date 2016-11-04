@@ -45,7 +45,8 @@
 
           $url .= '&subaction=do';
 
-          $response = HTTP::getResponse([
+          // errors are silenced to not log failed connection checks
+          $response = @HTTP::getResponse([
             'url' => $url,
             'verify_ssl' => false
           ]);
