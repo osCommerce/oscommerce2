@@ -10,6 +10,7 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\ErrorHandler;
   use OSC\OM\HTML;
   use OSC\OM\OSCOM;
   use OSC\OM\Registry;
@@ -96,6 +97,21 @@
 
           </ul>
         </li>
+
+<?php
+    if (count(glob(ErrorHandler::getDirectory() . 'errors-*.txt')) > 0) {
+?>
+
+        <li><a><i class="fa fa-exclamation-circle text-danger"></i></a>
+          <ul class="dropdown-menu">
+            <li><a href="<?= OSCOM::link('error_log.php'); ?>">View Error Log</a></li>
+          </ul>
+        </li>
+
+<?php
+    }
+?>
+
       </ul>
 
 <?php
