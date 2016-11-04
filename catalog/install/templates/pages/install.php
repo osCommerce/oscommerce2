@@ -71,7 +71,7 @@ use OSC\OM\HTML;
 
       <p>
         <?=
-          HTML::button('Continue to Step 2', 'triangle-1-e', null, null, 'btn-success') . '&nbsp;' .
+          HTML::button('Continue to Step 2', 'triangle-1-e', null, ['params' => 'id="buttonDoImport"'], 'btn-success') . '&nbsp;' .
           HTML::button('or continue and skip database import', null, null, ['params' => 'id="buttonSkipImport"'], 'btn-link');
         ?>
       </p>
@@ -111,10 +111,9 @@ $(function() {
   var formSubmited = false;
   var formSuccess = false;
   var dbNameToCreate;
+  var doImport = true;
 
-  function prepareDB(doImport) {
-    doImport = typeof doImport !== 'undefined' ? doImport : true;
-
+  function prepareDB() {
     if (formSubmited == true) {
       return false;
     }
@@ -219,6 +218,17 @@ $(function() {
     });
   }
 
+  // disable ENTER and force click on continue buttons
+  $('#installForm').on('keyup keypress', function(e) {
+    var keyCode = e.keyCode || e.which;
+
+    if (keyCode === 13) {
+      e.preventDefault();
+
+      return false;
+    }
+  });
+
   $('#installForm').submit(function(e) {
     if (formSuccess == false) {
       e.preventDefault();
@@ -227,12 +237,12 @@ $(function() {
     }
   });
 
-  $('#buttonSkipImport').click(function(e) {
-    if (formSuccess == false) {
-      e.preventDefault();
+  $('#buttonDoImport').on('click', function(e) {
+    doImport = true;
+  });
 
-      prepareDB(false);
-    }
+  $('#buttonSkipImport').on('click', function(e) {
+    doImport = false;
   });
 });
 </script>
