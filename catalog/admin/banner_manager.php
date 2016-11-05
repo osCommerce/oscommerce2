@@ -26,6 +26,42 @@
 
   if (tep_not_null($action)) {
     switch ($action) {
+      case 'fetchStats':
+        $result = [];
+
+        if (isset($_GET['banners_id']) && is_numeric($_GET['banners_id'])) {
+          $Qbanner = $OSCOM_Db->prepare('select banners_title from :table_banners where banners_id = :banners_id');
+          $Qbanner->bindInt(':banners_id', $_GET['banners_id']);
+          $Qbanner->execute();
+
+          if ($Qbanner->fetch() !== false) {
+            $days_shown = $days_clicked = [];
+            for($i = 0; $i < 7; $i++) {
+              $date = date('m-d', strtotime('-'. $i .' days'));
+
+              $days_shown[$date] = $days_clicked[$date] = 0;
+            }
+
+            $Qstats = $OSCOM_Db->prepare('select date_format(banners_history_date, "%m-%d") as date_day, banners_shown, banners_clicked from :table_banners_history where banners_id = :banners_id and banners_history_date >= date_sub(now(), interval 7 day)');
+            $Qstats->bindInt(':banners_id', $_GET['banners_id']);
+            $Qstats->execute();
+
+            while ($Qstats->fetch()) {
+              $days_shown[$Qstats->value('date_day')] = $Qstats->valueInt('banners_shown');
+              $days_clicked[$Qstats->value('date_day')] = $Qstats->valueInt('banners_clicked');
+            }
+
+            $result['labels'] = array_reverse(array_keys($days_shown));
+            $result['days'] = array_reverse(array_values($days_shown));
+            $result['clicks'] = array_reverse(array_values($days_clicked));
+            $result['title'] = $Qbanner->valueProtected('banners_title');
+          }
+        }
+
+        echo json_encode($result);
+
+        exit;
+        break;
       case 'setflag':
         if ( ($_GET['flag'] == '0') || ($_GET['flag'] == '1') ) {
           tep_set_banner_status($_GET['bID'], $_GET['flag']);
@@ -156,20 +192,6 @@
         $OSCOM_Db->delete('banners', ['banners_id' => (int)$banners_id]);
         $OSCOM_Db->delete('banners_history', ['banners_id' => (int)$banners_id]);
 
-        if (function_exists('imagecreate') && tep_not_null($banner_extension)) {
-          if (FileSystem::isWritable(OSCOM::getConfig('dir_root') . 'images/graphs/banner_yearly-' . (int)$banners_id . '.' . $banner_extension)) {
-            unlink(OSCOM::getConfig('dir_root') . 'images/graphs/banner_yearly-' . (int)$banners_id . '.' . $banner_extension);
-          }
-
-          if (FileSystem::isWritable(OSCOM::getConfig('dir_root') . 'images/graphs/banner_monthly-' . (int)$banners_id . '.' . $banner_extension)) {
-            unlink(OSCOM::getConfig('dir_root') . 'images/graphs/banner_monthly-' . (int)$banners_id . '.' . $banner_extension);
-          }
-
-          if (FileSystem::isWritable(OSCOM::getConfig('dir_root') . 'images/graphs/banner_daily-' . (int)$banners_id . '.' . $banner_extension)) {
-            unlink(OSCOM::getConfig('dir_root') . 'images/graphs/banner_daily-' . (int)$banners_id . '.' . $banner_extension);
-          }
-        }
-
         $OSCOM_MessageStack->add(SUCCESS_BANNER_REMOVED, 'success');
 
         OSCOM::redirect(FILENAME_BANNER_MANAGER, 'page=' . $_GET['page']);
@@ -197,17 +219,6 @@
           exit;
         }
         break;
-    }
-  }
-
-// check if the graphs directory exists
-  if (function_exists('imagecreate') && tep_not_null($banner_extension)) {
-    if (is_dir(OSCOM::getConfig('dir_root') . 'images/graphs')) {
-      if (!FileSystem::isWritable(OSCOM::getConfig('dir_root') . 'images/graphs')) {
-        $OSCOM_MessageStack->add(ERROR_GRAPHS_DIRECTORY_NOT_WRITEABLE, 'error');
-      }
-    } else {
-      $OSCOM_MessageStack->add(ERROR_GRAPHS_DIRECTORY_DOES_NOT_EXIST, 'error');
     }
   }
 
@@ -413,7 +424,7 @@
 ?>
 
     <tr>
-      <td><?= '<a href="javascript:popupImageWindow(\'' . OSCOM::link(FILENAME_BANNER_MANAGER, 'action=preview&banner=' . $Qbanners->valueInt('banners_id')) . '\');"><i class="fa fa-external-link" title="View Banner"></i></a>&nbsp;' . $Qbanners->value('banners_title'); ?></td>
+      <td><?= '<a href="' . OSCOM::link(FILENAME_BANNER_MANAGER, 'action=preview&banner=' . $Qbanners->valueInt('banners_id')) . '" target="_blank"><i class="fa fa-external-link" title="View Banner"></i></a>&nbsp;' . $Qbanners->value('banners_title'); ?></td>
       <td class="text-right"><?= $Qbanners->value('banners_group'); ?></td>
       <td class="text-right"><?= $Qinfo->valueInt('banners_shown') . ' / ' . $Qinfo->valueInt('banners_clicked'); ?></td>
       <td class="text-right">
@@ -428,7 +439,7 @@
 
       </td>
       <td class="action">
-        <?= '<a href="' . OSCOM::link(FILENAME_BANNER_STATISTICS, 'page=' . $_GET['page'] . '&bID=' . $Qbanners->valueInt('banners_id')) . '"><i class="fa fa-line-chart" title="' . ICON_STATISTICS . '"></i></a>'; ?>
+        <?= '<a data-banner-id="' . $Qbanners->valueInt('banners_id') . '" data-toggle="modal" data-target="#statsModal"><i class="fa fa-line-chart" title="' . ICON_STATISTICS . '"></i></a>'; ?>
         <?= '<a href="' . OSCOM::link(FILENAME_BANNER_MANAGER, 'page=' . $_GET['page'] . '&bID=' . $Qbanners->valueInt('banners_id') . '&action=new') . '"><i class="fa fa-pencil" title="' . IMAGE_EDIT . '"></i></a>'; ?>
         <?= '<a href="' . OSCOM::link(FILENAME_BANNER_MANAGER, 'page=' . $_GET['page'] . '&bID=' . $Qbanners->valueInt('banners_id') . '&action=delete') . '"><i class="fa fa-trash" title="' . IMAGE_DELETE . '"></i></a>'; ?>
       </td>
@@ -446,10 +457,100 @@
   <span><?= $Qbanners->getPageSetLabel(TEXT_DISPLAY_NUMBER_OF_BANNERS); ?></span>
 </div>
 
+<div id="statsModal" class="modal" tabindex="-1" role="dialog">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-body">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+
+        <div class="statsModalContent">
+          <i class="fa fa-spinner fa-spin fa-fw"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
 <script>
-function popupImageWindow(url) {
-  window.open(url,'popupImageWindow','toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=no,resizable=yes,copyhistory=no');
-}
+$(function() {
+  var fetchStatsUrl = '<?= addslashes(OSCOM::link('banner_manager.php', 'action=fetchStats&banners_id={{id}}')); ?>';
+
+  $('#statsModal').on('shown.bs.modal', function (e) {
+    var json = $.getJSON(Mustache.render(fetchStatsUrl, {id: $(e.relatedTarget).data('banner-id')}), function(data) {
+      if (typeof data.labels !== 'undefined') {
+        $('#statsModal .statsModalContent').html('<h4 class="modal-title">' + data.title + '</h4><div id="banner_statistics"></div><div class="text-right"><span class="label label-info">Views</span><span class="label label-danger">Clicks</span></div>');
+
+        var data = {
+          labels: data.labels,
+          series: [
+            {
+              name: 'shown',
+              data: data.days
+            },
+            {
+              name: 'clicked',
+              data: data.clicks
+            }
+          ]
+        };
+
+        var options = {
+          fullWidth: true,
+          series: {
+            'shown': {
+              showPoint: false,
+              showArea: true
+            },
+            'clicked': {
+              showPoint: false,
+              showArea: true
+            }
+          },
+          height: '400px',
+          axisY: {
+            labelInterpolationFnc: function skipLabels(value, index) {
+              return index % 2  === 0 ? value : null;
+            }
+          }
+        }
+
+        var chart = new Chartist.Line('#banner_statistics', data, options);
+
+        chart.on('draw', function(context) {
+          if ((typeof context.series !== 'undefined') && (typeof context.series.name !== 'undefined')) {
+            if (context.series.name == 'shown') {
+              if (context.type === 'line') {
+                context.element.attr({
+                  style: 'stroke: skyblue;'
+                });
+              } else if (context.type === 'area') {
+                context.element.attr({
+                  style: 'fill: skyblue;'
+                });
+              }
+            } else if (context.series.name == 'clicked') {
+              if (context.type === 'line') {
+                context.element.attr({
+                  style: 'stroke: salmon;'
+                });
+              } else if (context.type === 'area') {
+                context.element.attr({
+                  style: 'fill: salmon;'
+                });
+              }
+            }
+          }
+        });
+
+//        chart.update();
+      } else {
+        $('#statsModal .statsModalContent').html('<div class="alert alert-danger">Could not find banner statistics.</div>');
+      }
+    }).fail(function() {
+        $('#statsModal .statsModalContent').html('<div class="alert alert-danger">Could not fetch banner statistics.</div>');
+    });
+  });
+});
 </script>
 
 <?php
