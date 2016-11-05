@@ -10,7 +10,9 @@
 
 * Increase minimum MySQL requirement to v5.
 
-* Remove legacy code and old modules
+* Remove legacy code and old modules.
+
+* Change to MIT license.
 
 ---
 
