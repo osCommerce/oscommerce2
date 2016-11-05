@@ -11,7 +11,9 @@
 */
 
   use OSC\OM\Cache;
+  use OSC\OM\DateTime;
   use OSC\OM\HTML;
+  use OSC\OM\HTTP;
   use OSC\OM\OSCOM;
   use OSC\OM\Registry;
 
@@ -33,15 +35,25 @@
     }
 
     function getOutput() {
-      if (!class_exists('lastRSS')) {
-        include('includes/classes/rss.php');
-      }
+      $entries = [];
 
-      $rss = new lastRSS;
-      $rss->items_limit = 5;
-      $rss->cache_dir = Cache::getPath();
-      $rss->cache_time = 86400;
-      $feed = $rss->get('http://feeds.feedburner.com/osCommerceNewsAndBlogs', 'oscommerce_website-rss-news');
+      $newsCache = new Cache('oscommerce_website-news-latest5');
+
+      if ($newsCache->exists(360)) {
+        $entries = $newsCache->get();
+      } else {
+        $response = HTTP::getResponse(['url' => 'https://www.oscommerce.com/index.php?RPC&GetLatestNews']);
+
+        if (!empty($response)) {
+          $response = json_decode($response, true);
+
+          if (is_array($response) && (count($response) === 5)) {
+            $entries = $response;
+          }
+        }
+
+        $newsCache->save($entries);
+      }
 
       $output = '<table class="table table-hover">
                    <thead>
@@ -52,11 +64,11 @@
                    </thead>
                    <tbody>';
 
-      if (is_array($feed) && !empty($feed)) {
-        foreach ($feed['items'] as $item) {
+      if (is_array($entries) && (count($entries) === 5)) {
+        foreach ($entries as $item) {
           $output .= '    <tr>
-                            <td><a href="' . $item['link'] . '" target="_blank">' . $item['title'] . '</a></td>
-                            <td class="text-right" style="white-space: nowrap;">' . date("F j, Y", strtotime($item['pubDate'])) . '</td>
+                            <td><a href="' . HTML::outputProtected($item['link']) . '" target="_blank">' . HTML::outputProtected($item['title']) . '</a></td>
+                            <td class="text-right" style="white-space: nowrap;">' . HTML::outputProtected(DateTime::toShort($item['date'])) . '</td>
                           </tr>';
         }
       } else {
@@ -66,7 +78,13 @@
       }
 
       $output .= '    <tr>
-                        <td class="text-right" colspan="2"><a href="http://www.oscommerce.com/Us&News" target="_blank">' . HTML::image(OSCOM::linkImage('icon_oscommerce.png'), MODULE_ADMIN_DASHBOARD_LATEST_NEWS_ICON_NEWS) . '</a>&nbsp;<a href="http://www.oscommerce.com/newsletter/subscribe" target="_blank">' . HTML::image(OSCOM::linkImage('icon_newsletter.png'), MODULE_ADMIN_DASHBOARD_LATEST_NEWS_ICON_NEWSLETTER) . '</a>&nbsp;<a href="http://plus.google.com/+osCommerce" target="_blank">' . HTML::image(OSCOM::linkImage('icon_google_plus.png'), MODULE_ADMIN_DASHBOARD_LATEST_NEWS_ICON_GOOGLE_PLUS) . '</a>&nbsp;<a href="http://www.facebook.com/pages/osCommerce/33387373079" target="_blank">' . HTML::image(OSCOM::linkImage('icon_facebook.png'), MODULE_ADMIN_DASHBOARD_LATEST_NEWS_ICON_FACEBOOK) . '</a>&nbsp;<a href="http://twitter.com/osCommerce" target="_blank">' . HTML::image(OSCOM::linkImage('icon_twitter.png'), MODULE_ADMIN_DASHBOARD_LATEST_NEWS_ICON_TWITTER) . '</a>&nbsp;<a href="http://feeds.feedburner.com/osCommerceNewsAndBlogs" target="_blank">' . HTML::image(OSCOM::linkImage('icon_rss.png'), MODULE_ADMIN_DASHBOARD_LATEST_NEWS_ICON_RSS) . '</a></td>
+                        <td class="text-right" colspan="2">
+                          <a href="https://www.oscommerce.com/Us&News" target="_blank" title="' . HTML::outputProtected(MODULE_ADMIN_DASHBOARD_LATEST_NEWS_ICON_NEWS) . '"><span class="fa fa-fw fa-home"></span></a>
+                          <a href="https://www.oscommerce.com/newsletter/subscribe" target="_blank" title="' . HTML::outputProtected(MODULE_ADMIN_DASHBOARD_LATEST_NEWS_ICON_NEWSLETTER) . '"><span class="fa fa-fw fa-newspaper-o"></span></a>
+                          <a href="https://plus.google.com/+osCommerce" target="_blank" title="' . HTML::outputProtected(MODULE_ADMIN_DASHBOARD_LATEST_NEWS_ICON_GOOGLE_PLUS) . '"><span class="fa fa-fw fa-google-plus"></span></a>
+                          <a href="https://www.facebook.com/pages/osCommerce/33387373079" target="_blank" title="' . HTML::outputProtected(MODULE_ADMIN_DASHBOARD_LATEST_NEWS_ICON_FACEBOOK) . '"><span class="fa fa-fw fa-facebook"></span></a>
+                          <a href="https://twitter.com/osCommerce" target="_blank" title="' . HTML::outputProtected(MODULE_ADMIN_DASHBOARD_LATEST_NEWS_ICON_TWITTER) . '"><span class="fa fa-fw fa-twitter"></span></a>
+                        </td>
                       </tr>
                     </tbody>
                   </table>';
