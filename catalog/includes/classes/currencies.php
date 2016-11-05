@@ -1,14 +1,10 @@
 <?php
-/*
-  $Id$
-
-  osCommerce, Open Source E-Commerce Solutions
-  http://www.oscommerce.com
-
-  Copyright (c) 2015 osCommerce
-
-  Released under the GNU General Public License
-*/
+/**
+  * osCommerce Online Merchant
+  *
+  * @copyright (c) 2016 osCommerce; https://www.oscommerce.com
+  * @license MIT; https://www.oscommerce.com/license/mit.txt
+  */
 
   use OSC\OM\Registry;
 
@@ -74,7 +70,7 @@
     function display_price($products_price, $products_tax, $quantity = 1) {
       return $this->format($this->calculate_price($products_price, $products_tax, $quantity));
     }
-    
+
     function format_raw($number, $calculate_currency_value = true, $currency_type = '', $currency_value = '') {
       if (empty($currency_type)) $currency_type = $_SESSION['currency'];
 
@@ -87,9 +83,9 @@
 
       return $format_string;
     }
-    
+
     function display_raw($products_price, $products_tax, $quantity = 1) {
       return $this->format_raw($this->calculate_price($products_price, $products_tax, $quantity));
-    }    
+    }
   }
 ?>

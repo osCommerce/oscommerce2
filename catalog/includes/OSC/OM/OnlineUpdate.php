@@ -2,8 +2,8 @@
 /**
   * osCommerce Online Merchant
   *
-  * @copyright Copyright (c) 2016 osCommerce; https://www.oscommerce.com
-  * @license GPL; https://www.oscommerce.com/gpllicense.txt
+  * @copyright (c) 2016 osCommerce; https://www.oscommerce.com
+  * @license MIT; https://www.oscommerce.com/license/mit.txt
   */
 
 namespace OSC\OM;
