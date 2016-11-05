@@ -64,10 +64,15 @@ $(function() {
   };
 
   var options = {
-    width: '100%',
+    fullWidth: true,
     height: '200px',
     showPoint: false,
-    showArea: true
+    showArea: true,
+    axisY: {
+      labelInterpolationFnc: function skipLabels(value, index) {
+        return index % 2  === 0 ? value : null;
+      }
+    }
   }
 
   var chart = new Chartist.Line('#d_total_customers', data, options);
