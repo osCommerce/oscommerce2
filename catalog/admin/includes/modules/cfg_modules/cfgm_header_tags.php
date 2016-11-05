@@ -24,7 +24,7 @@
     function __construct() {
       $this->directory = OSCOM::getConfig('dir_root', $this->site) . 'includes/modules/header_tags/';
       $this->language_directory = OSCOM::getConfig('dir_root', $this->site) . 'includes/languages/';
-      $this->title = MODULE_CFG_MODULE_HEADER_TAGS_TITLE;
+      $this->title = OSCOM::getDef('module_cfg_module_header_tags_title');
     }
   }
 ?>

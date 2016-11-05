@@ -23,8 +23,8 @@
     var $enabled = false;
 
     function __construct() {
-      $this->title = MODULE_HEADER_TAGS_PRODUCT_OPENGRAPH_TITLE;
-      $this->description = MODULE_HEADER_TAGS_PRODUCT_OPENGRAPH_DESCRIPTION;
+      $this->title = OSCOM::getDef('module_header_tags_product_opengraph_title');
+      $this->description = OSCOM::getDef('module_header_tags_product_opengraph_description');
 
       if ( defined('MODULE_HEADER_TAGS_PRODUCT_OPENGRAPH_STATUS') ) {
         $this->sort_order = MODULE_HEADER_TAGS_PRODUCT_OPENGRAPH_SORT_ORDER;
@@ -88,7 +88,7 @@
 
           $data['og:url'] = OSCOM::link('product_info.php', 'products_id=' . $Qproduct->valueInt('products_id'), false);
 
-          $data['product:availability'] = ( $Qproduct->valueInt('products_quantity') > 0 ) ? MODULE_HEADER_TAGS_PRODUCT_OPENGRAPH_TEXT_IN_STOCK : MODULE_HEADER_TAGS_PRODUCT_OPENGRAPH_TEXT_OUT_OF_STOCK;
+          $data['product:availability'] = ( $Qproduct->valueInt('products_quantity') > 0 ) ? OSCOM::getDef('module_header_tags_product_opengraph_text_in_stock') : OSCOM::getDef('module_header_tags_product_opengraph_text_out_of_stock');
 
           $result = '';
           foreach ( $data as $key => $value ) {

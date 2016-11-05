@@ -1,0 +1,4 @@
+navbar_title_1 = Checkout
+navbar_title_2 = Success
+heading_title = Your Order Has Been Processed!
+table_heading_comments = Enter a comment for the order processed

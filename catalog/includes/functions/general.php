@@ -333,7 +333,7 @@
 
         $tax_rates[$class_id][$country_id][$zone_id]['description'] = $tax_description;
       } else {
-        $tax_rates[$class_id][$country_id][$zone_id]['description'] = TEXT_UNKNOWN_TAX_RATE;
+        $tax_rates[$class_id][$country_id][$zone_id]['description'] = OSCOM::getDef('text_unknown_tax_rate');
       }
     }
 
@@ -861,7 +861,7 @@
     $sort_suffix = '';
 
     if ($sortby) {
-      $sort_prefix = '<a href="' . OSCOM::link($PHP_SELF, tep_get_all_get_params(array('page', 'info', 'sort')) . 'page=1&sort=' . $colnum . ($sortby == $colnum . 'a' ? 'd' : 'a')) . '" title="' . HTML::output(TEXT_SORT_PRODUCTS . ($sortby == $colnum . 'd' || substr($sortby, 0, 1) != $colnum ? TEXT_ASCENDINGLY : TEXT_DESCENDINGLY) . TEXT_BY . $heading) . '" class="productListing-heading">' ;
+      $sort_prefix = '<a href="' . OSCOM::link($PHP_SELF, tep_get_all_get_params(array('page', 'info', 'sort')) . 'page=1&sort=' . $colnum . ($sortby == $colnum . 'a' ? 'd' : 'a')) . '" title="' . HTML::output(OSCOM::getDef('text_sort_products') . ($sortby == $colnum . 'd' || substr($sortby, 0, 1) != $colnum ? OSCOM::getDef('text_ascendingly') : OSCOM::getDef('text_descendingly')) . OSCOM::getDef('text_by') . $heading) . '" class="productListing-heading">' ;
       $sort_suffix = (substr($sortby, 0, 1) == $colnum ? (substr($sortby, 1, 1) == 'a' ? '+' : '-') : '') . '</a>';
     }
 
@@ -1196,7 +1196,7 @@
 ////
 // Creates a pull-down list of countries
   function tep_get_country_list($name, $selected = '', $parameters = '') {
-    $countries_array = array(array('id' => '', 'text' => PULL_DOWN_DEFAULT));
+    $countries_array = array(array('id' => '', 'text' => OSCOM::getDef('pull_down_default')));
     $countries = tep_get_countries();
 
     for ($i=0, $n=sizeof($countries); $i<$n; $i++) {

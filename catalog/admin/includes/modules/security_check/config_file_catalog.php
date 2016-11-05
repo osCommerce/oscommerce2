@@ -30,7 +30,7 @@
     }
 
     function getMessage() {
-      return WARNING_CONFIG_FILE_WRITEABLE;
+      return OSCOM::getDef('warning_config_file_writeable');
     }
   }
 ?>

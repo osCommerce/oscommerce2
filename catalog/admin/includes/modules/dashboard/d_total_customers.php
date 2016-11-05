@@ -22,8 +22,8 @@
     var $enabled = false;
 
     function d_total_customers() {
-      $this->title = MODULE_ADMIN_DASHBOARD_TOTAL_CUSTOMERS_TITLE;
-      $this->description = MODULE_ADMIN_DASHBOARD_TOTAL_CUSTOMERS_DESCRIPTION;
+      $this->title = OSCOM::getDef('module_admin_dashboard_total_customers_title');
+      $this->description = OSCOM::getDef('module_admin_dashboard_total_customers_description');
 
       if ( defined('MODULE_ADMIN_DASHBOARD_TOTAL_CUSTOMERS_STATUS') ) {
         $this->sort_order = MODULE_ADMIN_DASHBOARD_TOTAL_CUSTOMERS_SORT_ORDER;
@@ -47,7 +47,7 @@
 
       $days = array_reverse($days, true);
 
-      $chart_label = HTML::output(MODULE_ADMIN_DASHBOARD_TOTAL_CUSTOMERS_CHART_LINK);
+      $chart_label = HTML::output(OSCOM::getDef('module_admin_dashboard_total_customers_chart_link'));
       $chart_label_link = OSCOM::link(FILENAME_CUSTOMERS);
 
       $data_labels = json_encode(array_keys($days));

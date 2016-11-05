@@ -1,0 +1,2 @@
+module_header_tags_google_analytics_title = Google Analytics
+module_header_tags_google_analytics_description = Add Google Analytics to the shop

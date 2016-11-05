@@ -1,0 +1,4 @@
+module_admin_dashboard_partner_news_title = Partner News
+module_admin_dashboard_partner_news_description = Show the lastest osCommerce Partner News
+module_admin_dashboard_partner_news_more_title = See More Partner Services
+module_admin_dashboard_partner_news_error_json_decode = PHP json_decode() function required.

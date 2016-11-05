@@ -529,21 +529,21 @@
     }
 
     if (!empty($new_version)) {
-      $OSCOM_MessageStack->add(sprintf(VERSION_UPGRADES_AVAILABLE, $new_version['version']), 'warning', 'versionCheck');
+      $OSCOM_MessageStack->add(sprintf(OSCOM::getDef('version_upgrades_available'), $new_version['version']), 'warning', 'versionCheck');
     } else {
-      $OSCOM_MessageStack->add(VERSION_RUNNING_LATEST, 'success', 'versionCheck');
+      $OSCOM_MessageStack->add(OSCOM::getDef('version_running_latest'), 'success', 'versionCheck');
     }
   } else {
-    $OSCOM_MessageStack->add(ERROR_COULD_NOT_CONNECT, 'error', 'versionCheck');
+    $OSCOM_MessageStack->add(OSCOM::getDef('error_could_not_connect'), 'error', 'versionCheck');
   }
 
   require($oscTemplate->getFile('template_top.php'));
 ?>
 
-<h2><i class="fa fa-cloud-download"></i> <a href="<?= OSCOM::link('online_update.php'); ?>"><?= HEADING_TITLE; ?></a></h2>
+<h2><i class="fa fa-cloud-download"></i> <a href="<?= OSCOM::link('online_update.php'); ?>"><?= OSCOM::getDef('heading_title'); ?></a></h2>
 
 <div id="onlineUpdateContentBlock">
-  <p><?php echo TITLE_INSTALLED_VERSION . ' <strong>osCommerce Online Merchant v' . $current_version . '</strong>'; ?></p>
+  <p><?php echo OSCOM::getDef('title_installed_version') . ' <strong>osCommerce Online Merchant v' . $current_version . '</strong>'; ?></p>
 
   <?php echo $OSCOM_MessageStack->get('versionCheck'); ?>
 

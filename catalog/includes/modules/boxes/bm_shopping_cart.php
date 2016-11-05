@@ -22,8 +22,8 @@
     var $enabled = false;
 
     function __construct() {
-      $this->title = MODULE_BOXES_SHOPPING_CART_TITLE;
-      $this->description = MODULE_BOXES_SHOPPING_CART_DESCRIPTION;
+      $this->title = OSCOM::getDef('module_boxes_shopping_cart_title');
+      $this->description = OSCOM::getDef('module_boxes_shopping_cart_description');
 
       if ( defined('MODULE_BOXES_SHOPPING_CART_STATUS') ) {
         $this->sort_order = MODULE_BOXES_SHOPPING_CART_SORT_ORDER;
@@ -65,7 +65,7 @@
         $cart_contents_string .= '<li class="text-right"><hr>' . $currencies->format($_SESSION['cart']->show_total()) . '</li>';
 
       } else {
-        $cart_contents_string .= '<p>' . MODULE_BOXES_SHOPPING_CART_BOX_CART_EMPTY . '</p>';
+        $cart_contents_string .= '<p>' . OSCOM::getDef('module_boxes_shopping_cart_box_cart_empty') . '</p>';
       }
 
       ob_start();

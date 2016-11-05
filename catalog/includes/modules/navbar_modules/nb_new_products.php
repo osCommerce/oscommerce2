@@ -10,6 +10,7 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\OSCOM;
   use OSC\OM\Registry;
 
   class nb_new_products {
@@ -21,8 +22,8 @@
     var $enabled = false;
 
     function __construct() {
-      $this->title = MODULE_NAVBAR_NEW_PRODUCTS_TITLE;
-      $this->description = MODULE_NAVBAR_NEW_PRODUCTS_DESCRIPTION;
+      $this->title = OSCOM::getDef('module_navbar_new_products_title');
+      $this->description = OSCOM::getDef('module_navbar_new_products_description');
 
       if ( defined('MODULE_NAVBAR_NEW_PRODUCTS_STATUS') ) {
         $this->sort_order = MODULE_NAVBAR_NEW_PRODUCTS_SORT_ORDER;

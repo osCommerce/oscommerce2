@@ -23,13 +23,13 @@
 
   $OSCOM_Language->loadDefinitions('shopping_cart');
 
-  $breadcrumb->add(NAVBAR_TITLE, OSCOM::link('shopping_cart.php'));
+  $breadcrumb->add(OSCOM::getDef('navbar_title'), OSCOM::link('shopping_cart.php'));
 
   require($oscTemplate->getFile('template_top.php'));
 ?>
 
 <div class="page-header">
-  <h1><?php echo HEADING_TITLE; ?></h1>
+  <h1><?php echo OSCOM::getDef('heading_title'); ?></h1>
 </div>
 
 <?php
@@ -119,20 +119,20 @@
       </tbody>
     </table>
 
-    <p class="text-right"><strong><?php echo SUB_TITLE_SUB_TOTAL; ?> <?php echo $currencies->format($_SESSION['cart']->show_total()); ?></strong></p>
+    <p class="text-right"><strong><?php echo OSCOM::getDef('sub_title_sub_total'); ?> <?php echo $currencies->format($_SESSION['cart']->show_total()); ?></strong></p>
 
 <?php
     if ($any_out_of_stock == 1) {
       if (STOCK_ALLOW_CHECKOUT == 'true') {
 ?>
 
-    <div class="alert alert-warning"><?php echo OUT_OF_STOCK_CAN_CHECKOUT; ?></div>
+    <div class="alert alert-warning"><?php echo OSCOM::getDef('out_of_stock_can_checkout'); ?></div>
 
 <?php
       } else {
 ?>
 
-    <div class="alert alert-danger"><?php echo OUT_OF_STOCK_CANT_CHECKOUT; ?></div>
+    <div class="alert alert-danger"><?php echo OSCOM::getDef('out_of_stock_cant_checkout'); ?></div>
 
 <?php
       }
@@ -142,7 +142,7 @@
   </div>
 
   <div class="buttonSet">
-    <div class="text-right"><?php echo HTML::button(IMAGE_BUTTON_CHECKOUT, 'fa fa-angle-right', OSCOM::link('checkout_shipping.php'), null, 'btn-success'); ?></div>
+    <div class="text-right"><?php echo HTML::button(OSCOM::getDef('image_button_checkout'), 'fa fa-angle-right', OSCOM::link('checkout_shipping.php'), null, 'btn-success'); ?></div>
   </div>
 
 <?php
@@ -150,7 +150,7 @@
 
     if (!empty($checkout_buttons)) {
       echo '<div class="clearfix"></div>';
-      echo '<p class="text-right">' . TEXT_ALTERNATIVE_CHECKOUT_METHODS . '</p>';
+      echo '<p class="text-right">' . OSCOM::getDef('text_alternative_checkout_methods') . '</p>';
 
       foreach ($checkout_buttons as $button) {
         echo '<p class="text-right">' . $button . '</p>';
@@ -167,10 +167,10 @@
 ?>
 
 <div class="alert alert-danger">
-  <?php echo TEXT_CART_EMPTY; ?>
+  <?php echo OSCOM::getDef('text_cart_empty'); ?>
 </div>
 
-<p class="text-right"><?php echo HTML::button(IMAGE_BUTTON_CONTINUE, 'fa fa-angle-right', OSCOM::link('index.php'), null, 'btn-danger'); ?></p>
+<p class="text-right"><?php echo HTML::button(OSCOM::getDef('image_button_continue'), 'fa fa-angle-right', OSCOM::link('index.php'), null, 'btn-danger'); ?></p>
 
 <?php
   }

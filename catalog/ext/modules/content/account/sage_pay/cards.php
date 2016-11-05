@@ -88,7 +88,7 @@
 ?>
 
     <div>
-      <span style="float: right;"><?php echo HTML::button(SMALL_IMAGE_BUTTON_DELETE, 'glyphicon glyphicon-trash', OSCOM::link('ext/modules/content/account/sage_pay/cards.php', 'action=delete&id=' . $Qtokens->valueInt('id') . '&formid=' . md5($_SESSION['sessiontoken']))); ?></span>
+      <span style="float: right;"><?php echo HTML::button(OSCOM::getDef('small_image_button_delete'), 'glyphicon glyphicon-trash', OSCOM::link('ext/modules/content/account/sage_pay/cards.php', 'action=delete&id=' . $Qtokens->valueInt('id') . '&formid=' . md5($_SESSION['sessiontoken']))); ?></span>
       <p><strong><?php echo $Qtokens->valueProtected('card_type'); ?></strong>&nbsp;&nbsp;****<?php echo $Qtokens->valueProtected('number_filtered') . '&nbsp;&nbsp;' . HTML::outputProtected(substr($Qtokens->value('expiry_date'), 0, 2) . '/' . substr($Qtokens->value('expiry_date'), 2)); ?></p>
     </div>
 
@@ -108,7 +108,7 @@
   </div>
 
   <div class="buttonSet">
-    <?php echo HTML::button(IMAGE_BUTTON_BACK, 'glyphicon glyphicon-chevron-left', OSCOM::link('account.php')); ?>
+    <?php echo HTML::button(OSCOM::getDef('image_button_back'), 'glyphicon glyphicon-chevron-left', OSCOM::link('account.php')); ?>
   </div>
 </div>
 

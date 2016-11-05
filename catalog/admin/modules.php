@@ -165,9 +165,9 @@
             <td class="pageHeading"><?php echo HEADING_TITLE; ?></td>
 <?php
   if (isset($_GET['list'])) {
-    echo '            <td class="smallText" align="right">' . HTML::button(IMAGE_BACK, 'fa fa-chevron-left', OSCOM::link(FILENAME_MODULES, 'set=' . $set)) . '</td>';
+    echo '            <td class="smallText" align="right">' . HTML::button(OSCOM::getDef('image_back'), 'fa fa-chevron-left', OSCOM::link(FILENAME_MODULES, 'set=' . $set)) . '</td>';
   } else {
-    echo '            <td class="smallText" align="right">' . HTML::button(IMAGE_MODULE_INSTALL . ' (' . $new_modules_counter . ')', 'fa fa-plus', OSCOM::link(FILENAME_MODULES, 'set=' . $set . '&list=new')) . '</td>';
+    echo '            <td class="smallText" align="right">' . HTML::button(OSCOM::getDef('image_module_install') . ' (' . $new_modules_counter . ')', 'fa fa-plus', OSCOM::link(FILENAME_MODULES, 'set=' . $set . '&list=new')) . '</td>';
   }
 ?>
           </tr>
@@ -178,9 +178,9 @@
           <tr>
             <td valign="top"><table border="0" width="100%" cellspacing="0" cellpadding="2">
               <tr class="dataTableHeadingRow">
-                <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_MODULES; ?></td>
-                <td class="dataTableHeadingContent" align="right"><?php echo TABLE_HEADING_SORT_ORDER; ?></td>
-                <td class="dataTableHeadingContent" align="right"><?php echo TABLE_HEADING_ACTION; ?>&nbsp;</td>
+                <td class="dataTableHeadingContent"><?php echo OSCOM::getDef('table_heading_modules'); ?></td>
+                <td class="dataTableHeadingContent" align="right"><?php echo OSCOM::getDef('table_heading_sort_order'); ?></td>
+                <td class="dataTableHeadingContent" align="right"><?php echo OSCOM::getDef('table_heading_action'); ?>&nbsp;</td>
               </tr>
 <?php
   $installed_modules = array();
@@ -265,7 +265,7 @@
 ?>
                 <td class="dataTableContent"><?php echo $module->title; ?></td>
                 <td class="dataTableContent" align="right"><?php if (in_array($module->code . $file_extension, $modules_installed) && is_numeric($module->sort_order)) echo $module->sort_order; ?></td>
-                <td class="dataTableContent" align="right"><?php if (isset($mInfo) && is_object($mInfo) && ($class == $mInfo->code) ) { echo HTML::image(OSCOM::linkImage('icon_arrow_right.gif')); } else { echo '<a href="' . OSCOM::link(FILENAME_MODULES, 'set=' . $set . (isset($_GET['list']) ? '&list=new' : '') . '&module=' . $class) . '">' . HTML::image(OSCOM::linkImage('icon_info.gif'), IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
+                <td class="dataTableContent" align="right"><?php if (isset($mInfo) && is_object($mInfo) && ($class == $mInfo->code) ) { echo HTML::image(OSCOM::linkImage('icon_arrow_right.gif')); } else { echo '<a href="' . OSCOM::link(FILENAME_MODULES, 'set=' . $set . (isset($_GET['list']) ? '&list=new' : '') . '&module=' . $class) . '">' . HTML::image(OSCOM::linkImage('icon_info.gif'), OSCOM::getDef('image_icon_info')) . '</a>'; } ?>&nbsp;</td>
               </tr>
 <?php
     }
@@ -324,7 +324,7 @@
   }
 ?>
               <tr>
-                <td colspan="3" class="smallText"><?php echo TEXT_MODULE_DIRECTORY . ' ' . $module_directory; ?></td>
+                <td colspan="3" class="smallText"><?php echo OSCOM::getDef('text_module_directory') . ' ' . $module_directory; ?></td>
               </tr>
             </table></td>
 <?php
@@ -356,7 +356,7 @@
 
       $contents = array('form' => HTML::form('modules', OSCOM::link(FILENAME_MODULES, 'set=' . $set . '&module=' . $_GET['module'] . '&action=save')));
       $contents[] = array('text' => $keys);
-      $contents[] = array('align' => 'center', 'text' => '<br />' . HTML::button(IMAGE_SAVE, 'fa fa-save') . HTML::button(IMAGE_CANCEL, 'fa fa-close', OSCOM::link(FILENAME_MODULES, 'set=' . $set . '&module=' . $_GET['module'])));
+      $contents[] = array('align' => 'center', 'text' => '<br />' . HTML::button(OSCOM::getDef('image_save'), 'fa fa-save') . HTML::button(OSCOM::getDef('image_cancel'), 'fa fa-close', OSCOM::link(FILENAME_MODULES, 'set=' . $set . '&module=' . $_GET['module'])));
       break;
     default:
       $heading[] = array('text' => '<strong>' . $mInfo->title . '</strong>');
@@ -384,28 +384,28 @@
         }
         $keys = substr($keys, 0, strrpos($keys, '<br /><br />'));
 
-        $contents[] = array('align' => 'center', 'text' => HTML::button(IMAGE_EDIT, 'fa fa-edit', OSCOM::link(FILENAME_MODULES, 'set=' . $set . '&module=' . $mInfo->code . '&action=edit')) . HTML::button(IMAGE_MODULE_REMOVE, 'fa fa-minus', OSCOM::link(FILENAME_MODULES, 'set=' . $set . '&module=' . $mInfo->code . '&action=remove')));
+        $contents[] = array('align' => 'center', 'text' => HTML::button(OSCOM::getDef('image_edit'), 'fa fa-edit', OSCOM::link(FILENAME_MODULES, 'set=' . $set . '&module=' . $mInfo->code . '&action=edit')) . HTML::button(OSCOM::getDef('image_module_remove'), 'fa fa-minus', OSCOM::link(FILENAME_MODULES, 'set=' . $set . '&module=' . $mInfo->code . '&action=remove')));
 
         if (isset($mInfo->signature) && (list($scode, $smodule, $sversion, $soscversion) = explode('|', $mInfo->signature))) {
-          $contents[] = array('text' => '<br />' . HTML::image(OSCOM::linkImage('icon_info.gif'), IMAGE_ICON_INFO) . '&nbsp;<strong>' . TEXT_INFO_VERSION . '</strong> ' . $sversion . ' (<a href="http://sig.oscommerce.com/' . $mInfo->signature . '" target="_blank">' . TEXT_INFO_ONLINE_STATUS . '</a>)');
+          $contents[] = array('text' => '<br />' . HTML::image(OSCOM::linkImage('icon_info.gif'), OSCOM::getDef('image_icon_info')) . '&nbsp;<strong>' . OSCOM::getDef('text_info_version') . '</strong> ' . $sversion . ' (<a href="http://sig.oscommerce.com/' . $mInfo->signature . '" target="_blank">' . OSCOM::getDef('text_info_online_status') . '</a>)');
         }
 
         if (isset($mInfo->api_version)) {
-          $contents[] = array('text' => HTML::image(OSCOM::linkImage('icon_info.gif'), IMAGE_ICON_INFO) . '&nbsp;<strong>' . TEXT_INFO_API_VERSION . '</strong> ' . $mInfo->api_version);
+          $contents[] = array('text' => HTML::image(OSCOM::linkImage('icon_info.gif'), OSCOM::getDef('image_icon_info')) . '&nbsp;<strong>' . OSCOM::getDef('text_info_api_version') . '</strong> ' . $mInfo->api_version);
         }
 
         $contents[] = array('text' => '<br />' . $mInfo->description);
         $contents[] = array('text' => '<br />' . $keys);
       } elseif (isset($_GET['list']) && ($_GET['list'] == 'new')) {
         if (isset($mInfo)) {
-          $contents[] = array('align' => 'center', 'text' => HTML::button(IMAGE_MODULE_INSTALL, 'fa fa-plus', OSCOM::link(FILENAME_MODULES, 'set=' . $set . '&module=' . $mInfo->code . '&action=install')));
+          $contents[] = array('align' => 'center', 'text' => HTML::button(OSCOM::getDef('image_module_install'), 'fa fa-plus', OSCOM::link(FILENAME_MODULES, 'set=' . $set . '&module=' . $mInfo->code . '&action=install')));
 
           if (isset($mInfo->signature) && (list($scode, $smodule, $sversion, $soscversion) = explode('|', $mInfo->signature))) {
-            $contents[] = array('text' => '<br />' . HTML::image(OSCOM::linkImage('icon_info.gif'), IMAGE_ICON_INFO) . '&nbsp;<strong>' . TEXT_INFO_VERSION . '</strong> ' . $sversion . ' (<a href="http://sig.oscommerce.com/' . $mInfo->signature . '" target="_blank">' . TEXT_INFO_ONLINE_STATUS . '</a>)');
+            $contents[] = array('text' => '<br />' . HTML::image(OSCOM::linkImage('icon_info.gif'), OSCOM::getDef('image_icon_info')) . '&nbsp;<strong>' . OSCOM::getDef('text_info_version') . '</strong> ' . $sversion . ' (<a href="http://sig.oscommerce.com/' . $mInfo->signature . '" target="_blank">' . OSCOM::getDef('text_info_online_status') . '</a>)');
           }
 
           if (isset($mInfo->api_version)) {
-            $contents[] = array('text' => HTML::image(OSCOM::linkImage('icon_info.gif'), IMAGE_ICON_INFO) . '&nbsp;<strong>' . TEXT_INFO_API_VERSION . '</strong> ' . $mInfo->api_version);
+            $contents[] = array('text' => HTML::image(OSCOM::linkImage('icon_info.gif'), OSCOM::getDef('image_icon_info')) . '&nbsp;<strong>' . OSCOM::getDef('text_info_api_version') . '</strong> ' . $mInfo->api_version);
           }
 
           $contents[] = array('text' => '<br />' . $mInfo->description);

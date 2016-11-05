@@ -199,7 +199,7 @@
         $remove_language = true;
         if ($Qlanguage->value('code') == DEFAULT_LANGUAGE) {
           $remove_language = false;
-          $OSCOM_MessageStack->add(ERROR_REMOVE_DEFAULT_LANGUAGE, 'error');
+          $OSCOM_MessageStack->add(OSCOM::getDef('error_remove_default_language'), 'error');
         }
         break;
     }
@@ -212,7 +212,7 @@
       <tr>
         <td width="100%"><table border="0" width="100%" cellspacing="0" cellpadding="0">
           <tr>
-            <td class="pageHeading"><?php echo HEADING_TITLE; ?></td>
+            <td class="pageHeading"><?php echo OSCOM::getDef('heading_title'); ?></td>
           </tr>
         </table></td>
       </tr>
@@ -221,9 +221,9 @@
           <tr>
             <td valign="top"><table border="0" width="100%" cellspacing="0" cellpadding="2">
               <tr class="dataTableHeadingRow">
-                <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_LANGUAGE_NAME; ?></td>
-                <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_LANGUAGE_CODE; ?></td>
-                <td class="dataTableHeadingContent" align="right"><?php echo TABLE_HEADING_ACTION; ?>&nbsp;</td>
+                <td class="dataTableHeadingContent"><?php echo OSCOM::getDef('table_heading_language_name'); ?></td>
+                <td class="dataTableHeadingContent"><?php echo OSCOM::getDef('table_heading_language_code'); ?></td>
+                <td class="dataTableHeadingContent" align="right"><?php echo OSCOM::getDef('table_heading_action'); ?>&nbsp;</td>
               </tr>
 <?php
   $Qlanguages = $OSCOM_Db->prepare('select SQL_CALC_FOUND_ROWS languages_id, name, code, image, directory, sort_order from :table_languages order by sort_order limit :page_set_offset, :page_set_max_results');
@@ -242,13 +242,13 @@
     }
 
     if (DEFAULT_LANGUAGE == $Qlanguages->value('code')) {
-      echo '                <td class="dataTableContent"><strong>' . $Qlanguages->value('name') . ' (' . TEXT_DEFAULT . ')</strong></td>' . "\n";
+      echo '                <td class="dataTableContent"><strong>' . $Qlanguages->value('name') . ' (' . OSCOM::getDef('text_default') . ')</strong></td>' . "\n";
     } else {
       echo '                <td class="dataTableContent">' . $Qlanguages->value('name') . '</td>' . "\n";
     }
 ?>
                 <td class="dataTableContent"><?php echo $Qlanguages->value('code'); ?></td>
-                <td class="dataTableContent" align="right"><?php if (isset($lInfo) && is_object($lInfo) && ($Qlanguages->valueInt('languages_id') == (int)$lInfo->languages_id)) { echo HTML::image(OSCOM::linkImage('icon_arrow_right.gif')); } else { echo '<a href="' . OSCOM::link(FILENAME_LANGUAGES, 'page=' . $_GET['page'] . '&lID=' . $Qlanguages->valueInt('languages_id')) . '">' . HTML::image(OSCOM::linkImage('icon_info.gif'), IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
+                <td class="dataTableContent" align="right"><?php if (isset($lInfo) && is_object($lInfo) && ($Qlanguages->valueInt('languages_id') == (int)$lInfo->languages_id)) { echo HTML::image(OSCOM::linkImage('icon_arrow_right.gif')); } else { echo '<a href="' . OSCOM::link(FILENAME_LANGUAGES, 'page=' . $_GET['page'] . '&lID=' . $Qlanguages->valueInt('languages_id')) . '">' . HTML::image(OSCOM::linkImage('icon_info.gif'), OSCOM::getDef('image_icon_info')) . '</a>'; } ?>&nbsp;</td>
               </tr>
 <?php
   }
@@ -256,14 +256,14 @@
               <tr>
                 <td colspan="3"><table border="0" width="100%" cellspacing="0" cellpadding="2">
                   <tr>
-                    <td class="smallText" valign="top"><?php echo $Qlanguages->getPageSetLabel(TEXT_DISPLAY_NUMBER_OF_LANGUAGES); ?></td>
+                    <td class="smallText" valign="top"><?php echo $Qlanguages->getPageSetLabel(OSCOM::getDef('text_display_number_of_languages')); ?></td>
                     <td class="smallText" align="right"><?php echo $Qlanguages->getPageSetLinks(); ?></td>
                   </tr>
 <?php
   if (empty($action)) {
 ?>
                   <tr>
-                    <td class="smallText" align="right" colspan="2"><?php echo HTML::button(IMAGE_NEW_LANGUAGE, 'fa fa-plus', OSCOM::link(FILENAME_LANGUAGES, 'page=' . $_GET['page'] . (isset($lInfo) ? '&lID=' . $lInfo->languages_id : '') . '&action=new')); ?></td>
+                    <td class="smallText" align="right" colspan="2"><?php echo HTML::button(OSCOM::getDef('image_new_language'), 'fa fa-plus', OSCOM::link(FILENAME_LANGUAGES, 'page=' . $_GET['page'] . (isset($lInfo) ? '&lID=' . $lInfo->languages_id : '') . '&action=new')); ?></td>
                   </tr>
 <?php
   }
@@ -277,48 +277,48 @@
 
   switch ($action) {
     case 'new':
-      $heading[] = array('text' => '<strong>' . TEXT_INFO_HEADING_NEW_LANGUAGE . '</strong>');
+      $heading[] = array('text' => '<strong>' . OSCOM::getDef('text_info_heading_new_language') . '</strong>');
 
       $contents = array('form' => HTML::form('languages', OSCOM::link(FILENAME_LANGUAGES, 'action=insert')));
-      $contents[] = array('text' => TEXT_INFO_INSERT_INTRO);
-      $contents[] = array('text' => '<br />' . TEXT_INFO_LANGUAGE_NAME . '<br />' . HTML::inputField('name'));
-      $contents[] = array('text' => '<br />' . TEXT_INFO_LANGUAGE_CODE . '<br />' . HTML::inputField('code'));
-      $contents[] = array('text' => '<br />' . TEXT_INFO_LANGUAGE_IMAGE . '<br />' . HTML::inputField('image', 'icon.gif'));
-      $contents[] = array('text' => '<br />' . TEXT_INFO_LANGUAGE_DIRECTORY . '<br />' . HTML::inputField('directory'));
-      $contents[] = array('text' => '<br />' . TEXT_INFO_LANGUAGE_SORT_ORDER . '<br />' . HTML::inputField('sort_order'));
-      $contents[] = array('text' => '<br />' . HTML::checkboxField('default') . ' ' . TEXT_SET_DEFAULT);
-      $contents[] = array('align' => 'center', 'text' => '<br />' . HTML::button(IMAGE_SAVE, 'fa fa-save') . HTML::button(IMAGE_CANCEL, 'fa fa-close', OSCOM::link(FILENAME_LANGUAGES, 'page=' . $_GET['page'] . '&lID=' . $_GET['lID'])));
+      $contents[] = array('text' => OSCOM::getDef('text_info_insert_intro'));
+      $contents[] = array('text' => '<br />' . OSCOM::getDef('text_info_language_name') . '<br />' . HTML::inputField('name'));
+      $contents[] = array('text' => '<br />' . OSCOM::getDef('text_info_language_code') . '<br />' . HTML::inputField('code'));
+      $contents[] = array('text' => '<br />' . OSCOM::getDef('text_info_language_image') . '<br />' . HTML::inputField('image', 'icon.gif'));
+      $contents[] = array('text' => '<br />' . OSCOM::getDef('text_info_language_directory') . '<br />' . HTML::inputField('directory'));
+      $contents[] = array('text' => '<br />' . OSCOM::getDef('text_info_language_sort_order') . '<br />' . HTML::inputField('sort_order'));
+      $contents[] = array('text' => '<br />' . HTML::checkboxField('default') . ' ' . OSCOM::getDef('text_set_default'));
+      $contents[] = array('align' => 'center', 'text' => '<br />' . HTML::button(OSCOM::getDef('image_save'), 'fa fa-save') . HTML::button(OSCOM::getDef('image_cancel'), 'fa fa-close', OSCOM::link(FILENAME_LANGUAGES, 'page=' . $_GET['page'] . '&lID=' . $_GET['lID'])));
       break;
     case 'edit':
-      $heading[] = array('text' => '<strong>' . TEXT_INFO_HEADING_EDIT_LANGUAGE . '</strong>');
+      $heading[] = array('text' => '<strong>' . OSCOM::getDef('text_info_heading_edit_language') . '</strong>');
 
       $contents = array('form' => HTML::form('languages', OSCOM::link(FILENAME_LANGUAGES, 'page=' . $_GET['page'] . '&lID=' . $lInfo->languages_id . '&action=save')));
-      $contents[] = array('text' => TEXT_INFO_EDIT_INTRO);
-      $contents[] = array('text' => '<br />' . TEXT_INFO_LANGUAGE_NAME . '<br />' . HTML::inputField('name', $lInfo->name));
-      $contents[] = array('text' => '<br />' . TEXT_INFO_LANGUAGE_CODE . '<br />' . HTML::inputField('code', $lInfo->code));
-      $contents[] = array('text' => '<br />' . TEXT_INFO_LANGUAGE_IMAGE . '<br />' . HTML::inputField('image', $lInfo->image));
-      $contents[] = array('text' => '<br />' . TEXT_INFO_LANGUAGE_DIRECTORY . '<br />' . HTML::inputField('directory', $lInfo->directory));
-      $contents[] = array('text' => '<br />' . TEXT_INFO_LANGUAGE_SORT_ORDER . '<br />' . HTML::inputField('sort_order', $lInfo->sort_order));
-      if (DEFAULT_LANGUAGE != $lInfo->code) $contents[] = array('text' => '<br />' . HTML::checkboxField('default') . ' ' . TEXT_SET_DEFAULT);
-      $contents[] = array('align' => 'center', 'text' => '<br />' . HTML::button(IMAGE_SAVE, 'fa fa-save') . HTML::button(IMAGE_CANCEL, 'fa fa-close', OSCOM::link(FILENAME_LANGUAGES, 'page=' . $_GET['page'] . '&lID=' . $lInfo->languages_id)));
+      $contents[] = array('text' => OSCOM::getDef('text_info_edit_intro'));
+      $contents[] = array('text' => '<br />' . OSCOM::getDef('text_info_language_name') . '<br />' . HTML::inputField('name', $lInfo->name));
+      $contents[] = array('text' => '<br />' . OSCOM::getDef('text_info_language_code') . '<br />' . HTML::inputField('code', $lInfo->code));
+      $contents[] = array('text' => '<br />' . OSCOM::getDef('text_info_language_image') . '<br />' . HTML::inputField('image', $lInfo->image));
+      $contents[] = array('text' => '<br />' . OSCOM::getDef('text_info_language_directory') . '<br />' . HTML::inputField('directory', $lInfo->directory));
+      $contents[] = array('text' => '<br />' . OSCOM::getDef('text_info_language_sort_order') . '<br />' . HTML::inputField('sort_order', $lInfo->sort_order));
+      if (DEFAULT_LANGUAGE != $lInfo->code) $contents[] = array('text' => '<br />' . HTML::checkboxField('default') . ' ' . OSCOM::getDef('text_set_default'));
+      $contents[] = array('align' => 'center', 'text' => '<br />' . HTML::button(OSCOM::getDef('image_save'), 'fa fa-save') . HTML::button(OSCOM::getDef('image_cancel'), 'fa fa-close', OSCOM::link(FILENAME_LANGUAGES, 'page=' . $_GET['page'] . '&lID=' . $lInfo->languages_id)));
       break;
     case 'delete':
-      $heading[] = array('text' => '<strong>' . TEXT_INFO_HEADING_DELETE_LANGUAGE . '</strong>');
+      $heading[] = array('text' => '<strong>' . OSCOM::getDef('text_info_heading_delete_language') . '</strong>');
 
-      $contents[] = array('text' => TEXT_INFO_DELETE_INTRO);
+      $contents[] = array('text' => OSCOM::getDef('text_info_delete_intro'));
       $contents[] = array('text' => '<br /><strong>' . $lInfo->name . '</strong>');
-      $contents[] = array('align' => 'center', 'text' => '<br />' . (($remove_language) ? HTML::button(IMAGE_DELETE, 'fa fa-trash', OSCOM::link(FILENAME_LANGUAGES, 'page=' . $_GET['page'] . '&lID=' . $lInfo->languages_id . '&action=deleteconfirm')) : '') . HTML::button(IMAGE_CANCEL, 'fa fa-close', OSCOM::link(FILENAME_LANGUAGES, 'page=' . $_GET['page'] . '&lID=' . $lInfo->languages_id)));
+      $contents[] = array('align' => 'center', 'text' => '<br />' . (($remove_language) ? HTML::button(OSCOM::getDef('image_delete'), 'fa fa-trash', OSCOM::link(FILENAME_LANGUAGES, 'page=' . $_GET['page'] . '&lID=' . $lInfo->languages_id . '&action=deleteconfirm')) : '') . HTML::button(OSCOM::getDef('image_cancel'), 'fa fa-close', OSCOM::link(FILENAME_LANGUAGES, 'page=' . $_GET['page'] . '&lID=' . $lInfo->languages_id)));
       break;
     default:
       if (is_object($lInfo)) {
         $heading[] = array('text' => '<strong>' . $lInfo->name . '</strong>');
 
-        $contents[] = array('align' => 'center', 'text' => HTML::button(IMAGE_EDIT, 'fa fa-edit', OSCOM::link(FILENAME_LANGUAGES, 'page=' . $_GET['page'] . '&lID=' . $lInfo->languages_id . '&action=edit')) . HTML::button(IMAGE_DELETE, 'fa fa-trash', OSCOM::link(FILENAME_LANGUAGES, 'page=' . $_GET['page'] . '&lID=' . $lInfo->languages_id . '&action=delete')) . HTML::button(IMAGE_DETAILS, 'fa fa-info', OSCOM::link(FILENAME_DEFINE_LANGUAGE, 'lngdir=' . $lInfo->directory)));
-        $contents[] = array('text' => '<br />' . TEXT_INFO_LANGUAGE_NAME . ' ' . $lInfo->name);
-        $contents[] = array('text' => TEXT_INFO_LANGUAGE_CODE . ' ' . $lInfo->code);
+        $contents[] = array('align' => 'center', 'text' => HTML::button(OSCOM::getDef('image_edit'), 'fa fa-edit', OSCOM::link(FILENAME_LANGUAGES, 'page=' . $_GET['page'] . '&lID=' . $lInfo->languages_id . '&action=edit')) . HTML::button(OSCOM::getDef('image_delete'), 'fa fa-trash', OSCOM::link(FILENAME_LANGUAGES, 'page=' . $_GET['page'] . '&lID=' . $lInfo->languages_id . '&action=delete')) . HTML::button(OSCOM::getDef('image_details'), 'fa fa-info', OSCOM::link(FILENAME_DEFINE_LANGUAGE, 'lngdir=' . $lInfo->directory)));
+        $contents[] = array('text' => '<br />' . OSCOM::getDef('text_info_language_name') . ' ' . $lInfo->name);
+        $contents[] = array('text' => OSCOM::getDef('text_info_language_code') . ' ' . $lInfo->code);
         $contents[] = array('text' => '<br />' . HTML::image(OSCOM::link('Shop/includes/languages/' . $lInfo->directory . '/images/' . $lInfo->image), $lInfo->name));
-        $contents[] = array('text' => '<br />' . TEXT_INFO_LANGUAGE_DIRECTORY . '<br />' . OSCOM::getConfig('http_path', 'Shop') . 'includes/languages/<strong>' . $lInfo->directory . '</strong>');
-        $contents[] = array('text' => '<br />' . TEXT_INFO_LANGUAGE_SORT_ORDER . ' ' . $lInfo->sort_order);
+        $contents[] = array('text' => '<br />' . OSCOM::getDef('text_info_language_directory') . '<br />' . OSCOM::getConfig('http_path', 'Shop') . 'includes/languages/<strong>' . $lInfo->directory . '</strong>');
+        $contents[] = array('text' => '<br />' . OSCOM::getDef('text_info_language_sort_order') . ' ' . $lInfo->sort_order);
       }
       break;
   }

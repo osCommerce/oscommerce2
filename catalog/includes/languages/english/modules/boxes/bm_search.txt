@@ -1,0 +1,5 @@
+module_boxes_search_title = Search
+module_boxes_search_description = Show search field
+module_boxes_search_box_title = Quick Find
+module_boxes_search_box_text = Use keywords to find the product you are looking for.
+module_boxes_search_box_advanced_search = Advanced Search

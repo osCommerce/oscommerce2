@@ -1,0 +1,7 @@
+table_heading_modules = Modules
+table_heading_sort_order = Sort Order
+table_heading_action = Action
+text_info_version = Version:
+text_info_online_status = online status
+text_info_api_version = API Version:
+text_module_directory = Module Directory:

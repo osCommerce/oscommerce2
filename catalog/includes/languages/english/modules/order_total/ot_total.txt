@@ -1,0 +1,2 @@
+module_order_total_total_title = Total
+module_order_total_total_description = Order Total

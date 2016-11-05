@@ -23,9 +23,9 @@
     var $enabled = false;
 
     function __construct() {
-      $this->title = MODULE_SOCIAL_BOOKMARKS_TWITTER_TITLE;
-      $this->public_title = MODULE_SOCIAL_BOOKMARKS_TWITTER_PUBLIC_TITLE;
-      $this->description = MODULE_SOCIAL_BOOKMARKS_TWITTER_DESCRIPTION;
+      $this->title = OSCOM::getDef('module_social_bookmarks_twitter_title');
+      $this->public_title = OSCOM::getDef('module_social_bookmarks_twitter_public_title');
+      $this->description = OSCOM::getDef('module_social_bookmarks_twitter_description');
 
       if ( defined('MODULE_SOCIAL_BOOKMARKS_TWITTER_STATUS') ) {
         $this->sort_order = MODULE_SOCIAL_BOOKMARKS_TWITTER_SORT_ORDER;

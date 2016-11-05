@@ -1,0 +1,17 @@
+navbar_title = Create an Account
+heading_title = My Account Information
+text_origin_login = <font color="#FF0000"><small><strong>NOTE:</strong></small></font> If you already have an account with us, please login at the <a href="%s"><u>login page</u></a>.
+email_subject = Welcome to 
+email_greet_mr = Dear Mr. %s,
+email_greet_ms = Dear Ms. %s,
+email_greet_none = Dear %s
+email_welcome = We welcome you to <strong>
+email_text = You can now take part in the <strong>various services</strong> we have to offer you. Some of these services include:
+email_contact = For help with any of our online services, please email the store-owner: 
+email_warning = <strong>Note:</strong> This email address was given to us by one of our customers. If you did not signup to be a member, please send an email to 
+category_company = Company Details
+category_personal = Your Personal Details
+category_address = Your Address
+category_contact = Your Contact Information
+category_options = Options
+category_password = Your Password

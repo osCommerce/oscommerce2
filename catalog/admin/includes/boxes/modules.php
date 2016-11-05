@@ -13,7 +13,7 @@
   use OSC\OM\OSCOM;
 
   $cl_box_groups[] = array(
-    'heading' => BOX_HEADING_MODULES,
+    'heading' => OSCOM::getDef('box_heading_modules'),
     'apps' => array()
   );
 

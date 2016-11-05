@@ -10,6 +10,7 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\OSCOM;
   use OSC\OM\Registry;
 
   class ot_tax {
@@ -17,8 +18,8 @@
 
     function __construct() {
       $this->code = 'ot_tax';
-      $this->title = MODULE_ORDER_TOTAL_TAX_TITLE;
-      $this->description = MODULE_ORDER_TOTAL_TAX_DESCRIPTION;
+      $this->title = OSCOM::getDef('module_order_total_tax_title');
+      $this->description = OSCOM::getDef('module_order_total_tax_description');
       $this->enabled = defined('MODULE_ORDER_TOTAL_TAX_STATUS') && (MODULE_ORDER_TOTAL_TAX_STATUS == 'true') ? true : false;
       $this->sort_order = defined('MODULE_ORDER_TOTAL_TAX_SORT_ORDER') && ((int)MODULE_ORDER_TOTAL_TAX_SORT_ORDER > 0) ? (int)MODULE_ORDER_TOTAL_TAX_SORT_ORDER : 0;
 

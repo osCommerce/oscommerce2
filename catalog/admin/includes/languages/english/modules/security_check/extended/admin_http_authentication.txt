@@ -1,0 +1,2 @@
+module_security_check_extended_admin_http_authentication_title = Admin HTTP Authentication
+module_security_check_extended_admin_http_authentication_error = HTTP Authentication has not been set up for the osCommerce Administration Tool - please set this up in your web server configuration to further protect the Administration Tool from unauthorized access.

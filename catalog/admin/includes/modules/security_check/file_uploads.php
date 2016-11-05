@@ -29,7 +29,7 @@
     }
 
     function getMessage() {
-      return WARNING_FILE_UPLOADS_DISABLED;
+      return OSCOM::getDef('warning_file_uploads_disabled');
     }
   }
 ?>

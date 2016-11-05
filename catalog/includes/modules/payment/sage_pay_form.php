@@ -25,9 +25,9 @@
       $this->api_version = '3.00';
 
       $this->code = 'sage_pay_form';
-      $this->title = MODULE_PAYMENT_SAGE_PAY_FORM_TEXT_TITLE;
-      $this->public_title = MODULE_PAYMENT_SAGE_PAY_FORM_TEXT_PUBLIC_TITLE;
-      $this->description = MODULE_PAYMENT_SAGE_PAY_FORM_TEXT_DESCRIPTION;
+      $this->title = OSCOM::getDef('module_payment_sage_pay_form_text_title');
+      $this->public_title = OSCOM::getDef('module_payment_sage_pay_form_text_public_title');
+      $this->description = OSCOM::getDef('module_payment_sage_pay_form_text_description');
       $this->sort_order = defined('MODULE_PAYMENT_SAGE_PAY_FORM_SORT_ORDER') ? MODULE_PAYMENT_SAGE_PAY_FORM_SORT_ORDER : 0;
       $this->enabled = defined('MODULE_PAYMENT_SAGE_PAY_FORM_STATUS') && (MODULE_PAYMENT_SAGE_PAY_FORM_STATUS == 'True') ? true : false;
       $this->order_status = defined('MODULE_PAYMENT_SAGE_PAY_FORM_ORDER_STATUS_ID') && ((int)MODULE_PAYMENT_SAGE_PAY_FORM_ORDER_STATUS_ID > 0) ? (int)MODULE_PAYMENT_SAGE_PAY_FORM_ORDER_STATUS_ID : 0;
@@ -40,14 +40,14 @@
       }
 
       if ( !function_exists('mcrypt_encrypt') ) {
-        $this->description = '<div class="secWarning">' . MODULE_PAYMENT_SAGE_PAY_FORM_ERROR_ADMIN_MCRYPT . '</div>' . $this->description;
+        $this->description = '<div class="secWarning">' . OSCOM::getDef('module_payment_sage_pay_form_error_admin_mcrypt') . '</div>' . $this->description;
 
         $this->enabled = false;
       }
 
       if ( $this->enabled === true ) {
         if ( !tep_not_null(MODULE_PAYMENT_SAGE_PAY_FORM_VENDOR_LOGIN_NAME) || !tep_not_null(MODULE_PAYMENT_SAGE_PAY_FORM_ENCRYPTION_PASSWORD) ) {
-          $this->description = '<div class="secWarning">' . MODULE_PAYMENT_SAGE_PAY_FORM_ERROR_ADMIN_CONFIGURATION . '</div>' . $this->description;
+          $this->description = '<div class="secWarning">' . OSCOM::getDef('module_payment_sage_pay_form_error_admin_configuration') . '</div>' . $this->description;
 
           $this->enabled = false;
         }
@@ -304,7 +304,7 @@
     }
 
     function get_error() {
-      $message = MODULE_PAYMENT_SAGE_PAY_FORM_ERROR_GENERAL;
+      $message = OSCOM::getDef('module_payment_sage_pay_form_error_general');
 
       $error_number = null;
 
@@ -336,10 +336,10 @@
           return false;
         }
 
-        $message = $this->getErrorMessage($error_number) . ' ' . MODULE_PAYMENT_SAGE_PAY_FORM_ERROR_GENERAL;
+        $message = $this->getErrorMessage($error_number) . ' ' . OSCOM::getDef('module_payment_sage_pay_form_error_general');
       }
 
-      $error = array('title' => MODULE_PAYMENT_SAGE_PAY_FORM_ERROR_TITLE,
+      $error = array('title' => OSCOM::getDef('module_payment_sage_pay_form_error_title'),
                      'error' => $message);
 
       return $error;

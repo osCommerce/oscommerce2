@@ -1,0 +1,11 @@
+module_content_account_sage_pay_cards_title = Sage Pay Cards Management Page
+module_content_account_sage_pay_cards_description = Adds a Sage Pay Cards management page to the My Account area
+module_content_account_sage_pay_cards_error_main_module = This module will not load until the Sage Pay Direct payment module has been installed, configured, and is enabled. Please install and configure the Sage Pay Direct payment module.
+module_content_account_sage_pay_cards_link_title = Manage saved payment cards.
+module_content_account_sage_pay_cards_navbar_title_1 = My Account
+module_content_account_sage_pay_cards_navbar_title_2 = Saved Cards
+module_content_account_sage_pay_cards_heading_title = Saved Cards
+module_content_account_sage_pay_cards_text_description = <p>Saved payment cards are stored securely and safely in a certified and audited PCI DSS compliant environment. This high level of security provides convenience in allowing saved cards to be used for next purchases without the card information having to be re-typed again for each order made.</p><p>New cards can be securely saved during the process of your next order.</p>
+module_content_account_sage_pay_cards_saved_cards_title = Saved Cards
+module_content_account_sage_pay_cards_text_no_cards = <p>No cards have been saved yet.</p>
+module_content_account_sage_pay_cards_success_deleted = The card has been successfully deleted.

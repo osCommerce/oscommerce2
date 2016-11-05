@@ -1,0 +1,6 @@
+module_admin_dashboard_reviews_title = Reviews
+module_admin_dashboard_reviews_description = Show the latest reviews
+module_admin_dashboard_reviews_reviewer = Reviewer
+module_admin_dashboard_reviews_date = Date
+module_admin_dashboard_reviews_rating = Rating
+module_admin_dashboard_reviews_review_status = Status

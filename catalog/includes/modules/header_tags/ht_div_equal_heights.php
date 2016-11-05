@@ -23,8 +23,8 @@
     var $enabled = false;
 
     function __construct() {
-      $this->title = MODULE_HEADER_TAGS_DIV_EQUAL_HEIGHTS_TITLE;
-      $this->description = MODULE_HEADER_TAGS_DIV_EQUAL_HEIGHTS_DESCRIPTION;
+      $this->title = OSCOM::getDef('module_header_tags_div_equal_heights_title');
+      $this->description = OSCOM::getDef('module_header_tags_div_equal_heights_description');
 
       if ( defined('MODULE_HEADER_TAGS_DIV_EQUAL_HEIGHTS_STATUS') ) {
         $this->sort_order = MODULE_HEADER_TAGS_DIV_EQUAL_HEIGHTS_SORT_ORDER;

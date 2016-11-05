@@ -42,7 +42,7 @@
 
   $OSCOM_Language->loadDefinitions('product_reviews');
 
-  $breadcrumb->add(NAVBAR_TITLE, OSCOM::link('product_reviews.php', tep_get_all_get_params()));
+  $breadcrumb->add(OSCOM::getDef('navbar_title'), OSCOM::link('product_reviews.php', tep_get_all_get_params()));
 
   require($oscTemplate->getFile('template_top.php'));
 ?>
@@ -74,7 +74,7 @@
   echo '<div class="col-sm-8 text-center alert alert-success" itemprop="aggregateRating" itemscope itemtype="http://schema.org/AggregateRating">';
   echo '  <meta itemprop="ratingValue" content="' . max(1, (int)round($Qa->value('average'))) . '" />';
   echo '  <meta itemprop="bestRating" content="5" />';
-  echo    sprintf(REVIEWS_TEXT_AVERAGE, $Qa->valueInt('count'), HTML::stars(round($Qa->value('average'))));
+  echo    sprintf(OSCOM::getDef('reviews_text_average'), $Qa->valueInt('count'), HTML::stars(round($Qa->value('average'))));
   echo '</div>';
 ?>
 
@@ -85,7 +85,7 @@
   <div class="col-sm-4 text-center">
     <?php echo '<a href="' . OSCOM::link('product_info.php', 'products_id=' . $Qcheck->valueInt('products_id')) . '">' . HTML::image(OSCOM::linkImage($Qcheck->value('products_image')), $Qcheck->value('products_name'), SMALL_IMAGE_WIDTH, SMALL_IMAGE_HEIGHT, 'hspace="5" vspace="5"') . '</a>'; ?>
 
-    <p><?php echo HTML::button(IMAGE_BUTTON_IN_CART, 'fa fa-shopping-cart', OSCOM::link(basename($PHP_SELF), tep_get_all_get_params(array('action')) . 'action=buy_now')); ?></p>
+    <p><?php echo HTML::button(OSCOM::getDef('image_button_in_cart'), 'fa fa-shopping-cart', OSCOM::link(basename($PHP_SELF), tep_get_all_get_params(array('action')) . 'action=buy_now')); ?></p>
   </div>
 
   <div class="clearfix"></div>
@@ -108,11 +108,11 @@
 ?>
 <div class="row">
   <div class="col-sm-6 pagenumber hidden-xs">
-    <?php echo $Qreviews->getPageSetLabel(TEXT_DISPLAY_NUMBER_OF_REVIEWS); ?>
+    <?php echo $Qreviews->getPageSetLabel(OSCOM::getDef('text_display_number_of_reviews')); ?>
   </div>
   <div class="col-sm-6">
     <spanclass="pull-right pagenav"><ul class="pagination"><?php echo $Qreviews->getPageSetLinks(tep_get_all_get_params(array('page', 'info'))); ?></ul></span>
-    <span class="pull-right"><?php echo TEXT_RESULT_PAGE; ?></span>
+    <span class="pull-right"><?php echo OSCOM::getDef('text_result_page'); ?></span>
   </div>
 </div>
 <?php
@@ -132,7 +132,10 @@
         <footer>
         <?php
         $review_name = $Qreviews->valueProtected('customers_name');
-        echo sprintf(REVIEWS_TEXT_RATED, HTML::stars($Qreviews->value('reviews_rating')), $review_name, $review_name);
+        echo OSCOM::getDef('reviews_text_rated', [
+		'reviews_rating' => HTML::stars($Qreviews->value('reviews_rating')),
+		'review_name' => $review_name
+		]);        
         ?>
         </footer>
       </blockquote>
@@ -146,7 +149,7 @@
 ?>
 
   <div class="alert alert-info">
-    <?php echo TEXT_NO_REVIEWS; ?>
+    <?php echo OSCOM::getDef('text_no_reviews'); ?>
   </div>
 
 <?php
@@ -156,11 +159,11 @@
 ?>
 <div class="row">
   <div class="col-sm-6 pagenumber hidden-xs">
-    <?php echo $Qreviews->getPageSetLabel(TEXT_DISPLAY_NUMBER_OF_REVIEWS); ?>
+    <?php echo $Qreviews->getPageSetLabel(OSCOM::getDef('text_display_number_of_reviews')); ?>
   </div>
   <div class="col-sm-6">
     <span class="pull-right pagenav"><ul class="pagination"><?php echo $Qreviews->getPageSetLinks(tep_get_all_get_params(array('page', 'info'))); ?></ul></span>
-    <span class="pull-right"><?php echo TEXT_RESULT_PAGE; ?></span>
+    <span class="pull-right"><?php echo OSCOM::getDef('text_result_page'); ?></span>
   </div>
 </div>
 <?php
@@ -174,11 +177,11 @@
       <?php
       $back = sizeof($_SESSION['navigation']->path)-2;
       if (isset($_SESSION['navigation']->path[$back])) {
-        echo HTML::button(IMAGE_BUTTON_BACK, 'fa fa-angle-left', OSCOM::link($_SESSION['navigation']->path[$back]['page'], tep_array_to_string($_SESSION['navigation']->path[$back]['get'], array('action'))));
+        echo HTML::button(OSCOM::getDef('image_button_back'), 'fa fa-angle-left', OSCOM::link($_SESSION['navigation']->path[$back]['page'], tep_array_to_string($_SESSION['navigation']->path[$back]['get'], array('action'))));
       }
       ?>&nbsp;
     </div>
-    <div class="col-xs-6 text-right"><?php echo HTML::button(IMAGE_BUTTON_WRITE_REVIEW, 'fa fa-commenting', OSCOM::link('product_reviews_write.php', tep_get_all_get_params()), null, 'btn-success'); ?></div>
+    <div class="col-xs-6 text-right"><?php echo HTML::button(OSCOM::getDef('image_button_write_review'), 'fa fa-commenting', OSCOM::link('product_reviews_write.php', tep_get_all_get_params()), null, 'btn-success'); ?></div>
   </div>
 </div>
 

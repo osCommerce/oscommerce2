@@ -1,0 +1,8 @@
+text_product_not_found = Product not found!
+text_current_reviews = Current Reviews:
+text_more_information = For more information, please visit this products <a href="%s" target="_blank"><u>webpage</u></a>.
+text_date_added = This product was added to our catalog on %s.
+text_date_available = <font color="#ff0000">This product will be in stock on %s.</font>
+text_also_purchased_products = Customers who bought this product also purchased
+text_product_options = Available Options:
+text_click_to_enlarge = Click to enlarge

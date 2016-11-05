@@ -23,8 +23,8 @@
     var $enabled = false;
 
     function d_orders() {
-      $this->title = MODULE_ADMIN_DASHBOARD_ORDERS_TITLE;
-      $this->description = MODULE_ADMIN_DASHBOARD_ORDERS_DESCRIPTION;
+      $this->title = OSCOM::getDef('module_admin_dashboard_orders_title');
+      $this->description = OSCOM::getDef('module_admin_dashboard_orders_description');
 
       if ( defined('MODULE_ADMIN_DASHBOARD_ORDERS_STATUS') ) {
         $this->sort_order = MODULE_ADMIN_DASHBOARD_ORDERS_SORT_ORDER;
@@ -39,10 +39,10 @@
       $output = '<table class="table table-hover">
                    <thead>
                      <tr class="info">
-                       <th>' . MODULE_ADMIN_DASHBOARD_ORDERS_TITLE . '</th>
-                       <th>' . MODULE_ADMIN_DASHBOARD_ORDERS_TOTAL . '</th>
-                       <th>' . MODULE_ADMIN_DASHBOARD_ORDERS_DATE . '</th>
-                       <th>' . MODULE_ADMIN_DASHBOARD_ORDERS_ORDER_STATUS . '</th>
+                       <th>' . OSCOM::getDef('module_admin_dashboard_orders_title') . '</th>
+                       <th>' . OSCOM::getDef('module_admin_dashboard_orders_total') . '</th>
+                       <th>' . OSCOM::getDef('module_admin_dashboard_orders_date') . '</th>
+                       <th>' . OSCOM::getDef('module_admin_dashboard_orders_order_status') . '</th>
                      </tr>
                    </thead>
                    <tbody>';

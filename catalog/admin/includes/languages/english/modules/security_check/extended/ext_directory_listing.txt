@@ -1,0 +1,2 @@
+module_security_check_extended_ext_directory_listing_title = ext/ Directory Listing
+module_security_check_extended_ext_directory_listing_http_200 = The <a href="

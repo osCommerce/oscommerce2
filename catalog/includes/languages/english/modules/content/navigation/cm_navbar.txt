@@ -1,0 +1,2 @@
+module_content_navbar_title = Navigation Bar
+module_content_navbar_description = Show the Navigation Bar on your site. <div class="secWarning">This module has a number of Sub Modules which must also be installed.<br><br>Admin > Modules > Navbar Modules</div>

@@ -45,13 +45,13 @@
     if (strlen($review) < REVIEW_TEXT_MIN_LENGTH) {
       $error = true;
 
-      $messageStack->add('review', JS_REVIEW_TEXT);
+      $messageStack->add('review', OSCOM::getDef('js_review_text'));
     }
 
     if (($rating < 1) || ($rating > 5)) {
       $error = true;
 
-      $messageStack->add('review', JS_REVIEW_RATING);
+      $messageStack->add('review', OSCOM::getDef('js_review_rating'));
     }
 
     if ($error == false) {
@@ -60,7 +60,7 @@
 
       $OSCOM_Db->save('reviews_description', ['reviews_id' => $insert_id, 'languages_id' => $OSCOM_Language->getId(), 'reviews_text' => $review]);
 
-      $messageStack->add_session('product_reviews', TEXT_REVIEW_RECEIVED, 'success');
+      $messageStack->add_session('product_reviews', OSCOM::getDef('text_review_received'), 'success');
       OSCOM::redirect('product_reviews.php', tep_get_all_get_params(array('action')));
     }
   }
@@ -77,7 +77,7 @@
     $products_name .= '<br /><small>[' . $Qcheck->value('products_model') . ']</small>';
   }
 
-  $breadcrumb->add(NAVBAR_TITLE, OSCOM::link('product_reviews.php', tep_get_all_get_params()));
+  $breadcrumb->add(OSCOM::getDef('navbar_title'), OSCOM::link('product_reviews.php', tep_get_all_get_params()));
 
   require($oscTemplate->getFile('template_top.php'));
 ?>
@@ -85,18 +85,18 @@
 <script><!--
 function checkForm() {
   var error = 0;
-  var error_message = "<?php echo JS_ERROR; ?>";
+  var error_message = "<?php echo OSCOM::getDef('js_error'); ?>";
 
   var review = document.product_reviews_write.review.value;
 
   if (review.length < <?php echo REVIEW_TEXT_MIN_LENGTH; ?>) {
-    error_message = error_message + "<?php echo JS_REVIEW_TEXT; ?>";
+    error_message = error_message + "<?php echo OSCOM::getDef('js_review_text'); ?>";
     error = 1;
   }
 
   if ((document.product_reviews_write.rating[0].checked) || (document.product_reviews_write.rating[1].checked) || (document.product_reviews_write.rating[2].checked) || (document.product_reviews_write.rating[3].checked) || (document.product_reviews_write.rating[4].checked)) {
   } else {
-    error_message = error_message + "<?php echo JS_REVIEW_RATING; ?>";
+    error_message = error_message + "<?php echo OSCOM::getDef('js_review_rating'); ?>";
     error = 1;
   }
 
@@ -133,7 +133,7 @@ function checkForm() {
     <div class="pull-right text-center">
       <?php echo '<a href="' . OSCOM::link('product_info.php', 'products_id=' . $Qcheck->valueInt('products_id')) . '">' . HTML::image(OSCOM::linkImage($Qcheck->value('products_image')), $Qcheck->value('products_name'), SMALL_IMAGE_WIDTH, SMALL_IMAGE_HEIGHT, 'hspace="5" vspace="5"') . '</a>'; ?>
 
-      <p><?php echo HTML::button(IMAGE_BUTTON_IN_CART, 'fa fa-shopping-cart', OSCOM::link(basename($PHP_SELF), tep_get_all_get_params(array('action')) . 'action=buy_now')); ?></p>
+      <p><?php echo HTML::button(OSCOM::getDef('image_button_in_cart'), 'fa fa-shopping-cart', OSCOM::link(basename($PHP_SELF), tep_get_all_get_params(array('action')) . 'action=buy_now')); ?></p>
     </div>
 
     <div class="clearfix"></div>
@@ -144,20 +144,20 @@ function checkForm() {
 
   <div class="contentText">
     <div class="row">
-      <p class="col-sm-3 text-right-not-xs"><strong><?php echo SUB_TITLE_FROM; ?></strong></p>
+      <p class="col-sm-3 text-right-not-xs"><strong><?php echo OSCOM::getDef('sub_title_from'); ?></strong></p>
       <p class="col-sm-9"><?php echo HTML::sanitize($Qcustomer->value('customers_firstname') . ' ' . $Qcustomer->value('customers_lastname')); ?></p>
     </div>
     <div class="form-group has-feedback">
-      <label for="inputReview" class="control-label col-sm-3"><?php echo SUB_TITLE_REVIEW; ?></label>
+      <label for="inputReview" class="control-label col-sm-3"><?php echo OSCOM::getDef('sub_title_review'); ?></label>
       <div class="col-sm-9">
         <?php
-        echo HTML::textareaField('review', 60, 15, NULL, 'required aria-required="true" id="inputReview" placeholder="' . SUB_TITLE_REVIEW_TEXT . '"');
-        echo FORM_REQUIRED_INPUT;
+        echo HTML::textareaField('review', 60, 15, NULL, 'required aria-required="true" id="inputReview" placeholder="' . OSCOM::getDef('sub_title_review_text') . '"');
+        echo OSCOM::getDef('form_required_input');
         ?>
       </div>
     </div>
     <div class="form-group">
-      <label class="control-label col-sm-3"><?php echo SUB_TITLE_RATING; ?></label>
+      <label class="control-label col-sm-3"><?php echo OSCOM::getDef('sub_title_rating'); ?></label>
       <div class="col-sm-9">
         <label class="radio-inline">
           <?php echo HTML::radioField('rating', '1'); ?>
@@ -174,15 +174,15 @@ function checkForm() {
         <label class="radio-inline">
 	  <?php echo HTML::radioField('rating', '5', 1); ?>
         </label>
-        <?php echo '<div class="help-block justify" style="width: 150px;">' . TEXT_BAD . '<p class="pull-right">' . TEXT_GOOD . '</p></div>'; ?>
+        <?php echo '<div class="help-block justify" style="width: 150px;">' . OSCOM::getDef('text_bad') . '<p class="pull-right">' . OSCOM::getDef('text_good') . '</p></div>'; ?>
       </div>
     </div>
 
   </div>
 
   <div class="buttonSet row">
-    <div class="col-xs-6"><?php echo HTML::button(IMAGE_BUTTON_BACK, 'fa fa-angle-left', OSCOM::link('product_reviews.php', tep_get_all_get_params(array('reviews_id', 'action')))); ?></div>
-    <div class="col-xs-6 text-right"><?php echo HTML::button(IMAGE_BUTTON_CONTINUE, 'fa fa-angle-right', null, null, 'btn-success'); ?></div>
+    <div class="col-xs-6"><?php echo HTML::button(OSCOM::getDef('image_button_back'), 'fa fa-angle-left', OSCOM::link('product_reviews.php', tep_get_all_get_params(array('reviews_id', 'action')))); ?></div>
+    <div class="col-xs-6 text-right"><?php echo HTML::button(OSCOM::getDef('image_button_continue'), 'fa fa-angle-right', null, null, 'btn-success'); ?></div>
   </div>
 </div>
 

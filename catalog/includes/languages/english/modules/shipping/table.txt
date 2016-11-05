@@ -1,0 +1,5 @@
+module_shipping_table_text_title = Table Rate
+module_shipping_table_text_description = Table Rate
+module_shipping_table_text_way = 
+module_shipping_table_text_weight = Weight
+module_shipping_table_text_amount = Amount

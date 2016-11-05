@@ -27,9 +27,9 @@
       $this->api_version = '3.00';
 
       $this->code = 'sage_pay_server';
-      $this->title = MODULE_PAYMENT_SAGE_PAY_SERVER_TEXT_TITLE;
-      $this->public_title = MODULE_PAYMENT_SAGE_PAY_SERVER_TEXT_PUBLIC_TITLE;
-      $this->description = MODULE_PAYMENT_SAGE_PAY_SERVER_TEXT_DESCRIPTION;
+      $this->title = OSCOM::getDef('module_payment_sage_pay_server_text_title');
+      $this->public_title = OSCOM::getDef('module_payment_sage_pay_server_text_public_title');
+      $this->description = OSCOM::getDef('module_payment_sage_pay_server_text_description');
       $this->sort_order = defined('MODULE_PAYMENT_SAGE_PAY_SERVER_SORT_ORDER') ? MODULE_PAYMENT_SAGE_PAY_SERVER_SORT_ORDER : 0;
       $this->enabled = defined('MODULE_PAYMENT_SAGE_PAY_SERVER_STATUS') && (MODULE_PAYMENT_SAGE_PAY_SERVER_STATUS == 'True') ? true : false;
       $this->order_status = defined('MODULE_PAYMENT_SAGE_PAY_SERVER_ORDER_STATUS_ID') && ((int)MODULE_PAYMENT_SAGE_PAY_SERVER_ORDER_STATUS_ID > 0) ? (int)MODULE_PAYMENT_SAGE_PAY_SERVER_ORDER_STATUS_ID : 0;
@@ -44,14 +44,14 @@
       }
 
       if ( !function_exists('curl_init') ) {
-        $this->description = '<div class="secWarning">' . MODULE_PAYMENT_SAGE_PAY_SERVER_ERROR_ADMIN_CURL . '</div>' . $this->description;
+        $this->description = '<div class="secWarning">' . OSCOM::getDef('module_payment_sage_pay_server_error_admin_curl') . '</div>' . $this->description;
 
         $this->enabled = false;
       }
 
       if ( $this->enabled === true ) {
         if ( !tep_not_null(MODULE_PAYMENT_SAGE_PAY_SERVER_VENDOR_LOGIN_NAME) ) {
-          $this->description = '<div class="secWarning">' . MODULE_PAYMENT_SAGE_PAY_SERVER_ERROR_ADMIN_CONFIGURATION . '</div>' . $this->description;
+          $this->description = '<div class="secWarning">' . OSCOM::getDef('module_payment_sage_pay_server_error_admin_configuration') . '</div>' . $this->description;
 
           $this->enabled = false;
         }
@@ -303,7 +303,7 @@
     }
 
     function get_error() {
-      $message = MODULE_PAYMENT_SAGE_PAY_SERVER_ERROR_GENERAL;
+      $message = OSCOM::getDef('module_payment_sage_pay_server_error_general');
 
       $error_number = null;
 
@@ -317,10 +317,10 @@
           return false;
         }
 
-        $message = $this->getErrorMessage($error_number) . ' ' . MODULE_PAYMENT_SAGE_PAY_SERVER_ERROR_GENERAL;
+        $message = $this->getErrorMessage($error_number) . ' ' . OSCOM::getDef('module_payment_sage_pay_server_error_general');
       }
 
-      $error = array('title' => MODULE_PAYMENT_SAGE_PAY_SERVER_ERROR_TITLE,
+      $error = array('title' => OSCOM::getDef('module_payment_sage_pay_server_error_title'),
                      'error' => $message);
 
       return $error;
@@ -588,12 +588,12 @@ EOD;
     }
 
     function getTestLinkInfo() {
-      $dialog_title = MODULE_PAYMENT_SAGE_PAY_SERVER_DIALOG_CONNECTION_TITLE;
-      $dialog_button_close = MODULE_PAYMENT_SAGE_PAY_SERVER_DIALOG_CONNECTION_BUTTON_CLOSE;
-      $dialog_success = MODULE_PAYMENT_SAGE_PAY_SERVER_DIALOG_CONNECTION_SUCCESS;
-      $dialog_failed = MODULE_PAYMENT_SAGE_PAY_SERVER_DIALOG_CONNECTION_FAILED;
-      $dialog_error = MODULE_PAYMENT_SAGE_PAY_SERVER_DIALOG_CONNECTION_ERROR;
-      $dialog_connection_time = MODULE_PAYMENT_SAGE_PAY_SERVER_DIALOG_CONNECTION_TIME;
+      $dialog_title = OSCOM::getDef('module_payment_sage_pay_server_dialog_connection_title');
+      $dialog_button_close = OSCOM::getDef('module_payment_sage_pay_server_dialog_connection_button_close');
+      $dialog_success = OSCOM::getDef('module_payment_sage_pay_server_dialog_connection_success');
+      $dialog_failed = OSCOM::getDef('module_payment_sage_pay_server_dialog_connection_failed');
+      $dialog_error = OSCOM::getDef('module_payment_sage_pay_server_dialog_connection_error');
+      $dialog_connection_time = OSCOM::getDef('module_payment_sage_pay_server_dialog_connection_time');
 
       $test_url = OSCOM::link('modules.php', 'set=payment&module=' . $this->code . '&action=install&subaction=conntest');
 
@@ -646,7 +646,7 @@ function openTestConnectionDialog() {
 </script>
 EOD;
 
-      $info = '<p><img src="images/icons/locked.gif" border="0">&nbsp;<a href="javascript:openTestConnectionDialog();" style="text-decoration: underline; font-weight: bold;">' . MODULE_PAYMENT_SAGE_PAY_SERVER_DIALOG_CONNECTION_LINK_TITLE . '</a></p>' .
+      $info = '<p><img src="images/icons/locked.gif" border="0">&nbsp;<a href="javascript:openTestConnectionDialog();" style="text-decoration: underline; font-weight: bold;">' . OSCOM::getDef('module_payment_sage_pay_server_dialog_connection_link_title') . '</a></p>' .
               '<div id="testConnectionDialog" style="display: none;"><p>';
 
       if ( MODULE_PAYMENT_SAGE_PAY_SERVER_TRANSACTION_SERVER == 'Live' ) {
@@ -655,7 +655,7 @@ EOD;
         $info .= 'Test Server:<br />https://test.sagepay.com/gateway/service/vspserver-register.vsp';
       }
 
-      $info .= '</p><div id="testConnectionDialogProgress"><p>' . MODULE_PAYMENT_SAGE_PAY_SERVER_DIALOG_CONNECTION_GENERAL_TEXT . '</p><div id="tcdprogressbar"></div></div></div>' .
+      $info .= '</p><div id="testConnectionDialogProgress"><p>' . OSCOM::getDef('module_payment_sage_pay_server_dialog_connection_general_text') . '</p><div id="tcdprogressbar"></div></div></div>' .
                $js;
 
       return $info;

@@ -1,0 +1,6 @@
+navbar_title_1 = My Account
+navbar_title_2 = Newsletter Subscriptions
+heading_title = Newsletter Subscriptions
+my_newsletters_general_newsletter = General Newsletter
+my_newsletters_general_newsletter_description = Including store news, new products, special offers, and other promotional announcements.
+success_newsletter_updated = Your newsletter subscriptions have been successfully updated.

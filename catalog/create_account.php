@@ -67,20 +67,20 @@
       if ( ($gender != 'm') && ($gender != 'f') ) {
         $error = true;
 
-        $messageStack->add('create_account', ENTRY_GENDER_ERROR);
+        $messageStack->add('create_account', OSCOM::getDef('entry_gender_error'));
       }
     }
 
     if (strlen($firstname) < ENTRY_FIRST_NAME_MIN_LENGTH) {
       $error = true;
 
-      $messageStack->add('create_account', ENTRY_FIRST_NAME_ERROR);
+      $messageStack->add('create_account', OSCOM::getDef('entry_first_name_error'));
     }
 
     if (strlen($lastname) < ENTRY_LAST_NAME_MIN_LENGTH) {
       $error = true;
 
-      $messageStack->add('create_account', ENTRY_LAST_NAME_ERROR);
+      $messageStack->add('create_account', OSCOM::getDef('entry_last_name_error'));
     }
 
     if (ACCOUNT_DOB == 'true') {
@@ -89,17 +89,17 @@
       if ((strlen($dob) < ENTRY_DOB_MIN_LENGTH) || ($dobDateTime->isValid() === false)) {
         $error = true;
 
-        $messageStack->add('create_account', ENTRY_DATE_OF_BIRTH_ERROR);
+        $messageStack->add('create_account', OSCOM::getDef('entry_date_of_birth_error'));
       }
     }
 
     if (strlen($email_address) < ENTRY_EMAIL_ADDRESS_MIN_LENGTH) {
       $error = true;
-      $messageStack->add('create_account', ENTRY_EMAIL_ADDRESS_ERROR);
+      $messageStack->add('create_account', OSCOM::getDef('entry_email_address_error'));
     } elseif (Is::email($email_address) == false) {
       $error = true;
 
-      $messageStack->add('create_account', ENTRY_EMAIL_ADDRESS_CHECK_ERROR);
+      $messageStack->add('create_account', OSCOM::getDef('entry_email_address_check_error'));
     } else {
       $Qcheck = $OSCOM_Db->prepare('select customers_id from :table_customers where customers_email_address = :customers_email_address limit 1');
       $Qcheck->bindValue(':customers_email_address', $email_address);
@@ -108,32 +108,32 @@
       if ($Qcheck->fetch() !== false) {
         $error = true;
 
-        $messageStack->add('create_account', ENTRY_EMAIL_ADDRESS_ERROR_EXISTS);
+        $messageStack->add('create_account', OSCOM::getDef('entry_email_address_error_exists'));
       }
     }
 
     if (strlen($street_address) < ENTRY_STREET_ADDRESS_MIN_LENGTH) {
       $error = true;
 
-      $messageStack->add('create_account', ENTRY_STREET_ADDRESS_ERROR);
+      $messageStack->add('create_account', OSCOM::getDef('entry_street_address_error'));
     }
 
     if (strlen($postcode) < ENTRY_POSTCODE_MIN_LENGTH) {
       $error = true;
 
-      $messageStack->add('create_account', ENTRY_POST_CODE_ERROR);
+      $messageStack->add('create_account', OSCOM::getDef('entry_post_code_error'));
     }
 
     if (strlen($city) < ENTRY_CITY_MIN_LENGTH) {
       $error = true;
 
-      $messageStack->add('create_account', ENTRY_CITY_ERROR);
+      $messageStack->add('create_account', OSCOM::getDef('entry_city_error'));
     }
 
     if (is_numeric($country) == false) {
       $error = true;
 
-      $messageStack->add('create_account', ENTRY_COUNTRY_ERROR);
+      $messageStack->add('create_account', OSCOM::getDef('entry_country_error'));
     }
 
     if (ACCOUNT_STATE == 'true') {
@@ -157,13 +157,13 @@
         } else {
           $error = true;
 
-          $messageStack->add('create_account', ENTRY_STATE_ERROR_SELECT);
+          $messageStack->add('create_account', OSCOM::getDef('entry_state_error_select'));
         }
       } else {
         if (strlen($state) < ENTRY_STATE_MIN_LENGTH) {
           $error = true;
 
-          $messageStack->add('create_account', ENTRY_STATE_ERROR);
+          $messageStack->add('create_account', OSCOM::getDef('entry_state_error'));
         }
       }
     }
@@ -171,18 +171,18 @@
     if (strlen($telephone) < ENTRY_TELEPHONE_MIN_LENGTH) {
       $error = true;
 
-      $messageStack->add('create_account', ENTRY_TELEPHONE_NUMBER_ERROR);
+      $messageStack->add('create_account', OSCOM::getDef('entry_telephone_number_error'));
     }
 
 
     if (strlen($password) < ENTRY_PASSWORD_MIN_LENGTH) {
       $error = true;
 
-      $messageStack->add('create_account', ENTRY_PASSWORD_ERROR);
+      $messageStack->add('create_account', OSCOM::getDef('entry_password_error'));
     } elseif ($password != $confirmation) {
       $error = true;
 
-      $messageStack->add('create_account', ENTRY_PASSWORD_ERROR_NOT_MATCHING);
+      $messageStack->add('create_account', OSCOM::getDef('entry_password_error_not_matching'));
     }
 
     if ($error == false) {
@@ -245,17 +245,17 @@
 
       if (ACCOUNT_GENDER == 'true') {
          if ($gender == 'm') {
-           $email_text = sprintf(EMAIL_GREET_MR, $lastname);
+           $email_text = sprintf(OSCOM::getDef('email_greet_mr'), $lastname);
          } else {
-           $email_text = sprintf(EMAIL_GREET_MS, $lastname);
+           $email_text = sprintf(OSCOM::getDef('email_greet_ms'), $lastname);
          }
       } else {
-        $email_text = sprintf(EMAIL_GREET_NONE, $firstname);
+        $email_text = sprintf(OSCOM::getDef('email_greet_none'), $firstname);
       }
 
-      $email_text .= EMAIL_WELCOME . EMAIL_TEXT . EMAIL_CONTACT . EMAIL_WARNING;
+      $email_text .= OSCOM::getDef('email_welcome') . OSCOM::getDef('email_text') . OSCOM::getDef('email_contact') . OSCOM::getDef('email_warning');
 
-      $customerEmail = new Mail($email_address, $name, STORE_OWNER_EMAIL_ADDRESS, STORE_OWNER, EMAIL_SUBJECT);
+      $customerEmail = new Mail($email_address, $name, STORE_OWNER_EMAIL_ADDRESS, STORE_OWNER, OSCOM::getDef('email_subject'));
       $customerEmail->setBody($email_text);
       $customerEmail->send();
 
@@ -263,13 +263,13 @@
     }
   }
 
-  $breadcrumb->add(NAVBAR_TITLE, OSCOM::link('create_account.php'));
+  $breadcrumb->add(OSCOM::getDef('navbar_title'), OSCOM::link('create_account.php'));
 
   require($oscTemplate->getFile('template_top.php'));
 ?>
 
 <div class="page-header">
-  <h1><?php echo HEADING_TITLE; ?></h1>
+  <h1><?php echo OSCOM::getDef('heading_title'); ?></h1>
 </div>
 
 <?php
@@ -279,50 +279,50 @@
 ?>
 
 <div class="alert alert-warning">
-  <?php echo sprintf(TEXT_ORIGIN_LOGIN, OSCOM::link('login.php', tep_get_all_get_params())); ?><span class="text-danger pull-right text-right"><?php echo FORM_REQUIRED_INFORMATION; ?></span>
+  <?php echo sprintf(OSCOM::getDef('text_origin_login'), OSCOM::link('login.php', tep_get_all_get_params())); ?><span class="text-danger pull-right text-right"><?php echo OSCOM::getDef('form_required_information'); ?></span>
 </div>
 
 <?php echo HTML::form('create_account', OSCOM::link('create_account.php'), 'post', 'class="form-horizontal"', ['tokenize' => true, 'action' => 'process']); ?>
 
 <div class="contentContainer">
 
-  <h2><?php echo CATEGORY_PERSONAL; ?></h2>
+  <h2><?php echo OSCOM::getDef('category_personal'); ?></h2>
   <div class="contentText">
 
 <?php
   if (ACCOUNT_GENDER == 'true') {
 ?>
     <div class="form-group has-feedback">
-      <label class="control-label col-sm-3"><?php echo ENTRY_GENDER; ?></label>
+      <label class="control-label col-sm-3"><?php echo OSCOM::getDef('entry_gender'); ?></label>
       <div class="col-sm-9">
         <label class="radio-inline">
-          <?php echo HTML::radioField('gender', 'm', NULL, 'required aria-required="true" aria-describedby="atGender"') . ' ' . MALE; ?>
+          <?php echo HTML::radioField('gender', 'm', NULL, 'required aria-required="true" aria-describedby="atGender"') . ' ' . OSCOM::getDef('male'); ?>
         </label>
         <label class="radio-inline">
-          <?php echo HTML::radioField('gender', 'f') . ' ' . FEMALE; ?>
+          <?php echo HTML::radioField('gender', 'f') . ' ' . OSCOM::getDef('female'); ?>
         </label>
-        <?php echo FORM_REQUIRED_INPUT; ?>
-        <?php if (tep_not_null(ENTRY_GENDER_TEXT)) echo '<span id="atGender" class="help-block">' . ENTRY_GENDER_TEXT . '</span>'; ?>
+        <?php echo OSCOM::getDef('form_required_input'); ?>
+        <?php if (tep_not_null(OSCOM::getDef('entry_gender_text'))) echo '<span id="atGender" class="help-block">' . OSCOM::getDef('entry_gender_text') . '</span>'; ?>
       </div>
     </div>
 <?php
   }
 ?>
     <div class="form-group has-feedback">
-      <label for="inputFirstName" class="control-label col-sm-3"><?php echo ENTRY_FIRST_NAME; ?></label>
+      <label for="inputFirstName" class="control-label col-sm-3"><?php echo OSCOM::getDef('entry_first_name'); ?></label>
       <div class="col-sm-9">
         <?php
-        echo HTML::inputField('firstname', NULL, 'required aria-required="true" id="inputFirstName" placeholder="' . ENTRY_FIRST_NAME_TEXT . '"');
-        echo FORM_REQUIRED_INPUT;
+        echo HTML::inputField('firstname', NULL, 'required aria-required="true" id="inputFirstName" placeholder="' . OSCOM::getDef('entry_first_name_text') . '"');
+        echo OSCOM::getDef('form_required_input');
         ?>
       </div>
     </div>
     <div class="form-group has-feedback">
-      <label for="inputLastName" class="control-label col-sm-3"><?php echo ENTRY_LAST_NAME; ?></label>
+      <label for="inputLastName" class="control-label col-sm-3"><?php echo OSCOM::getDef('entry_last_name'); ?></label>
       <div class="col-sm-9">
         <?php
-        echo HTML::inputField('lastname', NULL, 'required aria-required="true" id="inputLastName" placeholder="' . ENTRY_LAST_NAME_TEXT . '"');
-        echo FORM_REQUIRED_INPUT;
+        echo HTML::inputField('lastname', NULL, 'required aria-required="true" id="inputLastName" placeholder="' . OSCOM::getDef('entry_last_name_text') . '"');
+        echo OSCOM::getDef('form_required_input');
         ?>
       </div>
     </div>
@@ -330,11 +330,11 @@
   if (ACCOUNT_DOB == 'true') {
 ?>
     <div class="form-group has-feedback">
-      <label for="dob" class="control-label col-sm-3"><?php echo ENTRY_DATE_OF_BIRTH; ?></label>
+      <label for="dob" class="control-label col-sm-3"><?php echo OSCOM::getDef('entry_date_of_birth'); ?></label>
       <div class="col-sm-9">
         <?php
-        echo HTML::inputField('dob', '', 'data-provide="datepicker" required aria-required="true" id="dob" placeholder="' . ENTRY_DATE_OF_BIRTH_TEXT . '"');
-        echo FORM_REQUIRED_INPUT;
+        echo HTML::inputField('dob', '', 'data-provide="datepicker" required aria-required="true" id="dob" placeholder="' . OSCOM::getDef('entry_date_of_birth_text') . '"');
+        echo OSCOM::getDef('form_required_input');
         ?>
       </div>
     </div>
@@ -342,11 +342,11 @@
   }
 ?>
     <div class="form-group has-feedback">
-      <label for="inputEmail" class="control-label col-sm-3"><?php echo ENTRY_EMAIL_ADDRESS; ?></label>
+      <label for="inputEmail" class="control-label col-sm-3"><?php echo OSCOM::getDef('entry_email_address'); ?></label>
       <div class="col-sm-9">
         <?php
-        echo HTML::inputField('email_address', NULL, 'required aria-required="true" id="inputEmail" placeholder="' . ENTRY_EMAIL_ADDRESS_TEXT . '"', 'email');
-        echo FORM_REQUIRED_INPUT;
+        echo HTML::inputField('email_address', NULL, 'required aria-required="true" id="inputEmail" placeholder="' . OSCOM::getDef('entry_email_address_text') . '"', 'email');
+        echo OSCOM::getDef('form_required_input');
         ?>
       </div>
     </div>
@@ -355,14 +355,14 @@
   if (ACCOUNT_COMPANY == 'true') {
 ?>
 
-  <h2><?php echo CATEGORY_COMPANY; ?></h2>
+  <h2><?php echo OSCOM::getDef('category_company'); ?></h2>
 
   <div class="contentText">
     <div class="form-group">
-      <label for="inputCompany" class="control-label col-sm-3"><?php echo ENTRY_COMPANY; ?></label>
+      <label for="inputCompany" class="control-label col-sm-3"><?php echo OSCOM::getDef('entry_company'); ?></label>
       <div class="col-sm-9">
         <?php
-        echo HTML::inputField('company', NULL, 'id="inputCompany" placeholder="' . ENTRY_COMPANY_TEXT . '"');
+        echo HTML::inputField('company', NULL, 'id="inputCompany" placeholder="' . OSCOM::getDef('entry_company_text') . '"');
         ?>
       </div>
     </div>
@@ -372,15 +372,15 @@
   }
 ?>
 
-  <h2><?php echo CATEGORY_ADDRESS; ?></h2>
+  <h2><?php echo OSCOM::getDef('category_address'); ?></h2>
 
   <div class="contentText">
     <div class="form-group has-feedback">
-      <label for="inputStreet" class="control-label col-sm-3"><?php echo ENTRY_STREET_ADDRESS; ?></label>
+      <label for="inputStreet" class="control-label col-sm-3"><?php echo OSCOM::getDef('entry_street_address'); ?></label>
       <div class="col-sm-9">
         <?php
-        echo HTML::inputField('street_address', NULL, 'required aria-required="true" id="inputStreet" placeholder="' . ENTRY_STREET_ADDRESS_TEXT . '"');
-        echo FORM_REQUIRED_INPUT;
+        echo HTML::inputField('street_address', NULL, 'required aria-required="true" id="inputStreet" placeholder="' . OSCOM::getDef('entry_street_address_text') . '"');
+        echo OSCOM::getDef('form_required_input');
         ?>
       </div>
     </div>
@@ -389,10 +389,10 @@
   if (ACCOUNT_SUBURB == 'true') {
 ?>
     <div class="form-group">
-      <label for="inputSuburb" class="control-label col-sm-3"><?php echo ENTRY_SUBURB; ?></label>
+      <label for="inputSuburb" class="control-label col-sm-3"><?php echo OSCOM::getDef('entry_suburb'); ?></label>
       <div class="col-sm-9">
         <?php
-        echo HTML::inputField('suburb', NULL, 'id="inputSuburb" placeholder="' . ENTRY_SUBURB_TEXT . '"');
+        echo HTML::inputField('suburb', NULL, 'id="inputSuburb" placeholder="' . OSCOM::getDef('entry_suburb_text') . '"');
         ?>
       </div>
     </div>
@@ -400,20 +400,20 @@
   }
 ?>
     <div class="form-group has-feedback">
-      <label for="inputCity" class="control-label col-sm-3"><?php echo ENTRY_CITY; ?></label>
+      <label for="inputCity" class="control-label col-sm-3"><?php echo OSCOM::getDef('entry_city'); ?></label>
       <div class="col-sm-9">
         <?php
-        echo HTML::inputField('city', NULL, 'required aria-required="true" id="inputCity" placeholder="' . ENTRY_CITY_TEXT . '"');
-        echo FORM_REQUIRED_INPUT;
+        echo HTML::inputField('city', NULL, 'required aria-required="true" id="inputCity" placeholder="' . OSCOM::getDef('entry_city_text') . '"');
+        echo OSCOM::getDef('form_required_input');
         ?>
       </div>
     </div>
     <div class="form-group has-feedback">
-      <label for="inputZip" class="control-label col-sm-3"><?php echo ENTRY_POST_CODE; ?></label>
+      <label for="inputZip" class="control-label col-sm-3"><?php echo OSCOM::getDef('entry_post_code'); ?></label>
       <div class="col-sm-9">
         <?php
-        echo HTML::inputField('postcode', NULL, 'required aria-required="true" id="inputZip" placeholder="' . ENTRY_POST_CODE_TEXT . '"');
-        echo FORM_REQUIRED_INPUT;
+        echo HTML::inputField('postcode', NULL, 'required aria-required="true" id="inputZip" placeholder="' . OSCOM::getDef('entry_post_code_text') . '"');
+        echo OSCOM::getDef('form_required_input');
         ?>
       </div>
     </div>
@@ -421,7 +421,7 @@
   if (ACCOUNT_STATE == 'true') {
 ?>
     <div class="form-group has-feedback">
-      <label for="inputState" class="control-label col-sm-3"><?php echo ENTRY_STATE; ?></label>
+      <label for="inputState" class="control-label col-sm-3"><?php echo OSCOM::getDef('entry_state'); ?></label>
       <div class="col-sm-9">
         <?php
         if ($process == true) {
@@ -436,15 +436,15 @@
               $zones_array[] = array('id' => $Qzones->value('zone_name'), 'text' => $Qzones->value('zone_name'));
             }
             echo HTML::selectField('state', $zones_array, 0, 'id="inputState" aria-describedby="atState"');
-            echo FORM_REQUIRED_INPUT;
-            if (tep_not_null(ENTRY_STATE_TEXT)) echo '<span id="atState" class="help-block">' . ENTRY_STATE_TEXT . '</span>';
+            echo OSCOM::getDef('form_required_input');
+            if (tep_not_null(OSCOM::getDef('entry_state_text'))) echo '<span id="atState" class="help-block">' . OSCOM::getDef('entry_state_text') . '</span>';
           } else {
-            echo HTML::inputField('state', NULL, 'id="inputState" placeholder="' . ENTRY_STATE_TEXT . '"');
-            echo FORM_REQUIRED_INPUT;
+            echo HTML::inputField('state', NULL, 'id="inputState" placeholder="' . OSCOM::getDef('entry_state_text') . '"');
+            echo OSCOM::getDef('form_required_input');
           }
         } else {
-          echo HTML::inputField('state', NULL, 'id="inputState" placeholder="' . ENTRY_STATE_TEXT . '"');
-          echo FORM_REQUIRED_INPUT;
+          echo HTML::inputField('state', NULL, 'id="inputState" placeholder="' . OSCOM::getDef('entry_state_text') . '"');
+          echo OSCOM::getDef('form_required_input');
         }
         ?>
       </div>
@@ -453,44 +453,44 @@
   }
 ?>
     <div class="form-group has-feedback">
-      <label for="inputCountry" class="control-label col-sm-3"><?php echo ENTRY_COUNTRY; ?></label>
+      <label for="inputCountry" class="control-label col-sm-3"><?php echo OSCOM::getDef('entry_country'); ?></label>
       <div class="col-sm-9">
         <?php
         echo tep_get_country_list('country', NULL, 'required aria-required="true" aria-describedby="atCountry" id="inputCountry"');
-        echo FORM_REQUIRED_INPUT;
-        if (tep_not_null(ENTRY_COUNTRY_TEXT)) echo '<span id="atCountry" class="help-block">' . ENTRY_COUNTRY_TEXT . '</span>';
+        echo OSCOM::getDef('form_required_input');
+        if (tep_not_null(OSCOM::getDef('entry_country_text'))) echo '<span id="atCountry" class="help-block">' . OSCOM::getDef('entry_country_text') . '</span>';
         ?>
       </div>
     </div>
   </div>
 
-  <h2><?php echo CATEGORY_CONTACT; ?></h2>
+  <h2><?php echo OSCOM::getDef('category_contact'); ?></h2>
 
   <div class="contentText">
     <div class="form-group has-feedback">
-      <label for="inputTelephone" class="control-label col-sm-3"><?php echo ENTRY_TELEPHONE_NUMBER; ?></label>
+      <label for="inputTelephone" class="control-label col-sm-3"><?php echo OSCOM::getDef('entry_telephone_number'); ?></label>
       <div class="col-sm-9">
         <?php
-        echo HTML::inputField('telephone', NULL, 'required aria-required="true" id="inputTelephone" placeholder="' . ENTRY_TELEPHONE_NUMBER_TEXT . '"', 'tel');
-        echo FORM_REQUIRED_INPUT;
+        echo HTML::inputField('telephone', NULL, 'required aria-required="true" id="inputTelephone" placeholder="' . OSCOM::getDef('entry_telephone_number_text') . '"', 'tel');
+        echo OSCOM::getDef('form_required_input');
         ?>
       </div>
     </div>
     <div class="form-group">
-      <label for="inputFax" class="control-label col-sm-3"><?php echo ENTRY_FAX_NUMBER; ?></label>
+      <label for="inputFax" class="control-label col-sm-3"><?php echo OSCOM::getDef('entry_fax_number'); ?></label>
       <div class="col-sm-9">
         <?php
-        echo HTML::inputField('fax', '', 'id="inputFax" placeholder="' . ENTRY_FAX_NUMBER_TEXT . '"', 'tel');
+        echo HTML::inputField('fax', '', 'id="inputFax" placeholder="' . OSCOM::getDef('entry_fax_number_text') . '"', 'tel');
         ?>
       </div>
     </div>
     <div class="form-group">
-      <label for="inputNewsletter" class="control-label col-sm-3"><?php echo ENTRY_NEWSLETTER; ?></label>
+      <label for="inputNewsletter" class="control-label col-sm-3"><?php echo OSCOM::getDef('entry_newsletter'); ?></label>
       <div class="col-sm-9">
         <div class="checkbox">
           <label>
             <?php echo HTML::checkboxField('newsletter', '1', NULL, 'id="inputNewsletter"'); ?>
-            <?php if (tep_not_null(ENTRY_NEWSLETTER_TEXT)) echo ENTRY_NEWSLETTER_TEXT; ?>
+            <?php if (tep_not_null(OSCOM::getDef('entry_newsletter_text'))) echo OSCOM::getDef('entry_newsletter_text'); ?>
           </label>
         </div>
       </div>
@@ -498,31 +498,31 @@
 
   </div>
 
-  <h2><?php echo CATEGORY_PASSWORD; ?></h2>
+  <h2><?php echo OSCOM::getDef('category_password'); ?></h2>
 
   <div class="contentText">
     <div class="form-group has-feedback">
-      <label for="inputPassword" class="control-label col-sm-3"><?php echo ENTRY_PASSWORD; ?></label>
+      <label for="inputPassword" class="control-label col-sm-3"><?php echo OSCOM::getDef('entry_password'); ?></label>
       <div class="col-sm-9">
         <?php
-        echo HTML::passwordField('password', NULL, 'required aria-required="true" id="inputPassword" autocomplete="new-password" placeholder="' . ENTRY_PASSWORD_TEXT . '"', 'password');
-        echo FORM_REQUIRED_INPUT;
+        echo HTML::passwordField('password', NULL, 'required aria-required="true" id="inputPassword" autocomplete="new-password" placeholder="' . OSCOM::getDef('entry_password_text') . '"', 'password');
+        echo OSCOM::getDef('form_required_input');
         ?>
       </div>
     </div>
     <div class="form-group has-feedback">
-      <label for="inputConfirmation" class="control-label col-sm-3"><?php echo ENTRY_PASSWORD_CONFIRMATION; ?></label>
+      <label for="inputConfirmation" class="control-label col-sm-3"><?php echo OSCOM::getDef('entry_password_confirmation'); ?></label>
       <div class="col-sm-9">
         <?php
-        echo HTML::passwordField('confirmation', NULL, 'required aria-required="true" id="inputConfirmation" autocomplete="new-password" placeholder="' . ENTRY_PASSWORD_CONFIRMATION_TEXT . '"', 'password');
-        echo FORM_REQUIRED_INPUT;
+        echo HTML::passwordField('confirmation', NULL, 'required aria-required="true" id="inputConfirmation" autocomplete="new-password" placeholder="' . OSCOM::getDef('entry_password_confirmation_text') . '"', 'password');
+        echo OSCOM::getDef('form_required_input');
         ?>
       </div>
     </div>
   </div>
 
   <div class="buttonSet">
-    <div class="text-right"><?php echo HTML::button(IMAGE_BUTTON_CONTINUE, 'fa fa-user', null, null, 'btn-success'); ?></div>
+    <div class="text-right"><?php echo HTML::button(OSCOM::getDef('image_button_continue'), 'fa fa-user', null, null, 'btn-success'); ?></div>
   </div>
 
 </div>

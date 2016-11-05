@@ -1,0 +1,2 @@
+module_content_in_category_description_title = Category Description
+module_content_in_category_description_description = Show the category description in index.php

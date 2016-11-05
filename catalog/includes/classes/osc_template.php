@@ -29,7 +29,7 @@
     function __construct() {
       $this->lang = Registry::get('Language');
 
-      $this->_title = TITLE;
+      $this->_title = OSCOM::getDef('title');
     }
 
     function setGridContainerWidth($width) {

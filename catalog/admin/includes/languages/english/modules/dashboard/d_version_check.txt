@@ -1,0 +1,6 @@
+module_admin_dashboard_version_check_title = Version Check
+module_admin_dashboard_version_check_description = Show the version check results
+module_admin_dashboard_version_check_date = Last Checked On
+module_admin_dashboard_version_check_check_now = Check Now
+module_admin_dashboard_version_check_never = Never
+module_admin_dashboard_version_check_update_available = An update for osCommerce Online Merchant is available!

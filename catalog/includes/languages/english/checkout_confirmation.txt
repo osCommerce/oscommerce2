@@ -1,0 +1,15 @@
+navbar_title_1 = Checkout
+navbar_title_2 = Confirmation
+heading_title = Order Confirmation
+heading_shipping_information = Shipping Information
+heading_delivery_address = Delivery Address
+heading_shipping_method = Shipping Method
+heading_products = Products
+heading_tax = Tax
+heading_total = Total
+heading_billing_information = Billing Information
+heading_billing_address = Billing Address
+heading_payment_method = Payment Method
+heading_payment_information = Payment Information
+heading_order_comments = Comments About Your Order
+text_edit = Edit

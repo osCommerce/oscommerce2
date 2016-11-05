@@ -210,7 +210,7 @@
     $Qlisting->setPageSet(isset($_GET['view']) && ($_GET['view'] == 'all') ? 999999 : MAX_DISPLAY_SEARCH_RESULTS);
     $Qlisting->execute();
 
-    $catname = HEADING_TITLE;
+    $catname = OSCOM::getDef('heading_title');
     if (isset($_GET['manufacturers_id']) && !empty($_GET['manufacturers_id'])) {
       $Qtitle = $OSCOM_Db->prepare('select m.manufacturers_image, m.manufacturers_name as catname, mi.manufacturers_description as catdesc from :table_manufacturers m, :table_manufacturers_info mi where m.manufacturers_id = :manufacturers_id and m.manufacturers_id = mi.manufacturers_id and mi.languages_id = :languages_id');
       $Qtitle->bindInt(':manufacturers_id', $_GET['manufacturers_id']);
@@ -254,13 +254,13 @@ if (tep_not_null($Qtitle->value('catdesc'))) {
       }
 
       if ($Qfilter->getPageSetTotalRows() > 1) {
-        echo '<div>' . HTML::form('filter', OSCOM::link('index.php', '', false), 'get', null, ['session_id' => true]) . '<p align="right">' . TEXT_SHOW . '&nbsp;';
+        echo '<div>' . HTML::form('filter', OSCOM::link('index.php', '', false), 'get', null, ['session_id' => true]) . '<p align="right">' . OSCOM::getDef('text_show') . '&nbsp;';
         if (isset($_GET['manufacturers_id']) && !empty($_GET['manufacturers_id'])) {
           echo HTML::hiddenField('manufacturers_id', $_GET['manufacturers_id']);
-          $options = array(array('id' => '', 'text' => TEXT_ALL_CATEGORIES));
+          $options = array(array('id' => '', 'text' => OSCOM::getDef('text_all_categories')));
         } else {
           echo HTML::hiddenField('cPath', $cPath);
-          $options = array(array('id' => '', 'text' => TEXT_ALL_MANUFACTURERS));
+          $options = array(array('id' => '', 'text' => OSCOM::getDef('text_all_manufacturers')));
         }
         echo HTML::hiddenField('sort', $_GET['sort']);
         while ($Qfilter->fetch()) {
@@ -281,7 +281,7 @@ if (tep_not_null($Qtitle->value('catdesc'))) {
 ?>
 
 <div class="page-header">
-  <h1><?php echo HEADING_TITLE; ?></h1>
+  <h1><?php echo OSCOM::getDef('heading_title'); ?></h1>
 </div>
 
 <?php

@@ -1,0 +1,2 @@
+module_payment_cod_text_title = Cash on Delivery
+module_payment_cod_text_description = Cash on Delivery

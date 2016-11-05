@@ -24,7 +24,7 @@
     function __construct() {
       $this->directory = OSCOM::getConfig('dir_root', $this->site) . 'includes/modules/shipping/';
       $this->language_directory = OSCOM::getConfig('dir_root', $this->site) . 'includes/languages/';
-      $this->title = MODULE_CFG_MODULE_SHIPPING_TITLE;
+      $this->title = OSCOM::getDef('module_cfg_module_shipping_title');
     }
   }
 ?>

@@ -27,7 +27,7 @@
           'customers_email_address'
         ]);
 
-        $mail_sent_to = TEXT_ALL_CUSTOMERS;
+        $mail_sent_to = OSCOM::getDef('text_all_customers');
         break;
       case '**D':
         $Qmail = $OSCOM_Db->get('customers', [
@@ -38,7 +38,7 @@
           'customers_newsletter' => '1'
         ]);
 
-        $mail_sent_to = TEXT_NEWSLETTER_CUSTOMERS;
+        $mail_sent_to = OSCOM::getDef('text_newsletter_customers');
         break;
       default:
         $customers_email_address = HTML::sanitize($_POST['customers_email_address']);
@@ -76,11 +76,11 @@
   }
 
   if ( ($action == 'preview') && !isset($_POST['customers_email_address']) ) {
-    $OSCOM_MessageStack->add(ERROR_NO_CUSTOMER_SELECTED, 'error');
+    $OSCOM_MessageStack->add(OSCOM::getDef('error_no_customer_selected'), 'error');
   }
 
   if (isset($_GET['mail_sent_to'])) {
-    $OSCOM_MessageStack->add(sprintf(NOTICE_EMAIL_SENT_TO, $_GET['mail_sent_to']), 'success');
+    $OSCOM_MessageStack->add(sprintf(OSCOM::getDef('notice_email_sent_to'), $_GET['mail_sent_to']), 'success');
   }
 
   require($oscTemplate->getFile('template_top.php'));
@@ -90,7 +90,7 @@
       <tr>
         <td width="100%"><table border="0" width="100%" cellspacing="0" cellpadding="0">
           <tr>
-            <td class="pageHeading"><?php echo HEADING_TITLE; ?></td>
+            <td class="pageHeading"><?php echo OSCOM::getDef('heading_title'); ?></td>
           </tr>
         </table></td>
       </tr>
@@ -100,10 +100,10 @@
   if ( ($action == 'preview') && isset($_POST['customers_email_address']) ) {
     switch ($_POST['customers_email_address']) {
       case '***':
-        $mail_sent_to = TEXT_ALL_CUSTOMERS;
+        $mail_sent_to = OSCOM::getDef('text_all_customers');
         break;
       case '**D':
-        $mail_sent_to = TEXT_NEWSLETTER_CUSTOMERS;
+        $mail_sent_to = OSCOM::getDef('text_newsletter_customers');
         break;
       default:
         $mail_sent_to = $_POST['customers_email_address'];
@@ -113,25 +113,25 @@
           <tr><?php echo HTML::form('mail', OSCOM::link(FILENAME_MAIL, 'action=send_email_to_user')); ?>
             <td><table border="0" width="100%" cellpadding="0" cellspacing="2">
               <tr>
-                <td class="smallText"><strong><?php echo TEXT_CUSTOMER; ?></strong><br /><?php echo $mail_sent_to; ?></td>
+                <td class="smallText"><strong><?php echo OSCOM::getDef('text_customer'); ?></strong><br /><?php echo $mail_sent_to; ?></td>
               </tr>
               <tr>
                 <td>&nbsp;</td>
               </tr>
               <tr>
-                <td class="smallText"><strong><?php echo TEXT_FROM; ?></strong><br /><?php echo htmlspecialchars(stripslashes($_POST['from'])); ?></td>
+                <td class="smallText"><strong><?php echo OSCOM::getDef('text_from'); ?></strong><br /><?php echo htmlspecialchars(stripslashes($_POST['from'])); ?></td>
               </tr>
               <tr>
                 <td>&nbsp;</td>
               </tr>
               <tr>
-                <td class="smallText"><strong><?php echo TEXT_SUBJECT; ?></strong><br /><?php echo htmlspecialchars(stripslashes($_POST['subject'])); ?></td>
+                <td class="smallText"><strong><?php echo OSCOM::getDef('text_subject'); ?></strong><br /><?php echo htmlspecialchars(stripslashes($_POST['subject'])); ?></td>
               </tr>
               <tr>
                 <td>&nbsp;</td>
               </tr>
               <tr>
-                <td class="smallText"><strong><?php echo TEXT_MESSAGE; ?></strong><br /><?php echo nl2br(htmlspecialchars(stripslashes($_POST['message']))); ?></td>
+                <td class="smallText"><strong><?php echo OSCOM::getDef('text_message'); ?></strong><br /><?php echo nl2br(htmlspecialchars(stripslashes($_POST['message']))); ?></td>
               </tr>
               <tr>
                 <td>&nbsp;</td>
@@ -146,7 +146,7 @@
       }
     }
 
-    echo HTML::button(IMAGE_SEND_EMAIL, 'fa fa-envelope') . HTML::button(IMAGE_CANCEL, 'fa fa-close', OSCOM::link(FILENAME_MAIL));
+    echo HTML::button(OSCOM::getDef('image_send_email'), 'fa fa-envelope') . HTML::button(OSCOM::getDef('image_cancel'), 'fa fa-close', OSCOM::link(FILENAME_MAIL));
 ?>
                 </td>
               </tr>
@@ -161,15 +161,15 @@
     $customers = [
       [
         'id' => '',
-        'text' => TEXT_SELECT_CUSTOMER
+        'text' => OSCOM::getDef('text_select_customer')
       ],
       [
         'id' => '***',
-        'text' => TEXT_ALL_CUSTOMERS
+        'text' => OSCOM::getDef('text_all_customers')
       ],
       [
         'id' => '**D',
-        'text' => TEXT_NEWSLETTER_CUSTOMERS
+        'text' => OSCOM::getDef('text_newsletter_customers')
       ]
     ];
 
@@ -187,35 +187,35 @@
     }
 ?>
               <tr>
-                <td class="main"><?php echo TEXT_CUSTOMER; ?></td>
+                <td class="main"><?php echo OSCOM::getDef('text_customer'); ?></td>
                 <td><?php echo HTML::selectField('customers_email_address', $customers, (isset($_GET['customer']) ? $_GET['customer'] : ''));?></td>
               </tr>
               <tr>
                 <td colspan="2">&nbsp;</td>
               </tr>
               <tr>
-                <td class="main"><?php echo TEXT_FROM; ?></td>
+                <td class="main"><?php echo OSCOM::getDef('text_from'); ?></td>
                 <td><?php echo HTML::inputField('from', EMAIL_FROM); ?></td>
               </tr>
               <tr>
                 <td colspan="2">&nbsp;</td>
               </tr>
               <tr>
-                <td class="main"><?php echo TEXT_SUBJECT; ?></td>
+                <td class="main"><?php echo OSCOM::getDef('text_subject'); ?></td>
                 <td><?php echo HTML::inputField('subject'); ?></td>
               </tr>
               <tr>
                 <td colspan="2">&nbsp;</td>
               </tr>
               <tr>
-                <td valign="top" class="main"><?php echo TEXT_MESSAGE; ?></td>
+                <td valign="top" class="main"><?php echo OSCOM::getDef('text_message'); ?></td>
                 <td><?php echo HTML::textareaField('message', '60', '15'); ?></td>
               </tr>
               <tr>
                 <td colspan="2">&nbsp;</td>
               </tr>
               <tr>
-                <td class="smallText" colspan="2" align="right"><?php echo HTML::button(IMAGE_PREVIEW, 'fa fa-file-o'); ?></td>
+                <td class="smallText" colspan="2" align="right"><?php echo HTML::button(OSCOM::getDef('image_preview'), 'fa fa-file-o'); ?></td>
               </tr>
             </table></td>
           </form></tr>

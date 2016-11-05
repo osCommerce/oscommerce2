@@ -13,9 +13,9 @@
   use OSC\OM\OSCOM;
 
   foreach ( $cl_box_groups as &$group ) {
-    if ( $group['heading'] == BOX_HEADING_MODULES ) {
+    if ( $group['heading'] == OSCOM::getDef('box_heading_modules') ) {
       $group['apps'][] = array('code' => 'modules_hooks.php',
-                               'title' => MODULES_ADMIN_MENU_MODULES_HOOKS,
+                               'title' => OSCOM::getDef('modules_admin_menu_modules_hooks'),
                                'link' => OSCOM::link('modules_hooks.php'));
 
       break;

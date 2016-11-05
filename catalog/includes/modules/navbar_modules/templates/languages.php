@@ -4,7 +4,7 @@ use OSC\OM\OSCOM;
 ?>
 
 <li class="dropdown">
-  <a class="dropdown-toggle" data-toggle="dropdown" href="#"><?php echo MODULE_NAVBAR_LANGUAGES_SELECTED_LANGUAGE; ?></a>
+  <a class="dropdown-toggle" data-toggle="dropdown" href="#"><?php echo OSCOM::getDef('module_navbar_languages_selected_language'); ?></a>
 
 <?php
 if (count($this->lang->getAll()) > 1) {

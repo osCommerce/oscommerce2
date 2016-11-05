@@ -1,0 +1,9 @@
+navbar_title = Reviews
+heading_title =  %s Reviews
+sub_title_product = Product:
+sub_title_from = From:
+sub_title_date = Date:
+sub_title_review = Review:
+sub_title_rating = Rating:
+text_of_5_stars = %s of 5 Stars!
+text_click_to_enlarge = Click to enlarge

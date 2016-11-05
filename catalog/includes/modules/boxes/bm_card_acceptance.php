@@ -23,8 +23,8 @@
     var $enabled = false;
 
     function __construct() {
-      $this->title = MODULE_BOXES_CARD_ACCEPTANCE_TITLE;
-      $this->description = MODULE_BOXES_CARD_ACCEPTANCE_DESCRIPTION;
+      $this->title = OSCOM::getDef('module_boxes_card_acceptance_title');
+      $this->description = OSCOM::getDef('module_boxes_card_acceptance_description');
 
       if ( defined('MODULE_BOXES_CARD_ACCEPTANCE_STATUS') ) {
         $this->sort_order = MODULE_BOXES_CARD_ACCEPTANCE_SORT_ORDER;
@@ -152,7 +152,7 @@
 
     $values_array = !empty($values) ? explode(';', $values) : array();
 
-    $output = '<h3>' . MODULE_BOXES_CARD_ACCEPTANCE_SHOWN_CARDS . '</h3>' .
+    $output = '<h3>' . OSCOM::getDef('module_boxes_card_acceptance_shown_cards') . '</h3>' .
               '<ul id="ca_logos" style="list-style-type: none; margin: 0; padding: 5px; margin-bottom: 10px;">';
 
     foreach ($values_array as $file) {
@@ -161,7 +161,7 @@
 
     $output .= '</ul>';
 
-    $output .= '<h3>' . MODULE_BOXES_CARD_ACCEPTANCE_NEW_CARDS . '</h3><ul id="new_ca_logos" style="list-style-type: none; margin: 0; padding: 5px; margin-bottom: 10px;">';
+    $output .= '<h3>' . OSCOM::getDef('module_boxes_card_acceptance_new_cards') . '</h3><ul id="new_ca_logos" style="list-style-type: none; margin: 0; padding: 5px; margin-bottom: 10px;">';
 
     foreach ($files_array as $file) {
       if ( !in_array($file, $values_array) ) {
@@ -173,7 +173,7 @@
 
     $output .= HTML::hiddenField('configuration[' . $key . ']', '', 'id="ca_logo_cards"');
 
-    $drag_here_li = '<li id="caLogoEmpty" style="background-color: #fcf8e3; border: 1px #faedd0 solid; color: #a67d57; padding: 5px;">' . addslashes(MODULE_BOXES_CARD_ACCEPTANCE_DRAG_HERE) . '</li>';
+    $drag_here_li = '<li id="caLogoEmpty" style="background-color: #fcf8e3; border: 1px #faedd0 solid; color: #a67d57; padding: 5px;">' . addslashes(OSCOM::getDef('module_boxes_card_acceptance_drag_here')) . '</li>';
 
     $output .= <<<EOD
 <script>

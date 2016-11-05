@@ -1,0 +1,4 @@
+heading_title = Security Checks
+table_heading_title = Title
+table_heading_module = Module
+table_heading_info = Info

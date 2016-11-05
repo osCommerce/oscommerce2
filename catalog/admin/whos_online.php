@@ -36,7 +36,7 @@
       <tr>
         <td><table border="0" width="100%" cellspacing="0" cellpadding="0">
           <tr>
-            <td class="pageHeading"><?php echo HEADING_TITLE; ?></td>
+            <td class="pageHeading"><?php echo OSCOM::getDef('heading_title'); ?></td>
           </tr>
         </table></td>
       </tr>
@@ -45,14 +45,14 @@
           <tr>
             <td valign="top"><table border="0" width="100%" cellspacing="0" cellpadding="2">
               <tr class="dataTableHeadingRow">
-                <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_ONLINE; ?></td>
-                <td class="dataTableHeadingContent" align="center"><?php echo TABLE_HEADING_CUSTOMER_ID; ?></td>
-                <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_FULL_NAME; ?></td>
-                <td class="dataTableHeadingContent" align="center"><?php echo TABLE_HEADING_IP_ADDRESS; ?></td>
-                <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_ENTRY_TIME; ?></td>
-                <td class="dataTableHeadingContent" align="center"><?php echo TABLE_HEADING_LAST_CLICK; ?></td>
-                <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_LAST_PAGE_URL; ?></td>
-                <td class="dataTableHeadingContent" align="right"><?php echo TABLE_HEADING_ACTION; ?>&nbsp;</td>
+                <td class="dataTableHeadingContent"><?php echo OSCOM::getDef('table_heading_online'); ?></td>
+                <td class="dataTableHeadingContent" align="center"><?php echo OSCOM::getDef('table_heading_customer_id'); ?></td>
+                <td class="dataTableHeadingContent"><?php echo OSCOM::getDef('table_heading_full_name'); ?></td>
+                <td class="dataTableHeadingContent" align="center"><?php echo OSCOM::getDef('table_heading_ip_address'); ?></td>
+                <td class="dataTableHeadingContent"><?php echo OSCOM::getDef('table_heading_entry_time'); ?></td>
+                <td class="dataTableHeadingContent" align="center"><?php echo OSCOM::getDef('table_heading_last_click'); ?></td>
+                <td class="dataTableHeadingContent"><?php echo OSCOM::getDef('table_heading_last_page_url'); ?></td>
+                <td class="dataTableHeadingContent" align="right"><?php echo OSCOM::getDef('table_heading_action'); ?>&nbsp;</td>
               </tr>
 <?php
   $Qonline = $OSCOM_Db->prepare('select SQL_CALC_FOUND_ROWS customer_id, full_name, ip_address, time_entry, time_last_click, last_page_url, session_id from :table_whos_online order by time_last_click desc limit :page_set_offset, :page_set_max_results');
@@ -79,7 +79,7 @@
                 <td class="dataTableContent"><?php echo date('H:i:s', $Qonline->value('time_entry')); ?></td>
                 <td class="dataTableContent" align="center"><?php echo date('H:i:s', $Qonline->value('time_last_click')); ?></td>
                 <td class="dataTableContent"><?php if (preg_match('/^(.*)osCsid=[A-Z0-9,-]+[&]*(.*)/i', $Qonline->value('last_page_url'), $array)) { echo $array[1] . $array[2]; } else { echo $Qonline->value('last_page_url'); } ?></td>
-                <td class="dataTableContent" align="right"><?php if (isset($info) && is_object($info) && ($Qonline->value('session_id') == $info->session_id)) { echo HTML::image(OSCOM::linkImage('icon_arrow_right.gif'), ''); } else { echo '<a href="' . OSCOM::link(FILENAME_WHOS_ONLINE, 'page=' . $_GET['page'] . '&info=' . $Qonline->value('session_id')) . '">' . HTML::image(OSCOM::linkImage('icon_info.gif'), IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
+                <td class="dataTableContent" align="right"><?php if (isset($info) && is_object($info) && ($Qonline->value('session_id') == $info->session_id)) { echo HTML::image(OSCOM::linkImage('icon_arrow_right.gif'), ''); } else { echo '<a href="' . OSCOM::link(FILENAME_WHOS_ONLINE, 'page=' . $_GET['page'] . '&info=' . $Qonline->value('session_id')) . '">' . HTML::image(OSCOM::linkImage('icon_info.gif'), OSCOM::getDef('image_icon_info')) . '</a>'; } ?>&nbsp;</td>
               </tr>
 <?php
   }
@@ -87,7 +87,7 @@
               <tr>
                 <td colspan="9"><table border="0" width="100%" cellspacing="0" cellpadding="2">
                   <tr>
-                    <td class="smallText" valign="top"><?php echo $Qonline->getPageSetLabel(TEXT_DISPLAY_NUMBER_OF_CUSTOMERS); ?></td>
+                    <td class="smallText" valign="top"><?php echo $Qonline->getPageSetLabel(OSCOM::getDef('text_display_number_of_customers')); ?></td>
                     <td class="smallText" align="right"><?php echo $Qonline->getPageSetLinks(); ?></td>
                   </tr>
                 </table></td>
@@ -98,7 +98,7 @@
   $contents = array();
 
   if (isset($info)) {
-    $heading[] = array('text' => '<strong>' . TABLE_HEADING_SHOPPING_CART . '</strong>');
+    $heading[] = array('text' => '<strong>' . OSCOM::getDef('table_heading_shopping_cart') . '</strong>');
 
     if ( $info->customer_id > 0 ) {
       $Qproducts = $OSCOM_Db->get([
@@ -141,7 +141,7 @@
           $shoppingCart->add_cart(tep_get_prid($Qproducts->value('products_id')), $Qproducts->valueInt('customers_basket_quantity'), $attributes);
         } while ($Qproducts->fetch());
 
-        $contents[] = array('align' => 'right', 'text'  => TEXT_SHOPPING_CART_SUBTOTAL . ' ' . $currencies->format($shoppingCart->show_total()));
+        $contents[] = array('align' => 'right', 'text'  => OSCOM::getDef('text_shopping_cart_subtotal') . ' ' . $currencies->format($shoppingCart->show_total()));
       } else {
         $contents[] = array('text' => '&nbsp;');
       }

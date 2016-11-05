@@ -17,8 +17,8 @@
 
   $OSCOM_Language->loadDefinitions('create_account_success');
 
-  $breadcrumb->add(NAVBAR_TITLE_1);
-  $breadcrumb->add(NAVBAR_TITLE_2);
+  $breadcrumb->add(OSCOM::getDef('navbar_title_1'));
+  $breadcrumb->add(OSCOM::getDef('navbar_title_2'));
 
   if (sizeof($_SESSION['navigation']->snapshot) > 0) {
     $origin_href = OSCOM::link($_SESSION['navigation']->snapshot['page'], tep_array_to_string($_SESSION['navigation']->snapshot['get'], array(session_name())));
@@ -31,18 +31,18 @@
 ?>
 
 <div class="page-header">
-  <h1><?php echo HEADING_TITLE; ?></h1>
+  <h1><?php echo OSCOM::getDef('heading_title'); ?></h1>
 </div>
 
 <div class="contentContainer">
   <div class="contentText">
     <div class="alert alert-success">
-      <?php echo TEXT_ACCOUNT_CREATED; ?>
+      <?php echo OSCOM::getDef('text_account_created'); ?>
     </div>
   </div>
 
   <div class="buttonSet">
-    <div class="text-right"><?php echo HTML::button(IMAGE_BUTTON_CONTINUE, 'fa fa-angle-right', $origin_href, null, 'btn-success'); ?></div>
+    <div class="text-right"><?php echo HTML::button(OSCOM::getDef('image_button_continue'), 'fa fa-angle-right', $origin_href, null, 'btn-success'); ?></div>
   </div>
 </div>
 

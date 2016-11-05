@@ -1,0 +1,6 @@
+module_content_header_buttons_title = Buttons
+module_content_header_buttons_description = Adds Login/Checkout Buttons into the Header Area of your site.
+module_content_header_buttons_title_cart_contents = Cart Contents
+module_content_header_buttons_title_checkout = Checkout
+module_content_header_buttons_title_logoff = Log Off
+module_content_header_buttons_title_my_account = My Account

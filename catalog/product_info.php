@@ -46,11 +46,11 @@
 
 <div class="contentContainer">
   <div class="contentText">
-    <div class="alert alert-warning"><?php echo TEXT_PRODUCT_NOT_FOUND; ?></div>
+    <div class="alert alert-warning"><?php echo OSCOM::getDef('text_product_not_found'); ?></div>
   </div>
 
   <div class="pull-right">
-    <?php echo HTML::button(IMAGE_BUTTON_CONTINUE, 'fa fa-angle-right', OSCOM::link('index.php')); ?>
+    <?php echo HTML::button(OSCOM::getDef('image_button_continue'), 'fa fa-angle-right', OSCOM::link('index.php')); ?>
   </div>
 </div>
 
@@ -167,7 +167,7 @@
     if ($Qpa->fetch() !== false) {
 ?>
 
-    <h4><?php echo TEXT_PRODUCT_OPTIONS; ?></h4>
+    <h4><?php echo OSCOM::getDef('text_product_options'); ?></h4>
 
     <p>
 <?php
@@ -210,7 +210,7 @@
     if ($Qproduct->value('products_date_available') > date('Y-m-d H:i:s')) {
 ?>
 
-    <div class="alert alert-info"><?php echo sprintf(TEXT_DATE_AVAILABLE, DateTime::toLong($Qproduct->value('products_date_available'))); ?></div>
+    <div class="alert alert-info"><?php echo sprintf(OSCOM::getDef('text_date_available'), DateTime::toLong($Qproduct->value('products_date_available'))); ?></div>
 
 <?php
     }
@@ -234,8 +234,8 @@
 ?>
 
   <div class="buttonSet row">
-    <div class="col-xs-6"><?php echo HTML::button(IMAGE_BUTTON_REVIEWS . (($has_rating === true) ? ' (' . $Qr->value('count') . ')' : ''), 'fa fa-commenting', OSCOM::link('product_reviews.php', tep_get_all_get_params())); ?></div>
-    <div class="col-xs-6 text-right"><?php echo HTML::hiddenField('products_id', $Qproduct->valueInt('products_id')) . HTML::button(IMAGE_BUTTON_IN_CART, 'fa fa-shopping-cart', null, null, 'btn-success'); ?></div>
+    <div class="col-xs-6"><?php echo HTML::button(OSCOM::getDef('image_button_reviews') . (($has_rating === true) ? ' (' . $Qr->value('count') . ')' : ''), 'fa fa-commenting', OSCOM::link('product_reviews.php', tep_get_all_get_params())); ?></div>
+    <div class="col-xs-6 text-right"><?php echo HTML::hiddenField('products_id', $Qproduct->valueInt('products_id')) . HTML::button(OSCOM::getDef('image_button_in_cart'), 'fa fa-shopping-cart', null, null, 'btn-success'); ?></div>
   </div>
 
   <div class="row">

@@ -24,9 +24,9 @@
   }
 ?>
 <!DOCTYPE html>
-<html <?php echo HTML_PARAMS; ?>>
+<html <?php echo OSCOM::getDef('html_params'); ?>>
 <head>
-<meta charset="<?php echo CHARSET; ?>">
+<meta charset="<?php echo OSCOM::getDef('charset'); ?>">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <title><?php echo HTML::outputProtected($oscTemplate->getTitle()); ?></title>

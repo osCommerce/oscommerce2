@@ -1,0 +1,2 @@
+module_order_total_loworderfee_title = Low Order Fee
+module_order_total_loworderfee_description = Low Order Fee

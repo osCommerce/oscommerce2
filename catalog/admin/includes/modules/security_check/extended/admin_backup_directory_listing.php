@@ -24,7 +24,7 @@
 
       $this->lang->loadDefinitions('modules/security_check/extended/admin_backup_directory_listing');
 
-      $this->title = MODULE_SECURITY_CHECK_EXTENDED_ADMIN_BACKUP_DIRECTORY_LISTING_TITLE;
+      $this->title = OSCOM::getDef('module_security_check_extended_admin_backup_directory_listing_title');
     }
 
     function pass() {
@@ -34,7 +34,7 @@
     }
 
     function getMessage() {
-      return MODULE_SECURITY_CHECK_EXTENDED_ADMIN_BACKUP_DIRECTORY_LISTING_HTTP_200;
+      return OSCOM::getDef('module_security_check_extended_admin_backup_directory_listing_http_200');
     }
 
     function getHttpRequest($url) {

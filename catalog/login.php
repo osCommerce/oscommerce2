@@ -63,13 +63,13 @@
 
   $OSCOM_Language->loadDefinitions('login');
 
-  $breadcrumb->add(NAVBAR_TITLE, OSCOM::link('login.php'));
+  $breadcrumb->add(OSCOM::getDef('navbar_title'), OSCOM::link('login.php'));
 
   require($oscTemplate->getFile('template_top.php'));
 ?>
 
 <div class="page-header">
-  <h1><?php echo HEADING_TITLE; ?></h1>
+  <h1><?php echo OSCOM::getDef('heading_title'); ?></h1>
 </div>
 
 <?php

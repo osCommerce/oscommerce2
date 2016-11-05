@@ -1,0 +1,3 @@
+module_social_bookmarks_email_title = E-Mail
+module_social_bookmarks_email_description = Share products via e-mail.
+module_social_bookmarks_email_public_title = Share via E-Mail

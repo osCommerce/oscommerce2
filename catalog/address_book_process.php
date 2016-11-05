@@ -24,11 +24,11 @@
 
   if (isset($_GET['action']) && ($_GET['action'] == 'deleteconfirm') && isset($_GET['delete']) && is_numeric($_GET['delete']) && isset($_GET['formid']) && ($_GET['formid'] == md5($_SESSION['sessiontoken']))) {
     if ((int)$_GET['delete'] == $_SESSION['customer_default_address_id']) {
-      $messageStack->add_session('addressbook', WARNING_PRIMARY_ADDRESS_DELETION, 'warning');
+      $messageStack->add_session('addressbook', OSCOM::getDef('warning_primary_address_deletion'), 'warning');
     } else {
       $OSCOM_Db->delete('address_book', ['address_book_id' => (int)$_GET['delete'], 'customers_id' => (int)$_SESSION['customer_id']]);
 
-      $messageStack->add_session('addressbook', SUCCESS_ADDRESS_BOOK_ENTRY_DELETED, 'success');
+      $messageStack->add_session('addressbook', OSCOM::getDef('success_address_book_entry_deleted'), 'success');
     }
 
     OSCOM::redirect('address_book.php');
@@ -62,44 +62,44 @@
       if ( ($gender != 'm') && ($gender != 'f') ) {
         $error = true;
 
-        $messageStack->add('addressbook', ENTRY_GENDER_ERROR);
+        $messageStack->add('addressbook', OSCOM::getDef('entry_gender_error'));
       }
     }
 
     if (strlen($firstname) < ENTRY_FIRST_NAME_MIN_LENGTH) {
       $error = true;
 
-      $messageStack->add('addressbook', ENTRY_FIRST_NAME_ERROR);
+      $messageStack->add('addressbook', OSCOM::getDef('entry_first_name_error'));
     }
 
     if (strlen($lastname) < ENTRY_LAST_NAME_MIN_LENGTH) {
       $error = true;
 
-      $messageStack->add('addressbook', ENTRY_LAST_NAME_ERROR);
+      $messageStack->add('addressbook', OSCOM::getDef('entry_last_name_error'));
     }
 
     if (strlen($street_address) < ENTRY_STREET_ADDRESS_MIN_LENGTH) {
       $error = true;
 
-      $messageStack->add('addressbook', ENTRY_STREET_ADDRESS_ERROR);
+      $messageStack->add('addressbook', OSCOM::getDef('entry_street_address_error'));
     }
 
     if (strlen($postcode) < ENTRY_POSTCODE_MIN_LENGTH) {
       $error = true;
 
-      $messageStack->add('addressbook', ENTRY_POST_CODE_ERROR);
+      $messageStack->add('addressbook', OSCOM::getDef('entry_post_code_error'));
     }
 
     if (strlen($city) < ENTRY_CITY_MIN_LENGTH) {
       $error = true;
 
-      $messageStack->add('addressbook', ENTRY_CITY_ERROR);
+      $messageStack->add('addressbook', OSCOM::getDef('entry_city_error'));
     }
 
     if (!is_numeric($country)) {
       $error = true;
 
-      $messageStack->add('addressbook', ENTRY_COUNTRY_ERROR);
+      $messageStack->add('addressbook', OSCOM::getDef('entry_country_error'));
     }
 
     if (ACCOUNT_STATE == 'true') {
@@ -123,13 +123,13 @@
         } else {
           $error = true;
 
-          $messageStack->add('addressbook', ENTRY_STATE_ERROR_SELECT);
+          $messageStack->add('addressbook', OSCOM::getDef('entry_state_error_select'));
         }
       } else {
         if (strlen($state) < ENTRY_STATE_MIN_LENGTH) {
           $error = true;
 
-          $messageStack->add('addressbook', ENTRY_STATE_ERROR);
+          $messageStack->add('addressbook', OSCOM::getDef('entry_state_error'));
         }
       }
     }
@@ -180,7 +180,7 @@
             $OSCOM_Db->save('customers', $sql_data_array, ['customers_id' => (int)$_SESSION['customer_id']]);
           }
 
-          $messageStack->add_session('addressbook', SUCCESS_ADDRESS_BOOK_ENTRY_UPDATED, 'success');
+          $messageStack->add_session('addressbook', OSCOM::getDef('success_address_book_entry_updated'), 'success');
         }
       } else {
         if (tep_count_customer_address_book_entries() < MAX_ADDRESS_BOOK_ENTRIES) {
@@ -205,7 +205,7 @@
 
             $OSCOM_Db->save('customers', $sql_data_array, ['customers_id' => (int)$_SESSION['customer_id']]);
 
-            $messageStack->add_session('addressbook', SUCCESS_ADDRESS_BOOK_ENTRY_UPDATED, 'success');
+            $messageStack->add_session('addressbook', OSCOM::getDef('success_address_book_entry_updated'), 'success');
           }
         }
       }
@@ -221,7 +221,7 @@
     $Qentry->execute();
 
     if ($Qentry->fetch() === false) {
-      $messageStack->add_session('addressbook', ERROR_NONEXISTING_ADDRESS_BOOK_ENTRY);
+      $messageStack->add_session('addressbook', OSCOM::getDef('error_nonexisting_address_book_entry'));
 
       OSCOM::redirect('address_book.php');
     }
@@ -229,7 +229,7 @@
     $entry = $Qentry->toArray();
   } elseif (isset($_GET['delete']) && is_numeric($_GET['delete'])) {
     if ($_GET['delete'] == $_SESSION['customer_default_address_id']) {
-      $messageStack->add_session('addressbook', WARNING_PRIMARY_ADDRESS_DELETION, 'warning');
+      $messageStack->add_session('addressbook', OSCOM::getDef('warning_primary_address_deletion'), 'warning');
 
       OSCOM::redirect('address_book.php');
     } else {
@@ -239,7 +239,7 @@
       $Qcheck->execute();
 
       if ($Qcheck->fetch() === false) {
-        $messageStack->add_session('addressbook', ERROR_NONEXISTING_ADDRESS_BOOK_ENTRY);
+        $messageStack->add_session('addressbook', OSCOM::getDef('error_nonexisting_address_book_entry'));
 
         OSCOM::redirect('address_book.php');
       }
@@ -250,28 +250,28 @@
 
   if (!isset($_GET['delete']) && !isset($_GET['edit'])) {
     if (tep_count_customer_address_book_entries() >= MAX_ADDRESS_BOOK_ENTRIES) {
-      $messageStack->add_session('addressbook', ERROR_ADDRESS_BOOK_FULL);
+      $messageStack->add_session('addressbook', OSCOM::getDef('error_address_book_full'));
 
       OSCOM::redirect('address_book.php');
     }
   }
 
-  $breadcrumb->add(NAVBAR_TITLE_1, OSCOM::link('account.php'));
-  $breadcrumb->add(NAVBAR_TITLE_2, OSCOM::link('address_book.php'));
+  $breadcrumb->add(OSCOM::getDef('navbar_title_1'), OSCOM::link('account.php'));
+  $breadcrumb->add(OSCOM::getDef('navbar_title_2'), OSCOM::link('address_book.php'));
 
   if (isset($_GET['edit']) && is_numeric($_GET['edit'])) {
-    $breadcrumb->add(NAVBAR_TITLE_MODIFY_ENTRY, OSCOM::link('address_book_process.php', 'edit=' . $_GET['edit']));
+    $breadcrumb->add(OSCOM::getDef('navbar_title_modify_entry'), OSCOM::link('address_book_process.php', 'edit=' . $_GET['edit']));
   } elseif (isset($_GET['delete']) && is_numeric($_GET['delete'])) {
-    $breadcrumb->add(NAVBAR_TITLE_DELETE_ENTRY, OSCOM::link('address_book_process.php', 'delete=' . $_GET['delete']));
+    $breadcrumb->add(OSCOM::getDef('navbar_title_delete_entry'), OSCOM::link('address_book_process.php', 'delete=' . $_GET['delete']));
   } else {
-    $breadcrumb->add(NAVBAR_TITLE_ADD_ENTRY, OSCOM::link('address_book_process.php'));
+    $breadcrumb->add(OSCOM::getDef('navbar_title_add_entry'), OSCOM::link('address_book_process.php'));
   }
 
   require($oscTemplate->getFile('template_top.php'));
 ?>
 
 <div class="page-header">
-  <h1><?php if (isset($_GET['edit'])) { echo HEADING_TITLE_MODIFY_ENTRY; } elseif (isset($_GET['delete'])) { echo HEADING_TITLE_DELETE_ENTRY; } else { echo HEADING_TITLE_ADD_ENTRY; } ?></h1>
+  <h1><?php if (isset($_GET['edit'])) { echo OSCOM::getDef('heading_title_modify_entry'); } elseif (isset($_GET['delete'])) { echo OSCOM::getDef('heading_title_delete_entry'); } else { echo OSCOM::getDef('heading_title_add_entry'); } ?></h1>
 </div>
 
 <?php
@@ -288,11 +288,11 @@
 
   <div class="contentText row">
     <div class="col-sm-8">
-      <div class="alert alert-warning"><?php echo DELETE_ADDRESS_DESCRIPTION; ?></div>
+      <div class="alert alert-warning"><?php echo OSCOM::getDef('delete_address_description'); ?></div>
     </div>
     <div class="col-sm-4">
       <div class="panel panel-danger">
-        <div class="panel-heading"><?php echo DELETE_ADDRESS_TITLE; ?></div>
+        <div class="panel-heading"><?php echo OSCOM::getDef('delete_address_title'); ?></div>
 
         <div class="panel-body">
           <?php echo tep_address_label($_SESSION['customer_id'], $_GET['delete'], true, ' ', '<br />'); ?>
@@ -302,9 +302,9 @@
   </div>
 
   <div class="buttonSet">
-    <span class="buttonAction"><?php echo HTML::button(IMAGE_BUTTON_DELETE, 'fa fa-trash', OSCOM::link('address_book_process.php', 'delete=' . $_GET['delete'] . '&action=deleteconfirm&formid=' . md5($_SESSION['sessiontoken'])), null, 'btn-danger'); ?></span>
+    <span class="buttonAction"><?php echo HTML::button(OSCOM::getDef('image_button_delete'), 'fa fa-trash', OSCOM::link('address_book_process.php', 'delete=' . $_GET['delete'] . '&action=deleteconfirm&formid=' . md5($_SESSION['sessiontoken'])), null, 'btn-danger'); ?></span>
 
-    <?php echo HTML::button(IMAGE_BUTTON_BACK, 'fa fa-angle-left', OSCOM::link('address_book.php')); ?>
+    <?php echo HTML::button(OSCOM::getDef('image_button_back'), 'fa fa-angle-left', OSCOM::link('address_book.php')); ?>
   </div>
 
 </div>
@@ -324,8 +324,8 @@
 ?>
 
   <div class="buttonSet row">
-    <div class="col-xs-6"><?php echo HTML::button(IMAGE_BUTTON_BACK, 'fa fa-angle-left', OSCOM::link('address_book.php')); ?></div>
-    <div class="col-xs-6 text-right"><?php echo HTML::hiddenField('action', 'update') . HTML::hiddenField('edit', $_GET['edit']) . HTML::button(IMAGE_BUTTON_UPDATE, 'fa fa-refresh'); ?></div>
+    <div class="col-xs-6"><?php echo HTML::button(OSCOM::getDef('image_button_back'), 'fa fa-angle-left', OSCOM::link('address_book.php')); ?></div>
+    <div class="col-xs-6 text-right"><?php echo HTML::hiddenField('action', 'update') . HTML::hiddenField('edit', $_GET['edit']) . HTML::button(OSCOM::getDef('image_button_update'), 'fa fa-refresh'); ?></div>
   </div>
 
 <?php
@@ -338,8 +338,8 @@
 ?>
 
   <div class="buttonSet row">
-    <div class="col-xs-6"><?php echo HTML::button(IMAGE_BUTTON_BACK, 'fa fa-angle-left', $back_link); ?></div>
-    <div class="col-xs-6 text-right"><?php echo HTML::hiddenField('action', 'process') . HTML::button(IMAGE_BUTTON_CONTINUE, 'fa fa-angle-right'); ?></div>
+    <div class="col-xs-6"><?php echo HTML::button(OSCOM::getDef('image_button_back'), 'fa fa-angle-left', $back_link); ?></div>
+    <div class="col-xs-6 text-right"><?php echo HTML::hiddenField('action', 'process') . HTML::button(OSCOM::getDef('image_button_continue'), 'fa fa-angle-right'); ?></div>
   </div>
 
 <?php

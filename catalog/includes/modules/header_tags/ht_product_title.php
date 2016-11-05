@@ -10,6 +10,7 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\OSCOM;
   use OSC\OM\Registry;
 
   class ht_product_title {
@@ -21,8 +22,8 @@
     var $enabled = false;
 
     function __construct() {
-      $this->title = MODULE_HEADER_TAGS_PRODUCT_TITLE_TITLE;
-      $this->description = MODULE_HEADER_TAGS_PRODUCT_TITLE_DESCRIPTION;
+      $this->title = OSCOM::getDef('module_header_tags_product_title_title');
+      $this->description = OSCOM::getDef('module_header_tags_product_title_description');
 
       if ( defined('MODULE_HEADER_TAGS_PRODUCT_TITLE_STATUS') ) {
         $this->sort_order = MODULE_HEADER_TAGS_PRODUCT_TITLE_SORT_ORDER;
@@ -45,10 +46,10 @@
 
           if ($Qproduct->fetch() !== false) {
             if ( tep_not_null($Qproduct->value('products_seo_title')) && (MODULE_HEADER_TAGS_PRODUCT_TITLE_SEO_TITLE_OVERRIDE == 'True') ) {
-              $oscTemplate->setTitle($Qproduct->value('products_seo_title') . MODULE_HEADER_TAGS_PRODUCT_SEO_SEPARATOR . $oscTemplate->getTitle());
+              $oscTemplate->setTitle($Qproduct->value('products_seo_title') . OSCOM::getDef('module_header_tags_product_seo_separator') . $oscTemplate->getTitle());
             }
             else {
-              $oscTemplate->setTitle($Qproduct->value('products_name') . MODULE_HEADER_TAGS_PRODUCT_SEO_SEPARATOR . $oscTemplate->getTitle());
+              $oscTemplate->setTitle($Qproduct->value('products_name') . OSCOM::getDef('module_header_tags_product_seo_separator') . $oscTemplate->getTitle());
             }
           }
         }

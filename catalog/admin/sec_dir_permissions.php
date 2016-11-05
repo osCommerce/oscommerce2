@@ -69,7 +69,7 @@
       <tr>
         <td width="100%"><table border="0" width="100%" cellspacing="0" cellpadding="0">
           <tr>
-            <td class="pageHeading"><?php echo HEADING_TITLE; ?></td>
+            <td class="pageHeading"><?php echo OSCOM::getDef('heading_title'); ?></td>
           </tr>
         </table></td>
       </tr>
@@ -78,9 +78,9 @@
           <tr>
             <td valign="top"><table border="0" width="100%" cellspacing="0" cellpadding="2">
               <tr class="dataTableHeadingRow">
-                <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_DIRECTORIES; ?></td>
-                <td class="dataTableHeadingContent" align="center"><?php echo TABLE_HEADING_WRITABLE; ?></td>
-                <td class="dataTableHeadingContent" align="center"><?php echo TABLE_HEADING_RECOMMENDED; ?></td>
+                <td class="dataTableHeadingContent"><?php echo OSCOM::getDef('table_heading_directories'); ?></td>
+                <td class="dataTableHeadingContent" align="center"><?php echo OSCOM::getDef('table_heading_writable'); ?></td>
+                <td class="dataTableHeadingContent" align="center"><?php echo OSCOM::getDef('table_heading_recommended'); ?></td>
               </tr>
 <?php
   foreach (tep_opendir(OSCOM::getConfig('dir_root', 'Shop')) as $file) {
@@ -96,7 +96,7 @@
   }
 ?>
               <tr>
-                <td colspan="3" class="smallText"><?php echo TEXT_DIRECTORY . ' ' . OSCOM::getConfig('dir_root', 'Shop'); ?></td>
+                <td colspan="3" class="smallText"><?php echo OSCOM::getDef('text_directory') . ' ' . OSCOM::getConfig('dir_root', 'Shop'); ?></td>
               </tr>
             </table></td>
           </tr>

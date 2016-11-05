@@ -68,7 +68,7 @@
       <tr>
         <td><table border="0" width="100%" cellspacing="0" cellpadding="0">
           <tr>
-            <td class="pageHeading"><?php echo HEADING_TITLE; ?></td>
+            <td class="pageHeading"><?php echo OSCOM::getDef('heading_title'); ?></td>
           </tr>
         </table></td>
       </tr>
@@ -77,8 +77,8 @@
           <tr>
             <td valign="top"><table border="0" width="100%" cellspacing="0" cellpadding="2">
               <tr class="dataTableHeadingRow">
-                <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_TAX_CLASSES; ?></td>
-                <td class="dataTableHeadingContent" align="right"><?php echo TABLE_HEADING_ACTION; ?>&nbsp;</td>
+                <td class="dataTableHeadingContent"><?php echo OSCOM::getDef('table_heading_tax_classes'); ?></td>
+                <td class="dataTableHeadingContent" align="right"><?php echo OSCOM::getDef('table_heading_action'); ?>&nbsp;</td>
               </tr>
 <?php
   $Qclasses = $OSCOM_Db->prepare('select SQL_CALC_FOUND_ROWS tax_class_id, tax_class_title, tax_class_description, last_modified, date_added from :table_tax_class order by tax_class_title limit :page_set_offset, :page_set_max_results');
@@ -97,7 +97,7 @@
     }
 ?>
                 <td class="dataTableContent"><?php echo $Qclasses->value('tax_class_title'); ?></td>
-                <td class="dataTableContent" align="right"><?php if (isset($tcInfo) && is_object($tcInfo) && ($Qclasses->valueInt('tax_class_id') === (int)$tcInfo->tax_class_id)) { echo HTML::image(OSCOM::linkImage('icon_arrow_right.gif'), ''); } else { echo '<a href="' . OSCOM::link(FILENAME_TAX_CLASSES, 'page=' . $_GET['page'] . '&tID=' . $Qclasses->valueInt('tax_class_id')) . '">' . HTML::image(OSCOM::linkImage('icon_info.gif'), IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
+                <td class="dataTableContent" align="right"><?php if (isset($tcInfo) && is_object($tcInfo) && ($Qclasses->valueInt('tax_class_id') === (int)$tcInfo->tax_class_id)) { echo HTML::image(OSCOM::linkImage('icon_arrow_right.gif'), ''); } else { echo '<a href="' . OSCOM::link(FILENAME_TAX_CLASSES, 'page=' . $_GET['page'] . '&tID=' . $Qclasses->valueInt('tax_class_id')) . '">' . HTML::image(OSCOM::linkImage('icon_info.gif'), OSCOM::getDef('image_icon_info')) . '</a>'; } ?>&nbsp;</td>
               </tr>
 <?php
   }
@@ -105,14 +105,14 @@
               <tr>
                 <td colspan="2"><table border="0" width="100%" cellspacing="0" cellpadding="2">
                   <tr>
-                    <td class="smallText" valign="top"><?php echo $Qclasses->getPageSetLabel(TEXT_DISPLAY_NUMBER_OF_TAX_CLASSES); ?></td>
+                    <td class="smallText" valign="top"><?php echo $Qclasses->getPageSetLabel(OSCOM::getDef('text_display_number_of_tax_classes')); ?></td>
                     <td class="smallText" align="right"><?php echo $Qclasses->getPageSetLinks(); ?></td>
                   </tr>
 <?php
   if (empty($action)) {
 ?>
                   <tr>
-                    <td class="smallText" colspan="2" align="right"><?php echo HTML::button(IMAGE_NEW_TAX_CLASS, 'fa fa-plus', OSCOM::link(FILENAME_TAX_CLASSES, 'page=' . $_GET['page'] . '&action=new')); ?></td>
+                    <td class="smallText" colspan="2" align="right"><?php echo HTML::button(OSCOM::getDef('image_new_tax_class'), 'fa fa-plus', OSCOM::link(FILENAME_TAX_CLASSES, 'page=' . $_GET['page'] . '&action=new')); ?></td>
                   </tr>
 <?php
   }
@@ -126,39 +126,39 @@
 
   switch ($action) {
     case 'new':
-      $heading[] = array('text' => '<strong>' . TEXT_INFO_HEADING_NEW_TAX_CLASS . '</strong>');
+      $heading[] = array('text' => '<strong>' . OSCOM::getDef('text_info_heading_new_tax_class') . '</strong>');
 
       $contents = array('form' => HTML::form('classes', OSCOM::link(FILENAME_TAX_CLASSES, 'page=' . $_GET['page'] . '&action=insert')));
-      $contents[] = array('text' => TEXT_INFO_INSERT_INTRO);
-      $contents[] = array('text' => '<br />' . TEXT_INFO_CLASS_TITLE . '<br />' . HTML::inputField('tax_class_title'));
-      $contents[] = array('text' => '<br />' . TEXT_INFO_CLASS_DESCRIPTION . '<br />' . HTML::inputField('tax_class_description'));
-      $contents[] = array('align' => 'center', 'text' => '<br />' . HTML::button(IMAGE_SAVE, 'fa fa-save') . HTML::button(IMAGE_CANCEL, 'fa fa-close', OSCOM::link(FILENAME_TAX_CLASSES, 'page=' . $_GET['page'])));
+      $contents[] = array('text' => OSCOM::getDef('text_info_insert_intro'));
+      $contents[] = array('text' => '<br />' . OSCOM::getDef('text_info_class_title') . '<br />' . HTML::inputField('tax_class_title'));
+      $contents[] = array('text' => '<br />' . OSCOM::getDef('text_info_class_description') . '<br />' . HTML::inputField('tax_class_description'));
+      $contents[] = array('align' => 'center', 'text' => '<br />' . HTML::button(OSCOM::getDef('image_save'), 'fa fa-save') . HTML::button(OSCOM::getDef('image_cancel'), 'fa fa-close', OSCOM::link(FILENAME_TAX_CLASSES, 'page=' . $_GET['page'])));
       break;
     case 'edit':
-      $heading[] = array('text' => '<strong>' . TEXT_INFO_HEADING_EDIT_TAX_CLASS . '</strong>');
+      $heading[] = array('text' => '<strong>' . OSCOM::getDef('text_info_heading_edit_tax_class') . '</strong>');
 
       $contents = array('form' => HTML::form('classes', OSCOM::link(FILENAME_TAX_CLASSES, 'page=' . $_GET['page'] . '&tID=' . $tcInfo->tax_class_id . '&action=save')));
-      $contents[] = array('text' => TEXT_INFO_EDIT_INTRO);
-      $contents[] = array('text' => '<br />' . TEXT_INFO_CLASS_TITLE . '<br />' . HTML::inputField('tax_class_title', $tcInfo->tax_class_title));
-      $contents[] = array('text' => '<br />' . TEXT_INFO_CLASS_DESCRIPTION . '<br />' . HTML::inputField('tax_class_description', $tcInfo->tax_class_description));
-      $contents[] = array('align' => 'center', 'text' => '<br />' . HTML::button(IMAGE_SAVE, 'fa fa-save') . HTML::button(IMAGE_CANCEL, 'fa fa-close', OSCOM::link(FILENAME_TAX_CLASSES, 'page=' . $_GET['page'] . '&tID=' . $tcInfo->tax_class_id)));
+      $contents[] = array('text' => OSCOM::getDef('text_info_edit_intro'));
+      $contents[] = array('text' => '<br />' . OSCOM::getDef('text_info_class_title') . '<br />' . HTML::inputField('tax_class_title', $tcInfo->tax_class_title));
+      $contents[] = array('text' => '<br />' . OSCOM::getDef('text_info_class_description') . '<br />' . HTML::inputField('tax_class_description', $tcInfo->tax_class_description));
+      $contents[] = array('align' => 'center', 'text' => '<br />' . HTML::button(OSCOM::getDef('image_save'), 'fa fa-save') . HTML::button(OSCOM::getDef('image_cancel'), 'fa fa-close', OSCOM::link(FILENAME_TAX_CLASSES, 'page=' . $_GET['page'] . '&tID=' . $tcInfo->tax_class_id)));
       break;
     case 'delete':
-      $heading[] = array('text' => '<strong>' . TEXT_INFO_HEADING_DELETE_TAX_CLASS . '</strong>');
+      $heading[] = array('text' => '<strong>' . OSCOM::getDef('text_info_heading_delete_tax_class') . '</strong>');
 
       $contents = array('form' => HTML::form('classes', OSCOM::link(FILENAME_TAX_CLASSES, 'page=' . $_GET['page'] . '&tID=' . $tcInfo->tax_class_id . '&action=deleteconfirm')));
-      $contents[] = array('text' => TEXT_INFO_DELETE_INTRO);
+      $contents[] = array('text' => OSCOM::getDef('text_info_delete_intro'));
       $contents[] = array('text' => '<br /><strong>' . $tcInfo->tax_class_title . '</strong>');
-      $contents[] = array('align' => 'center', 'text' => '<br />' . HTML::button(IMAGE_DELETE, 'fa fa-trash') . HTML::button(IMAGE_CANCEL, 'fa fa-close', OSCOM::link(FILENAME_TAX_CLASSES, 'page=' . $_GET['page'] . '&tID=' . $tcInfo->tax_class_id)));
+      $contents[] = array('align' => 'center', 'text' => '<br />' . HTML::button(OSCOM::getDef('image_delete'), 'fa fa-trash') . HTML::button(OSCOM::getDef('image_cancel'), 'fa fa-close', OSCOM::link(FILENAME_TAX_CLASSES, 'page=' . $_GET['page'] . '&tID=' . $tcInfo->tax_class_id)));
       break;
     default:
       if (isset($tcInfo) && is_object($tcInfo)) {
         $heading[] = array('text' => '<strong>' . $tcInfo->tax_class_title . '</strong>');
 
-        $contents[] = array('align' => 'center', 'text' => HTML::button(IMAGE_EDIT, 'fa fa-edit', OSCOM::link(FILENAME_TAX_CLASSES, 'page=' . $_GET['page'] . '&tID=' . $tcInfo->tax_class_id . '&action=edit')) . HTML::button(IMAGE_DELETE, 'fa fa-trash', OSCOM::link(FILENAME_TAX_CLASSES, 'page=' . $_GET['page'] . '&tID=' . $tcInfo->tax_class_id . '&action=delete')));
-        $contents[] = array('text' => '<br />' . TEXT_INFO_DATE_ADDED . ' ' . DateTime::toShort($tcInfo->date_added));
-        $contents[] = array('text' => '' . TEXT_INFO_LAST_MODIFIED . ' ' . DateTime::toShort($tcInfo->last_modified));
-        $contents[] = array('text' => '<br />' . TEXT_INFO_CLASS_DESCRIPTION . '<br />' . $tcInfo->tax_class_description);
+        $contents[] = array('align' => 'center', 'text' => HTML::button(OSCOM::getDef('image_edit'), 'fa fa-edit', OSCOM::link(FILENAME_TAX_CLASSES, 'page=' . $_GET['page'] . '&tID=' . $tcInfo->tax_class_id . '&action=edit')) . HTML::button(OSCOM::getDef('image_delete'), 'fa fa-trash', OSCOM::link(FILENAME_TAX_CLASSES, 'page=' . $_GET['page'] . '&tID=' . $tcInfo->tax_class_id . '&action=delete')));
+        $contents[] = array('text' => '<br />' . OSCOM::getDef('text_info_date_added') . ' ' . DateTime::toShort($tcInfo->date_added));
+        $contents[] = array('text' => '' . OSCOM::getDef('text_info_last_modified') . ' ' . DateTime::toShort($tcInfo->last_modified));
+        $contents[] = array('text' => '<br />' . OSCOM::getDef('text_info_class_description') . '<br />' . $tcInfo->tax_class_description);
       }
       break;
   }
