@@ -11,7 +11,9 @@
 */
 
   use OSC\OM\Cache;
+  use OSC\OM\DateTime;
   use OSC\OM\HTML;
+  use OSC\OM\HTTP;
   use OSC\OM\OSCOM;
   use OSC\OM\Registry;
 
@@ -33,15 +35,25 @@
     }
 
     function getOutput() {
-      if (!class_exists('lastRSS')) {
-        include('includes/classes/rss.php');
-      }
+      $entries = [];
 
-      $rss = new lastRSS;
-      $rss->items_limit = 5;
-      $rss->cache_dir = Cache::getPath();
-      $rss->cache_time = 86400;
-      $feed = $rss->get('http://feeds.feedburner.com/osCommerce_Contributions', 'oscommerce_website-rss-addons');
+      $addonsCache = new Cache('oscommerce_website-addons-latest5');
+
+      if ($addonsCache->exists(360)) {
+        $entries = $addonsCache->get();
+      } else {
+        $response = HTTP::getResponse(['url' => 'https://www.oscommerce.com/index.php?RPC&GetLatestAddons']);
+
+        if (!empty($response)) {
+          $response = json_decode($response, true);
+
+          if (is_array($response) && (count($response) === 5)) {
+            $entries = $response;
+          }
+        }
+
+        $addonsCache->save($entries);
+      }
 
       $output = '<table class="table table-hover">
                    <thead>
@@ -52,11 +64,11 @@
                    </thead>
                    <tbody>';
 
-      if (is_array($feed) && !empty($feed)) {
-        foreach ($feed['items'] as $item) {
+      if (is_array($entries) && (count($entries) === 5)) {
+        foreach ($entries as $item) {
           $output .= '    <tr>
-                            <td><a href="' . $item['link'] . '" target="_blank">' . $item['title'] . '</a></td>
-                            <td class="text-right" style="white-space: nowrap;">' . date("F j, Y", strtotime($item['pubDate'])) . '</td>
+                            <td><a href="' . HTML::outputProtected($item['link']) . '" target="_blank">' . HTML::outputProtected($item['title']) . '</a></td>
+                            <td class="text-right" style="white-space: nowrap;">' . HTML::outputProtected(DateTime::toShort($item['date'])) . '</td>
                           </tr>';
         }
       } else {
@@ -66,7 +78,7 @@
       }
 
       $output .= '    <tr>
-                        <td class="text-right" colspan="2"><a href="http://addons.oscommerce.com" target="_blank">' . HTML::image(OSCOM::linkImage('icon_oscommerce.png'), MODULE_ADMIN_DASHBOARD_LATEST_ADDONS_ICON_SITE) . '</a>&nbsp;<a href="http://feeds.feedburner.com/osCommerce_Contributions" target="_blank">' . HTML::image(OSCOM::linkImage('icon_rss.png'), MODULE_ADMIN_DASHBOARD_LATEST_ADDONS_ICON_RSS) . '</a></td>
+                        <td class="text-right" colspan="2"><a href="http://addons.oscommerce.com" target="_blank" title="' . HTML::outputProtected(MODULE_ADMIN_DASHBOARD_LATEST_ADDONS_ICON_SITE) . '"><span class="fa fa-fw fa-home"></span></a></td>
                       </tr>
                     </tbody>
                   </table>';
