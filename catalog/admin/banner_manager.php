@@ -192,20 +192,6 @@
         $OSCOM_Db->delete('banners', ['banners_id' => (int)$banners_id]);
         $OSCOM_Db->delete('banners_history', ['banners_id' => (int)$banners_id]);
 
-        if (function_exists('imagecreate') && tep_not_null($banner_extension)) {
-          if (FileSystem::isWritable(OSCOM::getConfig('dir_root') . 'images/graphs/banner_yearly-' . (int)$banners_id . '.' . $banner_extension)) {
-            unlink(OSCOM::getConfig('dir_root') . 'images/graphs/banner_yearly-' . (int)$banners_id . '.' . $banner_extension);
-          }
-
-          if (FileSystem::isWritable(OSCOM::getConfig('dir_root') . 'images/graphs/banner_monthly-' . (int)$banners_id . '.' . $banner_extension)) {
-            unlink(OSCOM::getConfig('dir_root') . 'images/graphs/banner_monthly-' . (int)$banners_id . '.' . $banner_extension);
-          }
-
-          if (FileSystem::isWritable(OSCOM::getConfig('dir_root') . 'images/graphs/banner_daily-' . (int)$banners_id . '.' . $banner_extension)) {
-            unlink(OSCOM::getConfig('dir_root') . 'images/graphs/banner_daily-' . (int)$banners_id . '.' . $banner_extension);
-          }
-        }
-
         $OSCOM_MessageStack->add(SUCCESS_BANNER_REMOVED, 'success');
 
         OSCOM::redirect(FILENAME_BANNER_MANAGER, 'page=' . $_GET['page']);
@@ -233,17 +219,6 @@
           exit;
         }
         break;
-    }
-  }
-
-// check if the graphs directory exists
-  if (function_exists('imagecreate') && tep_not_null($banner_extension)) {
-    if (is_dir(OSCOM::getConfig('dir_root') . 'images/graphs')) {
-      if (!FileSystem::isWritable(OSCOM::getConfig('dir_root') . 'images/graphs')) {
-        $OSCOM_MessageStack->add(ERROR_GRAPHS_DIRECTORY_NOT_WRITEABLE, 'error');
-      }
-    } else {
-      $OSCOM_MessageStack->add(ERROR_GRAPHS_DIRECTORY_DOES_NOT_EXIST, 'error');
     }
   }
 
