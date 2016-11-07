@@ -22,7 +22,7 @@ text_info_review_status = Review Status:
 text_info_products_average_rating = Average Rating:
 text_review_published = Published
 text_review_not_published = Not Published
-text_of_5_stars = %s of 5 Stars!
+text_of_5_stars = {{reviews_rating}} of 5 Stars!
 text_good = <small><font color="#ff0000"><strong>GOOD</strong></font></small>
 text_bad = <small><font color="#ff0000"><strong>BAD</strong></font></small>
 text_info_heading_delete_review = Delete Review

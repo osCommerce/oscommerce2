@@ -52,7 +52,7 @@
     if ($Qorders->fetch()) {
       $order = new order($Qorders->valueInt('orders_id'));
     } else {
-      $OSCOM_MessageStack->add(sprintf(OSCOM::getDef('error_order_does_not_exist'), $oID), 'error');
+      $OSCOM_MessageStack->add(OSCOM::getDef('error_order_does_not_exist', ['order_id' => $oID]), 'error');
     }
   }
 
@@ -94,10 +94,10 @@
           if (isset($_POST['notify']) && ($_POST['notify'] == 'on')) {
             $notify_comments = '';
             if (isset($_POST['notify_comments']) && ($_POST['notify_comments'] == 'on')) {
-              $notify_comments = sprintf(OSCOM::getDef('email_text_comments_update'), $comments) . "\n\n";
+              $notify_comments = OSCOM::getDef('email_text_comments_update', ['comments' => $comments]) . "\n\n";
             }
 
-            $email = STORE_NAME . "\n" . OSCOM::getDef('email_separator') . "\n" . OSCOM::getDef('email_text_order_number') . ' ' . $oID . "\n" . OSCOM::getDef('email_text_invoice_url') . ' ' . OSCOM::link('Shop/' . FILENAME_CATALOG_ACCOUNT_HISTORY_INFO, 'order_id=' . $oID) . "\n" . OSCOM::getDef('email_text_date_ordered') . ' ' . DateTime::toLong($Qcheck->value('date_purchased')) . "\n\n" . $notify_comments . sprintf(OSCOM::getDef('email_text_status_update'), $orders_status_array[$status]) . "\n";
+            $email = STORE_NAME . "\n" . OSCOM::getDef('email_separator') . "\n" . OSCOM::getDef('email_text_order_number') . ' ' . $oID . "\n" . OSCOM::getDef('email_text_invoice_url') . ' ' . OSCOM::link('Shop/' . FILENAME_CATALOG_ACCOUNT_HISTORY_INFO, 'order_id=' . $oID) . "\n" . OSCOM::getDef('email_text_date_ordered') . ' ' . DateTime::toLong($Qcheck->value('date_purchased')) . "\n\n" . $notify_comments . OSCOM::getDef('email_text_status_update', ['status' => $orders_status_array[$status]]) . "\n";
 
             $orderEmail = new Mail($Qcheck->value('customers_email_address'), $Qcheck->value('customers_name'), STORE_OWNER_EMAIL_ADDRESS, STORE_OWNER, OSCOM::getDef('email_text_subject'));
             $orderEmail->setBody($email);

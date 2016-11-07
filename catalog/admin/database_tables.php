@@ -42,7 +42,7 @@
   while ($Qcharsets->fetch()) {
     $mysql_charsets[] = [
       'id' => $Qcharsets->value('Charset'),
-      'text' => sprintf(OSCOM::getDef('action_utf8_conversion_from'), $Qcharsets->value('Charset'))
+      'text' => OSCOM::getDef('action_utf8_conversion_from', ['char_set' => $Qcharsets->value('Charset')])
     ];
   }
 
@@ -260,7 +260,7 @@
 ?>
 
 <div class="main" style="text-align: right;">
-  <?php echo '<span class="runUtf8" style="display: none;">' . sprintf(OSCOM::getDef('action_utf8_dry_run'), HTML::checkboxField('dryrun')) . '</span>' . HTML::selectField('action', $actions, '', 'id="sqlActionsMenu"') . '<span class="runUtf8" style="display: none;">&nbsp;' . HTML::selectField('from_charset', $mysql_charsets) . '</span>&nbsp;' . HTML::button(OSCOM::getDef('button_action_go')); ?>
+  <?php echo '<span class="runUtf8" style="display: none;">' . OSCOM::getDef('action_utf8_dry_run', ['dryrun' => HTML::checkboxField('dryrun')]) . '</span>' . HTML::selectField('action', $actions, '', 'id="sqlActionsMenu"') . '<span class="runUtf8" style="display: none;">&nbsp;' . HTML::selectField('from_charset', $mysql_charsets) . '</span>&nbsp;' . HTML::button(OSCOM::getDef('button_action_go')); ?>
 </div>
 
 <?php

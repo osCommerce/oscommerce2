@@ -5,4 +5,4 @@ text_create_first_administrator = No administrators exist in the database table.
 error_invalid_administrator = Error: Invalid administrator login attempt.
 button_login = Login
 button_create_administrator = Create Administrator
-error_action_recorder = Error: The maximum number of login attempts has been reached. Please try again in %s minutes.
+error_action_recorder = Error: The maximum number of login attempts has been reached. Please try again in {{module_action_recorder_admin_login_minutes}} minutes.

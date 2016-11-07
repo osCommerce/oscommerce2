@@ -38,7 +38,7 @@
 
       $actionRecorder->record(false);
 
-      $messageStack->add('contact', sprintf(OSCOM::getDef('error_action_recorder'), (defined('MODULE_ACTION_RECORDER_CONTACT_US_EMAIL_MINUTES') ? (int)MODULE_ACTION_RECORDER_CONTACT_US_EMAIL_MINUTES : 15)));
+      $messageStack->add('contact', OSCOM::getDef('error_action_recorder', ['module_action_recorder_contact_us_email_minutes' => (defined('MODULE_ACTION_RECORDER_CONTACT_US_EMAIL_MINUTES') ? (int)MODULE_ACTION_RECORDER_CONTACT_US_EMAIL_MINUTES : 15)]));
     }
 
     if ($error == false) {

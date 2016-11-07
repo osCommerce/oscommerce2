@@ -83,7 +83,7 @@
             $OSCOM_MessageStack->add(OSCOM::getDef('error_invalid_administrator'), 'error');
           }
         } else {
-          $OSCOM_MessageStack->add(sprintf(OSCOM::getDef('error_action_recorder'), (defined('MODULE_ACTION_RECORDER_ADMIN_LOGIN_MINUTES') ? (int)MODULE_ACTION_RECORDER_ADMIN_LOGIN_MINUTES : 5)));
+          $OSCOM_MessageStack->add(OSCOM::getDef('error_action_recorder', ['module_action_recorder_admin_login_minutes' => (defined('MODULE_ACTION_RECORDER_ADMIN_LOGIN_MINUTES') ? (int)MODULE_ACTION_RECORDER_ADMIN_LOGIN_MINUTES : 5)]));
         }
 
         if (isset($_POST['username'])) {

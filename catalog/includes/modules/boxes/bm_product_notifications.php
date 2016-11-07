@@ -48,9 +48,9 @@
         $notif_contents = '';
 
         if ($notification_exists == true) {
-          $notif_contents = '<a href="' . OSCOM::link(basename($PHP_SELF), tep_get_all_get_params(array('action')) . 'action=notify_remove') . '"><span class="fa fa-remove"></span> ' . sprintf(OSCOM::getDef('module_boxes_product_notifications_box_notify_remove'), tep_get_products_name($_GET['products_id'])) .'</a>';
+          $notif_contents = '<a href="' . OSCOM::link(basename($PHP_SELF), tep_get_all_get_params(array('action')) . 'action=notify_remove') . '"><span class="fa fa-remove"></span> ' . OSCOM::getDef('module_boxes_product_notifications_box_notify_remove', ['products_name' => tep_get_products_name($_GET['products_id'])]) .'</a>';
         } else {
-          $notif_contents = '<a href="' . OSCOM::link(basename($PHP_SELF), tep_get_all_get_params(array('action')) . 'action=notify') . '"><span class="fa fa-envelope"></span> ' . sprintf(OSCOM::getDef('module_boxes_product_notifications_box_notify'), tep_get_products_name($_GET['products_id'])) .'</a>';
+          $notif_contents = '<a href="' . OSCOM::link(basename($PHP_SELF), tep_get_all_get_params(array('action')) . 'action=notify') . '"><span class="fa fa-envelope"></span> ' . OSCOM::getDef('module_boxes_product_notifications_box_notify', ['products_name' => tep_get_products_name($_GET['products_id'])]) .'</a>';
         }
 
         ob_start();

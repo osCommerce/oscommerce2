@@ -6,4 +6,4 @@ entry_name = Full Name
 entry_email = E-Mail Address
 entry_enquiry = Enquiry
 entry_enquiry_text =
-error_action_recorder = Error: An enquiry has already been sent. Please try again in %s minutes.
+error_action_recorder = Error: An enquiry has already been sent. Please try again in {{module_action_recorder_contact_us_email_minutes}} minutes.

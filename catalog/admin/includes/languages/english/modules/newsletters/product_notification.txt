@@ -1,4 +1,4 @@
-text_count_customers = Customers receiving newsletter: %s
+text_count_customers = Customers receiving newsletter: {{audience}}
 text_products = Products
 text_selected_products = Selected Products
 js_please_select_products = Please select some products.

@@ -35,7 +35,7 @@
 
       $confirm_string = '<table border="0" cellspacing="0" cellpadding="2">' . "\n" .
                         '  <tr>' . "\n" .
-                        '    <td class="main"><font color="#ff0000"><strong>' . sprintf(OSCOM::getDef('text_count_customers'), $Qmail->valueInt('count')) . '</strong></font></td>' . "\n" .
+                        '    <td class="main"><font color="#ff0000"><strong>' . OSCOM::getDef('text_count_customers', ['count' => $Qmail->valueInt('count')]) . '</strong></font></td>' . "\n" .
                         '  </tr>' . "\n" .
                         '  <tr>' . "\n" .
                         '    <td>&nbsp;</td>' . "\n" .
