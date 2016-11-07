@@ -2,7 +2,7 @@
 use OSC\OM\OSCOM;
 ?>
 <li class="dropdown">
-  <a class="dropdown-toggle" data-toggle="dropdown" href="#"><?php echo isset($_SESSION['customer_id']) ? sprintf(OSCOM::getDef('module_navbar_account_logged_in'), $_SESSION['customer_first_name']) : OSCOM::getDef('module_navbar_account_logged_out'); ?></a>
+  <a class="dropdown-toggle" data-toggle="dropdown" href="#"><?php echo isset($_SESSION['customer_id']) ? OSCOM::getDef('module_navbar_account_logged_in', ['customer_first_name' => $_SESSION['customer_first_name']]) : OSCOM::getDef('module_navbar_account_logged_out'); ?></a>
   <ul class="dropdown-menu">
     <?php
     if (isset($_SESSION['customer_id'])) {

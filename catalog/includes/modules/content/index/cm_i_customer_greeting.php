@@ -42,9 +42,9 @@
       $content_width = MODULE_CONTENT_CUSTOMER_GREETING_CONTENT_WIDTH;
 
       if (isset($_SESSION['customer_id'])) {
-        $customer_greeting = sprintf(OSCOM::getDef('module_content_customer_greeting_personal'), HTML::outputProtected($_SESSION['customer_first_name']), OSCOM::link('products_new.php'));
+        $customer_greeting = OSCOM::getDef('module_content_customer_greeting_personal', ['customer_first_name' => HTML::outputProtected($_SESSION['customer_first_name']), 'products_new_link' => OSCOM::link('products_new.php')]);
       } else {
-        $customer_greeting = sprintf(OSCOM::getDef('module_content_customer_greeting_guest'), OSCOM::link('login.php'), OSCOM::link('create_account.php'));
+        $customer_greeting = OSCOM::getDef('module_content_customer_greeting_guest', ['guest_login_link' => OSCOM::link('login.php'), 'guest_create_account_link' =>  OSCOM::link('create_account.php')]);
       }
 
       ob_start();

@@ -38,7 +38,7 @@
 
   $breadcrumb->add(OSCOM::getDef('navbar_title_1'), OSCOM::link('account.php'));
   $breadcrumb->add(OSCOM::getDef('navbar_title_2'), OSCOM::link('account_history.php'));
-  $breadcrumb->add(sprintf(OSCOM::getDef('navbar_title_3'), $_GET['order_id']), OSCOM::link('account_history_info.php', 'order_id=' . $_GET['order_id']));
+  $breadcrumb->add(OSCOM::getDef('navbar_title_3', ['order_id' =>  $_GET['order_id']]), OSCOM::link('account_history_info.php', 'order_id=' . $_GET['order_id']));
 
   require('includes/classes/order.php');
   $order = new order($_GET['order_id']);
@@ -55,7 +55,7 @@
   <div class="contentText">
 
     <div class="panel panel-default">
-      <div class="panel-heading"><strong><?php echo sprintf(OSCOM::getDef('heading_order_number'), $_GET['order_id']) . ' <span class="badge pull-right">' . $order->info['orders_status'] . '</span>'; ?></strong></div>
+      <div class="panel-heading"><strong><?php echo OSCOM::getDef('heading_order_number', ['order_id' =>  $_GET['order_id']]) . ' <span class="badge pull-right">' . $order->info['orders_status'] . '</span>'; ?></strong></div>
       <div class="panel-body">
 
         <table border="0" width="100%" cellspacing="0" cellpadding="2" class="table-hover order_confirmation">

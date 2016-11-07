@@ -82,7 +82,7 @@
           }
         }
 
-        $OSCOM_MessageStack->add(sprintf(OSCOM::getDef('success_expired_entries'), $expired_entries), 'success');
+        $OSCOM_MessageStack->add(OSCOM::getDef('success_expired_entries', ['expired_entries' =>  $expired_entries]), 'success');
 
         OSCOM::redirect(FILENAME_ACTION_RECORDER);
 

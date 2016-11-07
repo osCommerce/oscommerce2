@@ -233,7 +233,7 @@
 
       if ($mInfo->products_count > 0) {
         $contents[] = array('text' => '<br />' . HTML::checkboxField('delete_products') . ' ' . OSCOM::getDef('text_delete_products'));
-        $contents[] = array('text' => '<br />' . sprintf(OSCOM::getDef('text_delete_warning_products'), $mInfo->products_count));
+        $contents[] = array('text' => '<br />' . OSCOM::getDef('text_delete_warning_products', ['products_count' =>  $mInfo->products_count]));
       }
 
       $contents[] = array('align' => 'center', 'text' => '<br />' . HTML::button(OSCOM::getDef('image_delete'), 'fa fa-trash') . HTML::button(OSCOM::getDef('image_cancel'), 'fa fa-close', OSCOM::link(FILENAME_MANUFACTURERS, 'page=' . $_GET['page'] . '&mID=' . $mInfo->manufacturers_id)));

@@ -1,8 +1,8 @@
 navbar_title_1 = My Account
 navbar_title_2 = History
-navbar_title_3 = Order #%s
+navbar_title_3 = Order #{{order_id}}
 heading_title = Order Information
-heading_order_number = Order #%s
+heading_order_number = Order #{{order_id}}
 heading_order_date = Order Date:
 heading_order_total = Order Total:
 heading_delivery_address = Delivery Address

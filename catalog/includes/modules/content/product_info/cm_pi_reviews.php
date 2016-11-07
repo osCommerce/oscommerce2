@@ -55,7 +55,7 @@
         do {
           $review_data .= '<blockquote class="col-sm-6">' .
                           '  <p>' . $Qreviews->valueProtected('reviews_text') . ' ... </p>' .
-                          '  <footer>' . sprintf(OSCOM::getDef('module_content_product_info_reviews_text_rated'), HTML::stars($Qreviews->valueInt('reviews_rating')), $Qreviews->valueProtected('customers_name'), $Qreviews->valueProtected('customers_name')) . '</footer>' .
+                          '  <footer>' . OSCOM::getDef('module_content_product_info_reviews_text_rated', ['reviews_rating' => HTML::stars($Qreviews->valueInt('reviews_rating')), 'customers_name' => $Qreviews->valueProtected('customers_name')]) . '</footer>' .
                           '</blockquote>';
         } while ($Qreviews->fetch());
 

@@ -74,7 +74,7 @@
   echo '<div class="col-sm-8 text-center alert alert-success" itemprop="aggregateRating" itemscope itemtype="http://schema.org/AggregateRating">';
   echo '  <meta itemprop="ratingValue" content="' . max(1, (int)round($Qa->value('average'))) . '" />';
   echo '  <meta itemprop="bestRating" content="5" />';
-  echo    sprintf(OSCOM::getDef('reviews_text_average'), $Qa->valueInt('count'), HTML::stars(round($Qa->value('average'))));
+  echo    OSCOM::getDef('reviews_text_average', ['count' =>  $Qa->valueInt('count'), 'average' =>  HTML::stars(round($Qa->value('average')))]);
   echo '</div>';
 ?>
 
