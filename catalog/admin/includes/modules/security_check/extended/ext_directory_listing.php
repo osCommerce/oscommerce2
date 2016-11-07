@@ -34,7 +34,10 @@
     }
 
     function getMessage() {
-      return OSCOM::getDef('module_security_check_extended_ext_directory_listing_http_200');
+      return OSCOM::getDef('module_security_check_extended_ext_directory_listing_http_200', [
+        'ext_url' => OSCOM::link('Shop/ext/'),
+        'ext_path' => OSCOM::getConfig('http_path', 'Shop') . 'ext/'
+      ]);
     }
 
     function getHttpRequest($url) {

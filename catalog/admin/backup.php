@@ -398,7 +398,13 @@
           case 'restore':
             $heading[] = array('text' => $buInfo->date);
 
-            $contents[] = array('text' => tep_break_string(sprintf(OSCOM::getDef('text_info_restore'), $backup_directory . (($buInfo->compression != OSCOM::getDef('text_no_extension')) ? substr($buInfo->file, 0, strrpos($buInfo->file, '.')) : $buInfo->file), ($buInfo->compression != OSCOM::getDef('text_no_extension')) ? OSCOM::getDef('text_info_unpack') : ''), 35, ' '));
+            $contents[] = array('text' => tep_break_string(OSCOM::getDef('text_info_restore', [
+              'db_server' => OSCOM::getConfig('db_server'),
+              'db_user' => OSCOM::getConfig('db_server_username'),
+              'db_database' => OSCOM::getConfig('db_database'),
+              'backup_file' => $backup_directory . (($buInfo->compression != OSCOM::getDef('text_no_extension')) ? substr($buInfo->file, 0, strrpos($buInfo->file, '.')) : $buInfo->file),
+              'extra_info' => ($buInfo->compression != OSCOM::getDef('text_no_extension')) ? OSCOM::getDef('text_info_unpack') : ''
+            ]), 35, ' '));
             $contents[] = array('text' => HTML::button(OSCOM::getDef('image_restore'), 'fa fa-repeat', OSCOM::link(FILENAME_BACKUP, 'file=' . $buInfo->file . '&action=restorenow'), null, 'btn-success') . HTML::button(OSCOM::getDef('image_cancel'), null, OSCOM::link(FILENAME_BACKUP), null, 'btn-link'));
             break;
 

@@ -265,7 +265,7 @@
 
 function check_form() {
   var error = 0;
-  var error_message = "<?php echo OSCOM::getDef('js_error'); ?>";
+  var error_message = <?= json_encode(OSCOM::getDef('js_error') . "\n\n"); ?>;
 
   var customers_firstname = document.customers.customers_firstname.value;
   var customers_lastname = document.customers.customers_lastname.value;
@@ -280,40 +280,40 @@ function check_form() {
 <?php if (ACCOUNT_GENDER == 'true') { ?>
   if (document.customers.customers_gender[0].checked || document.customers.customers_gender[1].checked) {
   } else {
-    error_message = error_message + "<?php echo OSCOM::getDef('js_gender'); ?>";
+    error_message = error_message + <?= jscon_encode(OSCOM::getDef('js_gender') . "\n"); ?>;
     error = 1;
   }
 <?php } ?>
 
   if (customers_firstname.length < <?php echo ENTRY_FIRST_NAME_MIN_LENGTH; ?>) {
-    error_message = error_message + "<?php echo OSCOM::getDef('js_first_name'); ?>";
+    error_message = error_message + <?= json_encode(OSCOM::getDef('js_first_name', ['min_length' => ENTRY_FIRST_NAME_MIN_LENGTH]) . "\n"); ?>;
     error = 1;
   }
 
   if (customers_lastname.length < <?php echo ENTRY_LAST_NAME_MIN_LENGTH; ?>) {
-    error_message = error_message + "<?php echo OSCOM::getDef('js_last_name'); ?>";
+    error_message = error_message + <?= json_encode(OSCOM::getDef('js_last_name', ['min_length' => ENTRY_LAST_NAME_MIN_LENGTH]) . "\n"); ?>;
     error = 1;
   }
 
 <?php if (ACCOUNT_DOB == 'true') { ?>
   if (customers_dob.length < <?php echo ENTRY_DOB_MIN_LENGTH; ?>) {
-    error_message = error_message + "<?php echo OSCOM::getDef('js_dob'); ?>";
+    error_message = error_message + <?= json_encocde(OSCOM::getDef('js_dob') . "\n"); ?>;
     error = 1;
   }
 <?php } ?>
 
   if (entry_street_address.length < <?php echo ENTRY_STREET_ADDRESS_MIN_LENGTH; ?>) {
-    error_message = error_message + "<?php echo OSCOM::getDef('js_address'); ?>";
+    error_message = error_message + <?= json_encode(OSCOM::getDef('js_address', ['min_length' => ENTRY_STREET_ADDRESS_MIN_LENGTH]) . "\n"); ?>;
     error = 1;
   }
 
   if (entry_postcode.length < <?php echo ENTRY_POSTCODE_MIN_LENGTH; ?>) {
-    error_message = error_message + "<?php echo OSCOM::getDef('js_post_code'); ?>";
+    error_message = error_message + <?= json_encode(OSCOM::getDef('js_post_code', ['min_length' => ENTRY_POSTCODE_MIN_LENGTH]) . "\n"); ?>;
     error = 1;
   }
 
   if (entry_city.length < <?php echo ENTRY_CITY_MIN_LENGTH; ?>) {
-    error_message = error_message + "<?php echo OSCOM::getDef('js_city'); ?>";
+    error_message = error_message + <?= json_encode(OSCOM::getDef('js_city', ['min_length' => ENTRY_CITY_MIN_LENGTH]) . "\n"); ?>;
     error = 1;
   }
 
@@ -322,7 +322,7 @@ function check_form() {
 ?>
   if (document.customers.elements['entry_state'].type != "hidden") {
     if (document.customers.entry_state.value.length < <?php echo ENTRY_STATE_MIN_LENGTH; ?>) {
-       error_message = error_message + "<?php echo OSCOM::getDef('js_state'); ?>";
+       error_message = error_message + <?= json_encode(OSCOM::getDef('js_state') . "\n"); ?>;
        error = 1;
     }
   }
@@ -332,13 +332,13 @@ function check_form() {
 
   if (document.customers.elements['entry_country_id'].type != "hidden") {
     if (document.customers.entry_country_id.value == 0) {
-      error_message = error_message + "<?php echo OSCOM::getDef('js_country'); ?>";
+      error_message = error_message + <?= json_encode(OSCOM::getDef('js_country') . "\n"); ?>;
       error = 1;
     }
   }
 
   if (customers_telephone.length < <?php echo ENTRY_TELEPHONE_MIN_LENGTH; ?>) {
-    error_message = error_message + "<?php echo OSCOM::getDef('js_telephone'); ?>";
+    error_message = error_message + <?= json_encode(OSCOM::getDef('js_telephone', ['min_length' => ENTRY_TELEPHONE_MIN_LENGTH]) . "\n"); ?>;
     error = 1;
   }
 
@@ -400,7 +400,7 @@ function check_form() {
 <?php
   if ($error == true) {
     if ($entry_firstname_error == true) {
-      echo HTML::inputField('customers_firstname', $cInfo->customers_firstname, 'maxlength="32"') . '&nbsp;' . OSCOM::getDef('entry_first_name_error');
+      echo HTML::inputField('customers_firstname', $cInfo->customers_firstname, 'maxlength="32"') . '&nbsp;' . OSCOM::getDef('entry_first_name_error', ['min_length' => ENTRY_FIRST_NAME_MIN_LENGTH]);
     } else {
       echo $cInfo->customers_firstname . HTML::hiddenField('customers_firstname');
     }
@@ -415,7 +415,7 @@ function check_form() {
 <?php
   if ($error == true) {
     if ($entry_lastname_error == true) {
-      echo HTML::inputField('customers_lastname', $cInfo->customers_lastname, 'maxlength="32"') . '&nbsp;' . OSCOM::getDef('entry_last_name_error');
+      echo HTML::inputField('customers_lastname', $cInfo->customers_lastname, 'maxlength="32"') . '&nbsp;' . OSCOM::getDef('entry_last_name_error', ['min_length' => ENTRY_LAST_NAME_MIN_LENGTH]);
     } else {
       echo $cInfo->customers_lastname . HTML::hiddenField('customers_lastname');
     }
@@ -453,7 +453,7 @@ function check_form() {
 <?php
   if ($error == true) {
     if ($entry_email_address_error == true) {
-      echo HTML::inputField('customers_email_address', $cInfo->customers_email_address, 'maxlength="96"') . '&nbsp;' . OSCOM::getDef('entry_email_address_error');
+      echo HTML::inputField('customers_email_address', $cInfo->customers_email_address, 'maxlength="96"') . '&nbsp;' . OSCOM::getDef('entry_email_address_error', ['min_length' => ENTRY_EMAIL_ADDRESS_MIN_LENGTH]);
     } elseif ($entry_email_address_check_error == true) {
       echo HTML::inputField('customers_email_address', $cInfo->customers_email_address, 'maxlength="96"') . '&nbsp;' . OSCOM::getDef('entry_email_address_check_error');
     } elseif ($entry_email_address_exists == true) {
@@ -503,7 +503,7 @@ function check_form() {
 <?php
   if ($error == true) {
     if ($entry_street_address_error == true) {
-      echo HTML::inputField('entry_street_address', $cInfo->entry_street_address, 'maxlength="64"') . '&nbsp;' . OSCOM::getDef('entry_street_address_error');
+      echo HTML::inputField('entry_street_address', $cInfo->entry_street_address, 'maxlength="64"') . '&nbsp;' . OSCOM::getDef('entry_street_address_error', ['min_length' => ENTRY_STREET_ADDRESS_MIN_LENGTH]);
     } else {
       echo $cInfo->entry_street_address . HTML::hiddenField('entry_street_address');
     }
@@ -535,7 +535,7 @@ function check_form() {
 <?php
   if ($error == true) {
     if ($entry_post_code_error == true) {
-      echo HTML::inputField('entry_postcode', $cInfo->entry_postcode, 'maxlength="8"') . '&nbsp;' . OSCOM::getDef('entry_post_code_error');
+      echo HTML::inputField('entry_postcode', $cInfo->entry_postcode, 'maxlength="8"') . '&nbsp;' . OSCOM::getDef('entry_post_code_error', ['min_length' => ENTRY_POSTCODE_MIN_LENGTH]);
     } else {
       echo $cInfo->entry_postcode . HTML::hiddenField('entry_postcode');
     }
@@ -550,7 +550,7 @@ function check_form() {
 <?php
   if ($error == true) {
     if ($entry_city_error == true) {
-      echo HTML::inputField('entry_city', $cInfo->entry_city, 'maxlength="32"') . '&nbsp;' . OSCOM::getDef('entry_city_error');
+      echo HTML::inputField('entry_city', $cInfo->entry_city, 'maxlength="32"') . '&nbsp;' . OSCOM::getDef('entry_city_error', ['min_length' => ENTRY_CITY_MIN_LENGTH]);
     } else {
       echo $cInfo->entry_city . HTML::hiddenField('entry_city');
     }
@@ -577,9 +577,9 @@ function check_form() {
               'text' => $Qzones->value('zone_name')
             ];
           }
-          echo HTML::selectField('entry_state', $zones_array) . '&nbsp;' . OSCOM::getDef('entry_state_error');
+          echo HTML::selectField('entry_state', $zones_array) . '&nbsp;' . OSCOM::getDef('entry_state_error', ['min_length' => ENTRY_STATE_MIN_LENGTH]);
         } else {
-          echo HTML::inputField('entry_state', tep_get_zone_name($cInfo->entry_country_id, $cInfo->entry_zone_id, $cInfo->entry_state)) . '&nbsp;' . OSCOM::getDef('entry_state_error');
+          echo HTML::inputField('entry_state', tep_get_zone_name($cInfo->entry_country_id, $cInfo->entry_zone_id, $cInfo->entry_state)) . '&nbsp;' . OSCOM::getDef('entry_state_error', ['min_length' => ENTRY_STATE_MIN_LENGTH]);
         }
       } else {
         echo tep_get_zone_name($cInfo->entry_country_id, $cInfo->entry_zone_id, $cInfo->entry_state) . HTML::hiddenField('entry_zone_id') . HTML::hiddenField('entry_state');
@@ -621,7 +621,7 @@ function check_form() {
 <?php
   if ($error == true) {
     if ($entry_telephone_error == true) {
-      echo HTML::inputField('customers_telephone', $cInfo->customers_telephone, 'maxlength="32"') . '&nbsp;' . OSCOM::getDef('entry_telephone_number_error');
+      echo HTML::inputField('customers_telephone', $cInfo->customers_telephone, 'maxlength="32"') . '&nbsp;' . OSCOM::getDef('entry_telephone_number_error', ['min_length' => ENTRY_TELEPHONE_MIN_LENGTH]);
     } else {
       echo $cInfo->customers_telephone . HTML::hiddenField('customers_telephone');
     }

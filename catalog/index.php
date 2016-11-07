@@ -210,7 +210,7 @@
     $Qlisting->setPageSet(isset($_GET['view']) && ($_GET['view'] == 'all') ? 999999 : MAX_DISPLAY_SEARCH_RESULTS);
     $Qlisting->execute();
 
-    $catname = OSCOM::getDef('heading_title');
+    $catname = OSCOM::getDef('heading_title', ['store_name' => STORE_NAME]);
     if (isset($_GET['manufacturers_id']) && !empty($_GET['manufacturers_id'])) {
       $Qtitle = $OSCOM_Db->prepare('select m.manufacturers_image, m.manufacturers_name as catname, mi.manufacturers_description as catdesc from :table_manufacturers m, :table_manufacturers_info mi where m.manufacturers_id = :manufacturers_id and m.manufacturers_id = mi.manufacturers_id and mi.languages_id = :languages_id');
       $Qtitle->bindInt(':manufacturers_id', $_GET['manufacturers_id']);
@@ -281,7 +281,7 @@ if (tep_not_null($Qtitle->value('catdesc'))) {
 ?>
 
 <div class="page-header">
-  <h1><?php echo OSCOM::getDef('heading_title'); ?></h1>
+  <h1><?php echo OSCOM::getDef('heading_title', ['store_name' => STORE_NAME]); ?></h1>
 </div>
 
 <?php

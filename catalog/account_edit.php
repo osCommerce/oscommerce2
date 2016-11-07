@@ -46,13 +46,13 @@
     if (strlen($firstname) < ENTRY_FIRST_NAME_MIN_LENGTH) {
       $error = true;
 
-      $messageStack->add('account_edit', OSCOM::getDef('entry_first_name_error'));
+      $messageStack->add('account_edit', OSCOM::getDef('entry_first_name_error', ['min_length' => ENTRY_FIRST_NAME_MIN_LENGTH]));
     }
 
     if (strlen($lastname) < ENTRY_LAST_NAME_MIN_LENGTH) {
       $error = true;
 
-      $messageStack->add('account_edit', OSCOM::getDef('entry_last_name_error'));
+      $messageStack->add('account_edit', OSCOM::getDef('entry_last_name_error', ['min_length' => ENTRY_LAST_NAME_MIN_LENGTH]));
     }
 
     if (ACCOUNT_DOB == 'true') {
@@ -68,7 +68,7 @@
     if (strlen($email_address) < ENTRY_EMAIL_ADDRESS_MIN_LENGTH) {
       $error = true;
 
-      $messageStack->add('account_edit', OSCOM::getDef('entry_email_address_error'));
+      $messageStack->add('account_edit', OSCOM::getDef('entry_email_address_error', ['min_length' => ENTRY_EMAIL_ADDRESS_MIN_LENGTH]));
     }
 
     if (!Is::email($email_address)) {
@@ -91,7 +91,7 @@
     if (strlen($telephone) < ENTRY_TELEPHONE_MIN_LENGTH) {
       $error = true;
 
-      $messageStack->add('account_edit', OSCOM::getDef('entry_telephone_number_error'));
+      $messageStack->add('account_edit', OSCOM::getDef('entry_telephone_number_error', ['min_length' => ENTRY_TELEPHONE_MIN_LENGTH]));
     }
 
     if ($error == false) {

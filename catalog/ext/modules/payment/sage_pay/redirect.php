@@ -41,7 +41,7 @@
 <html <?php echo OSCOM::getDef('html_params'); ?>>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=<?php echo OSCOM::getDef('charset'); ?>">
-<title><?php echo OSCOM::getDef('title'); ?></title>
+<title><?php echo OSCOM::getDef('title', ['store_name' => STORE_NAME]); ?></title>
 <base href="<?= OSCOM::getConfig('http_server', 'Shop') . OSCOM::getConfig('http_path', 'Shop'); ?>">
 </head>
 <body>

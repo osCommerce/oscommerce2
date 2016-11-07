@@ -78,9 +78,6 @@
       }
 
       $output .= '    <tr>
-<<<<<<< HEAD
-                        <td class="text-right" colspan="2"><a href="http://www.oscommerce.com/Us&News" target="_blank">' . HTML::image(OSCOM::linkImage('icon_oscommerce.png'), OSCOM::getDef('module_admin_dashboard_latest_news_icon_news')) . '</a>&nbsp;<a href="http://www.oscommerce.com/newsletter/subscribe" target="_blank">' . HTML::image(OSCOM::linkImage('icon_newsletter.png'), OSCOM::getDef('module_admin_dashboard_latest_news_icon_newsletter')) . '</a>&nbsp;<a href="http://plus.google.com/+osCommerce" target="_blank">' . HTML::image(OSCOM::linkImage('icon_google_plus.png'), OSCOM::getDef('module_admin_dashboard_latest_news_icon_google_plus')) . '</a>&nbsp;<a href="http://www.facebook.com/pages/osCommerce/33387373079" target="_blank">' . HTML::image(OSCOM::linkImage('icon_facebook.png'), OSCOM::getDef('module_admin_dashboard_latest_news_icon_facebook')) . '</a>&nbsp;<a href="http://twitter.com/osCommerce" target="_blank">' . HTML::image(OSCOM::linkImage('icon_twitter.png'), OSCOM::getDef('module_admin_dashboard_latest_news_icon_twitter')) . '</a>&nbsp;<a href="http://feeds.feedburner.com/osCommerceNewsAndBlogs" target="_blank">' . HTML::image(OSCOM::linkImage('icon_rss.png'), OSCOM::getDef('module_admin_dashboard_latest_news_icon_rss')) . '</a></td>
-=======
                         <td class="text-right" colspan="2">
                           <a href="https://www.oscommerce.com/Us&News" target="_blank" title="' . HTML::outputProtected(OSCOM::getDef('module_admin_dashboard_latest_news_icon_news')) . '"><span class="fa fa-fw fa-home"></span></a>
                           <a href="https://www.oscommerce.com/newsletter/subscribe" target="_blank" title="' . HTML::outputProtected(OSCOM::getDef('module_admin_dashboard_latest_news_icon_newsletter')) . '"><span class="fa fa-fw fa-newspaper-o"></span></a>
@@ -88,7 +85,6 @@
                           <a href="https://www.facebook.com/pages/osCommerce/33387373079" target="_blank" title="' . HTML::outputProtected(OSCOM::getDef('module_admin_dashboard_latest_news_icon_facebook')) . '"><span class="fa fa-fw fa-facebook"></span></a>
                           <a href="https://twitter.com/osCommerce" target="_blank" title="' . HTML::outputProtected(OSCOM::getDef('module_admin_dashboard_latest_news_icon_twitter')) . '"><span class="fa fa-fw fa-twitter"></span></a>
                         </td>
->>>>>>> master
                       </tr>
                     </tbody>
                   </table>';

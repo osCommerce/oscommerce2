@@ -1,14 +1,15 @@
+system_locale = en_US.UTF-8;en_US.UTF8;enu_usa
 date_format_short = %m/%d/%Y
 date_format_long = %A %d %B, %Y
 date_format = m/d/Y
 php_date_time_format = m/d/Y H:i:s
-date_time_format = DATE_FORMAT_SHORT
-jquery_datepicker_i18n_code = 
+date_time_format = %m/%d/%Y %H:%M:%S
+jquery_datepicker_i18n_code =
 jquery_datepicker_format = mm/dd/yy
 js_date_format = mm/dd/yyyy
 html_params = dir="ltr" lang="en"
 charset = utf-8
-title = osCommerce Online Merchant Administration Tool
+title = OSCOM Dashboard
 header_title_top = Administration
 header_title_support_site = Support Site
 header_title_online_catalog = Online Catalog
@@ -36,31 +37,20 @@ box_heading_localization = Localization
 box_localization_currencies = Currencies
 box_localization_languages = Languages
 box_localization_orders_status = Orders Status
-js_error = Errors have occured during the process of your form!\nPlease make the following corrections:\n\n
-js_options_value_price = * The new product atribute needs a price value\n
-js_options_value_price_prefix = * The new product atribute needs a price prefix\n
-js_products_name = * The new product needs a name\n
-js_products_description = * The new product needs a description\n
-js_products_price = * The new product needs a price value\n
-js_products_weight = * The new product needs a weight value\n
-js_products_quantity = * The new product needs a quantity value\n
-js_products_model = * The new product needs a model value\n
-js_products_image = * The new product needs an image value\n
-js_specials_products_price = * A new price for this product needs to be set\n
-js_gender = * The \'Gender\' value must be chosen.\n
-js_first_name = * The \'First Name\' entry must have at least 
-js_last_name = * The \'Last Name\' entry must have at least 
-js_dob = * The \'Date of Birth\' entry must be in the format: xx/xx/xxxx (month/date/year).\n
-js_email_address = * The \'E-Mail Address\' is not formatted correctly.\n
-js_address = * The \'Street Address\' entry must have at least 
-js_post_code = * The \'Post Code\' entry must have at least 
-js_city = * The \'City\' entry must have at least 
-js_state = * The \'State\' entry is must be selected.\n
+js_error = Errors have occured during the process of your form!
+
+Please make the following corrections:
+js_gender = * The 'Gender' value must be chosen.
+js_first_name = * The 'First Name' entry must have at least {{min_length}} characters.
+js_last_name = * The 'Last Name' entry must have at least {{min_length}} characters.
+js_dob = * The 'Date of Birth' entry must be in the format: xx/xx/xxxx (month/date/year).
+js_address = * The 'Street Address' entry must have at least {{min_length}} characters.
+js_post_code = * The 'Post Code' entry must have at least {{min_length}} characters.
+js_city = * The 'City' entry must have at least {{min_length}} characters.
+js_state = * The 'State' entry is must be selected.
 js_state_select = -- Select Above --
-js_zone = * The \'State\' entry must be selected from the list for this country.
-js_country = * The \'Country\' value must be chosen.\n
-js_telephone = * The \'Telephone Number\' entry must have at least 
-js_password = * The \'Password\' amd \'Confirmation\' entries must match amd have at least 
+js_country = * The 'Country' value must be chosen.
+js_telephone = * The 'Telephone Number' entry must have at least {{min_length}} characters.
 js_order_does_not_exist = Order Number %s does not exist!
 category_personal = Personal
 category_address = Address
@@ -70,29 +60,29 @@ category_options = Options
 entry_gender = Gender:
 entry_gender_error = &nbsp;<span class="errorText">required</span>
 entry_first_name = First Name:
-entry_first_name_error = &nbsp;<span class="errorText">min 
+entry_first_name_error = &nbsp;<span class="errorText">min {{min_length}} chars</span>
 entry_last_name = Last Name:
-entry_last_name_error = &nbsp;<span class="errorText">min 
+entry_last_name_error = &nbsp;<span class="errorText">min {{min_length}} chars</span>
 entry_date_of_birth = Date of Birth:
 entry_date_of_birth_error = &nbsp;<span class="errorText">(eg. 05/21/1970)</span>
 entry_email_address = E-Mail Address:
 entry_email_address_error = &nbsp;<span class="errorText">not formatted correctly</span>
-entry_email_address_check_error = &nbsp;<span class="errorText">The email address doesn\'t appear to be valid!</span>
+entry_email_address_check_error = &nbsp;<span class="errorText">The email address doesn't appear to be valid!</span>
 entry_email_address_error_exists = &nbsp;<span class="errorText">This email address already exists!</span>
 entry_company = Company name:
 entry_street_address = Street Address:
-entry_street_address_error = &nbsp;<span class="errorText">min 
+entry_street_address_error = &nbsp;<span class="errorText">min {{min_length}} chars</span>
 entry_suburb = Suburb:
 entry_post_code = Post Code:
-entry_post_code_error = &nbsp;<span class="errorText">min 
+entry_post_code_error = &nbsp;<span class="errorText">min {{min_length}} chars</span>
 entry_city = City:
-entry_city_error = &nbsp;<span class="errorText">min 
+entry_city_error = &nbsp;<span class="errorText">min {{min_length}} chars</span>
 entry_state = State:
 entry_state_error = &nbsp;<span class="errorText">required</span>
 entry_country = Country:
 entry_country_error = You must select a country from the Countries pull down menu.
 entry_telephone_number = Telephone Number:
-entry_telephone_number_error = &nbsp;<span class="errorText">min 
+entry_telephone_number_error = &nbsp;<span class="errorText">min {{min_length}} chars</span>
 entry_fax_number = Fax Number:
 entry_newsletter = Newsletter:
 entry_newsletter_yes = Subscribed

@@ -27,7 +27,7 @@
 <html <?php echo OSCOM::getDef('html_params'); ?>>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=<?php echo OSCOM::getDef('charset'); ?>">
-<title><?php echo OSCOM::getDef('title'); ?></title>
+<title><?php echo OSCOM::getDef('title', ['store_name' => STORE_NAME]); ?></title>
 <link rel="stylesheet" type="text/css" href="<?= OSCOM::linkPublic('Templates/Sail/css/stylesheet.css'); ?>">
 </head>
 <body>

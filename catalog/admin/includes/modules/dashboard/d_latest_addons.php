@@ -78,11 +78,7 @@
       }
 
       $output .= '    <tr>
-<<<<<<< HEAD
-                        <td class="text-right" colspan="2"><a href="http://addons.oscommerce.com" target="_blank">' . HTML::image(OSCOM::linkImage('icon_oscommerce.png'), OSCOM::getDef('module_admin_dashboard_latest_addons_icon_site')) . '</a>&nbsp;<a href="http://feeds.feedburner.com/osCommerce_Contributions" target="_blank">' . HTML::image(OSCOM::linkImage('icon_rss.png'), OSCOM::getDef('module_admin_dashboard_latest_addons_icon_rss')) . '</a></td>
-=======
-                        <td class="text-right" colspan="2"><a href="http://addons.oscommerce.com" target="_blank" title="' . HTML::outputProtected(MODULE_ADMIN_DASHBOARD_LATEST_ADDONS_ICON_SITE) . '"><span class="fa fa-fw fa-home"></span></a></td>
->>>>>>> master
+                        <td class="text-right" colspan="2"><a href="http://addons.oscommerce.com" target="_blank" title="' . HTML::outputProtected(OSCOM::getDef('module_admin_dashboard_latest_addons_icon_site')) . '"><span class="fa fa-fw fa-home"></span></a></td>
                       </tr>
                     </tbody>
                   </table>';

@@ -192,25 +192,7 @@
         $OSCOM_Db->delete('banners', ['banners_id' => (int)$banners_id]);
         $OSCOM_Db->delete('banners_history', ['banners_id' => (int)$banners_id]);
 
-<<<<<<< HEAD
-        if (function_exists('imagecreate') && tep_not_null($banner_extension)) {
-          if (FileSystem::isWritable(OSCOM::getConfig('dir_root') . 'images/graphs/banner_yearly-' . (int)$banners_id . '.' . $banner_extension)) {
-            unlink(OSCOM::getConfig('dir_root') . 'images/graphs/banner_yearly-' . (int)$banners_id . '.' . $banner_extension);
-          }
-
-          if (FileSystem::isWritable(OSCOM::getConfig('dir_root') . 'images/graphs/banner_monthly-' . (int)$banners_id . '.' . $banner_extension)) {
-            unlink(OSCOM::getConfig('dir_root') . 'images/graphs/banner_monthly-' . (int)$banners_id . '.' . $banner_extension);
-          }
-
-          if (FileSystem::isWritable(OSCOM::getConfig('dir_root') . 'images/graphs/banner_daily-' . (int)$banners_id . '.' . $banner_extension)) {
-            unlink(OSCOM::getConfig('dir_root') . 'images/graphs/banner_daily-' . (int)$banners_id . '.' . $banner_extension);
-          }
-        }
-
         $OSCOM_MessageStack->add(OSCOM::getDef('success_banner_removed'), 'success');
-=======
-        $OSCOM_MessageStack->add(SUCCESS_BANNER_REMOVED, 'success');
->>>>>>> master
 
         OSCOM::redirect(FILENAME_BANNER_MANAGER, 'page=' . $_GET['page']);
         break;
@@ -240,20 +222,6 @@
     }
   }
 
-<<<<<<< HEAD
-// check if the graphs directory exists
-  if (function_exists('imagecreate') && tep_not_null($banner_extension)) {
-    if (is_dir(OSCOM::getConfig('dir_root') . 'images/graphs')) {
-      if (!FileSystem::isWritable(OSCOM::getConfig('dir_root') . 'images/graphs')) {
-        $OSCOM_MessageStack->add(OSCOM::getDef('error_graphs_directory_not_writeable'), 'error');
-      }
-    } else {
-      $OSCOM_MessageStack->add(OSCOM::getDef('error_graphs_directory_does_not_exist'), 'error');
-    }
-  }
-
-=======
->>>>>>> master
   $show_listing = true;
 
   require($oscTemplate->getFile('template_top.php'));
@@ -471,15 +439,9 @@
 
       </td>
       <td class="action">
-<<<<<<< HEAD
-        <?= '<a href="' . OSCOM::link(FILENAME_BANNER_STATISTICS, 'page=' . $_GET['page'] . '&bID=' . $Qbanners->valueInt('banners_id')) . '"><i class="fa fa-line-chart" title="' . OSCOM::getDef('icon_statistics') . '"></i></a>'; ?>
+        <?= '<a data-banner-id="' . $Qbanners->valueInt('banners_id') . '" data-toggle="modal" data-target="#statsModal"><i class="fa fa-line-chart" title="' . OSCOM::getDef('icon_statistics') . '"></i></a>'; ?>
         <?= '<a href="' . OSCOM::link(FILENAME_BANNER_MANAGER, 'page=' . $_GET['page'] . '&bID=' . $Qbanners->valueInt('banners_id') . '&action=new') . '"><i class="fa fa-pencil" title="' . OSCOM::getDef('image_edit') . '"></i></a>'; ?>
         <?= '<a href="' . OSCOM::link(FILENAME_BANNER_MANAGER, 'page=' . $_GET['page'] . '&bID=' . $Qbanners->valueInt('banners_id') . '&action=delete') . '"><i class="fa fa-trash" title="' . OSCOM::getDef('image_delete') . '"></i></a>'; ?>
-=======
-        <?= '<a data-banner-id="' . $Qbanners->valueInt('banners_id') . '" data-toggle="modal" data-target="#statsModal"><i class="fa fa-line-chart" title="' . ICON_STATISTICS . '"></i></a>'; ?>
-        <?= '<a href="' . OSCOM::link(FILENAME_BANNER_MANAGER, 'page=' . $_GET['page'] . '&bID=' . $Qbanners->valueInt('banners_id') . '&action=new') . '"><i class="fa fa-pencil" title="' . IMAGE_EDIT . '"></i></a>'; ?>
-        <?= '<a href="' . OSCOM::link(FILENAME_BANNER_MANAGER, 'page=' . $_GET['page'] . '&bID=' . $Qbanners->valueInt('banners_id') . '&action=delete') . '"><i class="fa fa-trash" title="' . IMAGE_DELETE . '"></i></a>'; ?>
->>>>>>> master
       </td>
     </tr>
 

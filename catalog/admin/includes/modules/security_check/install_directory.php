@@ -29,7 +29,9 @@
     }
 
     function getMessage() {
-      return OSCOM::getDef('warning_install_directory_exists');
+      return OSCOM::getDef('warning_install_directory_exists', [
+        'install_path' => OSCOM::getConfig('dir_root', 'Shop') . 'install'
+      ]);
     }
   }
 ?>

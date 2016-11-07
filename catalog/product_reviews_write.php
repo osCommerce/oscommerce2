@@ -45,7 +45,7 @@
     if (strlen($review) < REVIEW_TEXT_MIN_LENGTH) {
       $error = true;
 
-      $messageStack->add('review', OSCOM::getDef('js_review_text'));
+      $messageStack->add('review', OSCOM::getDef('js_review_text', ['min_length' => REVIEW_TEXT_MIN_LENGTH]));
     }
 
     if (($rating < 1) || ($rating > 5)) {
@@ -85,18 +85,18 @@
 <script><!--
 function checkForm() {
   var error = 0;
-  var error_message = "<?php echo OSCOM::getDef('js_error'); ?>";
+  var error_message = <?= json_encode(OSCOM::getDef('js_error') . "\n\n"); ?>;
 
   var review = document.product_reviews_write.review.value;
 
   if (review.length < <?php echo REVIEW_TEXT_MIN_LENGTH; ?>) {
-    error_message = error_message + "<?php echo OSCOM::getDef('js_review_text'); ?>";
+    error_message = error_message + <?= json_encode(OSCOM::getDef('js_review_text', ['min_length' => REVIEW_TEXT_MIN_LENGTH]) . "\n"); ?>;
     error = 1;
   }
 
   if ((document.product_reviews_write.rating[0].checked) || (document.product_reviews_write.rating[1].checked) || (document.product_reviews_write.rating[2].checked) || (document.product_reviews_write.rating[3].checked) || (document.product_reviews_write.rating[4].checked)) {
   } else {
-    error_message = error_message + "<?php echo OSCOM::getDef('js_review_rating'); ?>";
+    error_message = error_message + <?= json_encode(OSCOM::getDef('js_review_rating') . "\n"); ?>;
     error = 1;
   }
 

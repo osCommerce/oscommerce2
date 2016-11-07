@@ -33,7 +33,9 @@
     }
 
     function getMessage() {
-      return OSCOM::getDef('warning_download_directory_non_existent');
+      return OSCOM::getDef('warning_download_directory_non_existent', [
+        'download_path' => OSCOM::getConfig('dir_root', 'Shop') . 'download/'
+      ]);
     }
   }
 ?>

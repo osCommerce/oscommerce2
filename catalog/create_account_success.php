@@ -37,7 +37,7 @@
 <div class="contentContainer">
   <div class="contentText">
     <div class="alert alert-success">
-      <?php echo OSCOM::getDef('text_account_created'); ?>
+      <?php echo OSCOM::getDef('text_account_created', ['contact_us_link' => OSCOM::link('contact_us.php')]); ?>
     </div>
   </div>
 

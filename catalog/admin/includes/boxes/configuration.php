@@ -11,6 +11,9 @@
 */
 
 use OSC\OM\OSCOM;
+use OSC\OM\Registry;
+
+$OSCOM_Language = Registry::get('Language');
 
 $admin_menu['shop']['configuration']['administrators'] = OSCOM::link('administrators.php');
 
@@ -22,7 +25,9 @@ $Qgroups = $OSCOM_Db->get('configuration_group', [
 ], 'sort_order');
 
 while ($Qgroups->fetch()) {
-  define('admin_menu_shop_configuration_g' . $Qgroups->valueInt('cgID'), $Qgroups->value('cgTitle'));
+  $OSCOM_Language->injectDefinitions([
+    'admin_menu_shop_configuration_g' . $Qgroups->valueInt('cgID') => $Qgroups->value('cgTitle')
+  ], 'global');
 
   $admin_menu['shop']['configuration']['g' . $Qgroups->valueInt('cgID')] = OSCOM::link('configuration.php', 'gID=' . $Qgroups->valueInt('cgID'));
 }

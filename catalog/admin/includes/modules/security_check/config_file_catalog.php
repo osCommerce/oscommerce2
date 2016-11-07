@@ -30,7 +30,9 @@
     }
 
     function getMessage() {
-      return OSCOM::getDef('warning_config_file_writeable');
+      return OSCOM::getDef('warning_config_file_writeable', [
+        'configure_file_path' => OSCOM::getConfig('dir_root', 'Shop') . 'includes/configure.php'
+      ]);
     }
   }
 ?>

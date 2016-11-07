@@ -11,7 +11,7 @@
 */
 
   use OSC\OM\Apps;
-  use OSC\OM\OSCOM;	
+  use OSC\OM\OSCOM;
   use OSC\OM\Registry;
 
   class payment {
@@ -125,7 +125,7 @@
         $js = '<script><!-- ' . "\n" .
               'function check_form() {' . "\n" .
               '  var error = 0;' . "\n" .
-              '  var error_message = "' . OSCOM::getDef('js_error') . '";' . "\n" .
+              '  var error_message = ' . json_encode(OSCOM::getDef('js_error') . "\n\n") . ';' . "\n" .
               '  var payment_value = null;' . "\n" .
               '  if (document.checkout_payment.payment.length) {' . "\n" .
               '    for (var i=0; i<document.checkout_payment.payment.length; i++) {' . "\n" .
@@ -155,7 +155,7 @@
         }
 
         $js .= "\n" . '  if (payment_value == null) {' . "\n" .
-               '    error_message = error_message + "' . OSCOM::getDef('js_error_no_payment_module_selected') . '";' . "\n" .
+               '    error_message = error_message + ' . json_encode(OSCOM::getDef('js_error_no_payment_module_selected') . "\n") . ';' . "\n" .
                '    error = 1;' . "\n" .
                '  }' . "\n\n" .
                '  if (error == 1) {' . "\n" .

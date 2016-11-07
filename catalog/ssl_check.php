@@ -38,7 +38,11 @@
 
     <div class="panel panel-danger">
       <div class="panel-body">
-        <?php echo OSCOM::getDef('text_information'); ?>
+        <?=
+          OSCOM::getDef('text_information', [
+            'contact_us_url' => OSCOM::link('contact_us.php')
+          ]);
+        ?>
       </div>
     </div>
   </div>

@@ -53,8 +53,17 @@ email_text_subject = Order Update
 email_text_order_number = Order Number:
 email_text_invoice_url = Detailed Invoice:
 email_text_date_ordered = Date Ordered:
+
 email_text_status_update = Your order has been updated to the following status.
+
+New status: %s
+
+Please reply to this email if you have any questions.
+
 email_text_comments_update = The comments for your order are
+
+%s
+
 error_order_does_not_exist = Error: Order does not exist.
 success_order_updated = Success: Order has been successfully updated.
 warning_order_not_updated = Warning: Nothing to change. The order was not updated.

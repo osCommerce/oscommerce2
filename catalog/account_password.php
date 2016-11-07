@@ -33,7 +33,7 @@
     if (strlen($password_new) < ENTRY_PASSWORD_MIN_LENGTH) {
       $error = true;
 
-      $messageStack->add('account_password', OSCOM::getDef('entry_password_new_error'));
+      $messageStack->add('account_password', OSCOM::getDef('entry_password_new_error', ['min_length' => ENTRY_PASSWORD_MIN_LENGTH]));
     } elseif ($password_new != $password_confirmation) {
       $error = true;
 

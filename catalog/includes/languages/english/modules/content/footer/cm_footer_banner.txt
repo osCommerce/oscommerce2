@@ -1,0 +1,2 @@
+module_content_footer_banner_title = Banner Block
+module_content_footer_banner_description = Adds a banner block to the footer area of your site

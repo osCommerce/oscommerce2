@@ -11,4 +11,4 @@ box_tools_mail = Send Email
 box_tools_newsletter_manager = Newsletter Manager
 box_tools_sec_dir_permissions = Security Directory Permissions
 box_tools_server_info = Server Info
-box_tools_whos_online = Who\'s Online
+box_tools_whos_online = Who's Online

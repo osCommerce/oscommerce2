@@ -1,4 +1,4 @@
-heading_title = Who\'s Online
+heading_title = Who's Online
 table_heading_online = Online
 table_heading_customer_id = ID
 table_heading_full_name = Full Name

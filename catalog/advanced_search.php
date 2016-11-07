@@ -25,7 +25,7 @@
 <script src="<?= OSCOM::linkPublic('js/general.js'); ?>"></script>
 <script><!--
 function check_form() {
-  var error_message = "<?php echo OSCOM::getDef('js_error'); ?>";
+  var error_message = <?= json_encode(OSCOM::getDef('js_error') . "\n\n"); ?>;
   var error_found = false;
   var error_field;
   var keywords = document.advanced_search.keywords.value;

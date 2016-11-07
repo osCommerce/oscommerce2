@@ -1,7 +1,13 @@
 <?php
-// in a template so that shopowners 
-// don't have to change the main file! 
+// in a template so that shopowners
+// don't have to change the main file!
 
 use OSC\OM\OSCOM;
+?>
 
-echo OSCOM::getDef('module_navbar_brand_public_text');
+<?=
+  OSCOM::getDef('module_navbar_brand_public_text', [
+    'store_url' => OSCOM::link('index.php'),
+    'store_name' => STORE_NAME
+  ]);
+?>

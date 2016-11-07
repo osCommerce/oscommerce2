@@ -34,7 +34,10 @@
     }
 
     function getMessage() {
-      return OSCOM::getDef('module_security_check_extended_admin_backup_directory_listing_http_200');
+      return OSCOM::getDef('module_security_check_extended_admin_backup_directory_listing_http_200', [
+        'backups_url' => OSCOM::link('includes/backups/'),
+        'backups_path' => OSCOM::getConfig('http_path', 'Admin') . 'includes/backups/'
+      ]);
     }
 
     function getHttpRequest($url) {

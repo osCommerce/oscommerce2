@@ -42,7 +42,7 @@
     }
 
     if ($error == false) {
-      $contactEmail = new Mail(STORE_OWNER_EMAIL_ADDRESS, STORE_OWNER, $email_address, $name, OSCOM::getDef('email_subject'));
+      $contactEmail = new Mail(STORE_OWNER_EMAIL_ADDRESS, STORE_OWNER, $email_address, $name, OSCOM::getDef('email_subject', ['store_name' => STORE_NAME]));
       $contactEmail->setBody($enquiry);
       $contactEmail->send();
 

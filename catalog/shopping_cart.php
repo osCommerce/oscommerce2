@@ -126,13 +126,13 @@
       if (STOCK_ALLOW_CHECKOUT == 'true') {
 ?>
 
-    <div class="alert alert-warning"><?php echo OSCOM::getDef('out_of_stock_can_checkout'); ?></div>
+    <div class="alert alert-warning"><?php echo OSCOM::getDef('out_of_stock_can_checkout', ['out_of_stock_label' => STOCK_MARK_PRODUCT_OUT_OF_STOCK]); ?></div>
 
 <?php
       } else {
 ?>
 
-    <div class="alert alert-danger"><?php echo OSCOM::getDef('out_of_stock_cant_checkout'); ?></div>
+    <div class="alert alert-danger"><?php echo OSCOM::getDef('out_of_stock_cant_checkout', ['out_of_stock_label' => STOCK_MARK_PRODUCT_OUT_OF_STOCK]); ?></div>
 
 <?php
       }

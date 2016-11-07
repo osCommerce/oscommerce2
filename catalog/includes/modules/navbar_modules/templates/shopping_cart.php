@@ -10,7 +10,13 @@ if ($_SESSION['cart']->count_contents() > 0) {
       <li role="separator" class="divider"></li>
       <?php
       foreach ($_SESSION['cart']->get_products() as $k => $v) {
-        echo '<li>' . sprintf(OSCOM::getDef('module_navbar_shopping_cart_product'), $v['id'], $v['quantity'], $v['name']) . '</li>';
+        echo '<li>' .
+             OSCOM::getDef('module_navbar_shopping_cart_product', [
+               'product_url' => OSCOM::link('product_info.php', 'products_id=' . $v['id']),
+               'product_quantity' => $v['quantity'],
+               'product_name' => $v['name']
+             ]) .
+             '</li>';
       }
       ?>
       <li role="separator" class="divider"></li>

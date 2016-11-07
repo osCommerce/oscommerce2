@@ -450,9 +450,15 @@
 
 // check if the catalog image directory exists
   if (is_dir(OSCOM::getConfig('dir_root', 'Shop') . 'images/')) {
-    if (!FileSystem::isWritable(OSCOM::getConfig('dir_root', 'Shop') . 'images/')) $OSCOM_MessageStack->add(OSCOM::getDef('error_catalog_image_directory_not_writeable'), 'error');
+    if (!FileSystem::isWritable(OSCOM::getConfig('dir_root', 'Shop') . 'images/')) {
+      $OSCOM_MessageStack->add(OSCOM::getDef('error_catalog_image_directory_not_writeable', [
+        'images_path' => OSCOM::getConfig('dir_root', 'Shop') . 'images/'
+      ]), 'error');
+    }
   } else {
-    $OSCOM_MessageStack->add(OSCOM::getDef('error_catalog_image_directory_does_not_exist'), 'error');
+    $OSCOM_MessageStack->add(OSCOM::getDef('error_catalog_image_directory_does_not_exist', [
+      'images_path' => OSCOM::getConfig('dir_root', 'Shop') . 'images/'
+    ]), 'error');
   }
 
   $cPath_back = '';
