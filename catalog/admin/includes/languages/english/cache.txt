@@ -1,0 +1,7 @@
+heading_title = Cache Control
+table_heading_cache = Cache Blocks
+table_heading_cache_number_of_files = Total
+text_file_does_not_exist = File does not exist
+text_cache_directory = Cache Directory:
+error_cache_directory_does_not_exist = Error: Cache directory does not exist. Please set this Configuration->Cache.
+error_cache_directory_not_writeable = Error: Cache directory is not writeable.

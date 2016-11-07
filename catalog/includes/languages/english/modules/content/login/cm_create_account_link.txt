@@ -1,0 +1,5 @@
+module_content_create_account_link_title = Create Account Link
+module_content_create_account_link_description = Show a create account container on the login page
+module_content_login_heading_new_customer = New Customer
+module_content_login_text_new_customer = I am a new customer.
+module_content_login_text_new_customer_introduction = By creating an account at {{store_name}} you will be able to shop faster, be up to date on an orders status, and keep track of the orders you have previously made.

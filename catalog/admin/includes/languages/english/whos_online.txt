@@ -1,0 +1,12 @@
+heading_title = Who's Online
+table_heading_online = Online
+table_heading_customer_id = ID
+table_heading_full_name = Full Name
+table_heading_ip_address = IP Address
+table_heading_entry_time = Entry Time
+table_heading_last_click = Last Click
+table_heading_last_page_url = Last URL
+table_heading_action = Action
+table_heading_shopping_cart = Users Shopping Cart
+text_shopping_cart_subtotal = Subtotal
+text_number_of_customers = Currently there are %s customers online

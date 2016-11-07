@@ -1,0 +1,3 @@
+module_navbar_brand_title = Brand
+module_navbar_brand_description = Show Brand in Navbar.  <div class="secWarning">This can be a simple link or something more complicated such as an image.<br><br>For more details about using an image, see <a target="_blank" href="http://getbootstrap.com/components/#navbar-brand-image"><u>#navbar-brand-image</u></a></div>
+module_navbar_brand_public_text = <a class="navbar-brand" href="{{store_url}}">{{store_name}}</a>

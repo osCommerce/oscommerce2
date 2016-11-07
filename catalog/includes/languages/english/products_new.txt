@@ -1,0 +1,6 @@
+navbar_title = New Products
+heading_title = New Products
+text_date_added = Date Added:
+text_manufacturer = Manufacturer:
+text_price = Price:
+text_no_products = There are no new products to show.

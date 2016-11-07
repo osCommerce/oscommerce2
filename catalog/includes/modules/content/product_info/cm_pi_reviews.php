@@ -11,6 +11,7 @@
 */
 
   use OSC\OM\HTML;
+  use OSC\OM\OSCOM;
   use OSC\OM\Registry;
 
   class cm_pi_reviews {
@@ -25,9 +26,9 @@
       $this->code = get_class($this);
       $this->group = basename(dirname(__FILE__));
 
-      $this->title = MODULE_CONTENT_PRODUCT_INFO_REVIEWS_TITLE;
-      $this->description = MODULE_CONTENT_PRODUCT_INFO_REVIEWS_DESCRIPTION;
-      $this->description .= '<div class="secWarning">' . MODULE_CONTENT_BOOTSTRAP_ROW_DESCRIPTION . '</div>';
+      $this->title = OSCOM::getDef('module_content_product_info_reviews_title');
+      $this->description = OSCOM::getDef('module_content_product_info_reviews_description');
+      $this->description .= '<div class="secWarning">' . OSCOM::getDef('module_content_bootstrap_row_description') . '</div>';
 
       if ( defined('MODULE_CONTENT_PRODUCT_INFO_REVIEWS_STATUS') ) {
         $this->sort_order = MODULE_CONTENT_PRODUCT_INFO_REVIEWS_SORT_ORDER;
@@ -54,7 +55,7 @@
         do {
           $review_data .= '<blockquote class="col-sm-6">' .
                           '  <p>' . $Qreviews->valueProtected('reviews_text') . ' ... </p>' .
-                          '  <footer>' . sprintf(MODULE_CONTENT_PRODUCT_INFO_REVIEWS_TEXT_RATED, HTML::stars($Qreviews->valueInt('reviews_rating')), $Qreviews->valueProtected('customers_name'), $Qreviews->valueProtected('customers_name')) . '</footer>' .
+                          '  <footer>' . sprintf(OSCOM::getDef('module_content_product_info_reviews_text_rated'), HTML::stars($Qreviews->valueInt('reviews_rating')), $Qreviews->valueProtected('customers_name'), $Qreviews->valueProtected('customers_name')) . '</footer>' .
                           '</blockquote>';
         } while ($Qreviews->fetch());
 

@@ -1,0 +1,6 @@
+module_shipping_zones_text_title = Zone Rates
+module_shipping_zones_text_description = Zone Based Rates
+module_shipping_zones_text_way = Shipping to
+module_shipping_zones_text_units = lb(s)
+module_shipping_zones_invalid_zone = No shipping available to the selected country
+module_shipping_zones_undefined_rate = The shipping rate cannot be determined at this time

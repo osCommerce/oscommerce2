@@ -1,0 +1,3 @@
+module_boxes_product_social_bookmarks_title = Product Social Bookmarks
+module_boxes_product_social_bookmarks_description = Show social bookmarks on the product information page
+module_boxes_product_social_bookmarks_box_title = Share Product

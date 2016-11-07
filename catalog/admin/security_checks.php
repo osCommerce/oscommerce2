@@ -66,14 +66,14 @@
 
 <div style="float: right;"><?php echo HTML::button('Reload', 'fa fa-refresh', OSCOM::link('security_checks.php')); ?></div>
 
-<h1 class="pageHeading"><?php echo HEADING_TITLE; ?></h1>
+<h1 class="pageHeading"><?php echo OSCOM::getDef('heading_title'); ?></h1>
 
 <table border="0" width="100%" cellspacing="0" cellpadding="2">
   <tr class="dataTableHeadingRow">
     <td class="dataTableHeadingContent" width="20">&nbsp;</td>
-    <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_TITLE; ?></td>
-    <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_MODULE; ?></td>
-    <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_INFO; ?></td>
+    <td class="dataTableHeadingContent"><?php echo OSCOM::getDef('table_heading_title'); ?></td>
+    <td class="dataTableHeadingContent"><?php echo OSCOM::getDef('table_heading_module'); ?></td>
+    <td class="dataTableHeadingContent"><?php echo OSCOM::getDef('table_heading_info'); ?></td>
     <td class="dataTableHeadingContent" width="20" align="right">&nbsp;</td>
   </tr>
 

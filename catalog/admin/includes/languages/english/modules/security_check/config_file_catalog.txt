@@ -1,0 +1,1 @@
+warning_config_file_writeable = I am able to write to the configuration file: {{configure_file_path}}. This is a potential security risk - please set the right user permissions on this file.

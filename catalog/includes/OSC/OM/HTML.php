@@ -243,7 +243,7 @@ class HTML
         $field .= '>';
 
         if ($required == true) {
-            $field .= '<option value="">' . PULL_DOWN_DEFAULT . '</option>';
+            $field .= '<option value="">' . OSCOM::getDef('pull_down_default') . '</option>';
         }
 
         if (empty($default) && ((isset($_GET[$name]) && is_string($_GET[$name])) || (isset($_POST[$name]) && is_string($_POST[$name])))) {

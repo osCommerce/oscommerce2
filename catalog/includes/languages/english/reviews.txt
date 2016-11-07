@@ -1,0 +1,4 @@
+navbar_title = Reviews
+heading_title = Read What Others Are Saying
+text_of_5_stars = %s of 5 Stars!
+reviews_text_read_more = Read More

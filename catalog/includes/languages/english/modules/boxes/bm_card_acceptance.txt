@@ -1,0 +1,6 @@
+module_boxes_card_acceptance_title = Card Acceptance
+module_boxes_card_acceptance_description = Show payment card acceptance logos
+module_boxes_card_acceptance_shown_cards = Shown Cards
+module_boxes_card_acceptance_new_cards = New Cards
+module_boxes_card_acceptance_drag_here = Drag Here
+module_boxes_card_acceptance_box_title = We Accept

@@ -13,11 +13,11 @@
   use OSC\OM\OSCOM;
 
   $cl_box_groups[] = array(
-    'heading' => BOX_HEADING_CUSTOMERS,
+    'heading' => OSCOM::getDef('box_heading_customers'),
     'apps' => array(
       array(
         'code' => FILENAME_CUSTOMERS,
-        'title' => BOX_CUSTOMERS_CUSTOMERS,
+        'title' => OSCOM::getDef('box_customers_customers'),
         'link' => OSCOM::link(FILENAME_CUSTOMERS)
       )
     )

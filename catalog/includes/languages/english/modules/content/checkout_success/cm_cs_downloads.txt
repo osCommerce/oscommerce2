@@ -1,0 +1,6 @@
+module_content_checkout_success_downloads_title = Product Downloads
+module_content_checkout_success_downloads_description = Show ordered product download links on the checkout success page
+table_heading_download_date = Expiry date:
+table_heading_download_count =  downloads remaining
+heading_download = Download your products here:
+footer_download = You can also download your products at a later time at '%s'

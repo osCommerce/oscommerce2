@@ -25,8 +25,8 @@
       $this->code = get_class($this);
       $this->group = basename(dirname(__FILE__));
 
-      $this->title = MODULE_CONTENT_ACCOUNT_SET_PASSWORD_TITLE;
-      $this->description = MODULE_CONTENT_ACCOUNT_SET_PASSWORD_DESCRIPTION;
+      $this->title = OSCOM::getDef('module_content_account_set_password_title');
+      $this->description = OSCOM::getDef('module_content_account_set_password_description');
 
       if ( defined('MODULE_CONTENT_ACCOUNT_SET_PASSWORD_STATUS') ) {
         $this->sort_order = MODULE_CONTENT_ACCOUNT_SET_PASSWORD_SORT_ORDER;
@@ -59,7 +59,7 @@
           $oscTemplate->_data['account']['account']['links'] = $before_eight;
 
           if ( MODULE_CONTENT_ACCOUNT_SET_PASSWORD_ALLOW_PASSWORD == 'True' ) {
-            $oscTemplate->_data['account']['account']['links'] += array('set_password' => array('title' => MODULE_CONTENT_ACCOUNT_SET_PASSWORD_SET_PASSWORD_LINK_TITLE,
+            $oscTemplate->_data['account']['account']['links'] += array('set_password' => array('title' => OSCOM::getDef('module_content_account_set_password_set_password_link_title'),
                                                                         'link' => OSCOM::link('ext/modules/content/account/set_password.php'),
                                                                         'icon' => 'fa fa-fw fa-lock'));
           }

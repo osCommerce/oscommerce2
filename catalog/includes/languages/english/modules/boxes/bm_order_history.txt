@@ -1,0 +1,3 @@
+module_boxes_order_history_title = Order History
+module_boxes_order_history_description = Show previously ordered products to signed in customers
+module_boxes_order_history_box_title = Order History

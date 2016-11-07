@@ -1,0 +1,4 @@
+navbar_title_1 = Create an Account
+navbar_title_2 = Success
+heading_title = Your Account Has Been Created!
+text_account_created = Congratulations! Your new account has been successfully created! You can now take advantage of member priviledges to enhance your online shopping experience with us. If you have <small><strong>ANY</strong></small> questions about the operation of this online shop, please email the <a href="{{contact_us_link}}">store owner</a>.<br /><br />A confirmation has been sent to the provided email address. If you have not received it within the hour, please <a href="{{contact_us_link}}">contact us</a>.

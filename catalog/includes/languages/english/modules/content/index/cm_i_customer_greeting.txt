@@ -1,0 +1,4 @@
+module_content_customer_greeting_title = Customer Greeting
+module_content_customer_greeting_description = Shows the "Customer Greeting" module on your Index page.
+module_content_customer_greeting_personal = Welcome back <strong>%s!</strong> Would you like to see which <a role="button" class="btn btn-info btn-xs" href="%s">new products</a> are available to purchase?
+module_content_customer_greeting_guest = Welcome <strong>Guest!</strong> Would you like to <a role="button" class="btn btn-info btn-xs" href="%s">log yourself in</a> or would you prefer to <a role="button" class="btn btn-info btn-xs" href="%s">create an account</a>

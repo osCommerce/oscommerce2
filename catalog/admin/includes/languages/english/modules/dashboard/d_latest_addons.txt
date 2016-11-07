@@ -1,0 +1,5 @@
+module_admin_dashboard_latest_addons_title = Latest Add-Ons
+module_admin_dashboard_latest_addons_description = Show the latest osCommerce Add-Ons
+module_admin_dashboard_latest_addons_date = Date
+module_admin_dashboard_latest_addons_feed_error = Could not connect to the osCommerce website to fetch the add-ons feed. The next attempt will be performed within 6 hours.
+module_admin_dashboard_latest_addons_icon_site = Visit the osCommerce Add-Ons Site

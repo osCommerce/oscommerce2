@@ -1,0 +1,4 @@
+heading_title = Best Viewed Products
+table_heading_number = No.
+table_heading_products = Products
+table_heading_viewed = Viewed

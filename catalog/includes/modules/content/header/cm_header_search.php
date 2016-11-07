@@ -26,9 +26,9 @@
       $this->code = get_class($this);
       $this->group = basename(dirname(__FILE__));
 
-      $this->title = MODULE_CONTENT_HEADER_SEARCH_TITLE;
-      $this->description = MODULE_CONTENT_HEADER_SEARCH_DESCRIPTION;
-      $this->description .= '<div class="secWarning">' . MODULE_CONTENT_BOOTSTRAP_ROW_DESCRIPTION . '</div>';
+      $this->title = OSCOM::getDef('module_content_header_search_title');
+      $this->description = OSCOM::getDef('module_content_header_search_description');
+      $this->description .= '<div class="secWarning">' . OSCOM::getDef('module_content_bootstrap_row_description') . '</div>';
 
       if ( defined('MODULE_CONTENT_HEADER_SEARCH_STATUS') ) {
         $this->sort_order = MODULE_CONTENT_HEADER_SEARCH_SORT_ORDER;
@@ -44,7 +44,7 @@
       $search_box = '<div class="searchbox-margin">';
       $search_box .= HTML::form('quick_find', OSCOM::link('advanced_search_result.php', '', false), 'get', 'class="form-horizontal"', ['session_id' => true]);
       $search_box .= '  <div class="input-group">' .
-                          HTML::inputField('keywords', '', 'required placeholder="' . TEXT_SEARCH_PLACEHOLDER . '"', 'search') . '<span class="input-group-btn"><button type="submit" class="btn btn-info"><i class="fa fa-search"></i></button></span>' .
+                          HTML::inputField('keywords', '', 'required placeholder="' . OSCOM::getDef('text_search_placeholder') . '"', 'search') . '<span class="input-group-btn"><button type="submit" class="btn btn-info"><i class="fa fa-search"></i></button></span>' .
                      '  </div>';
       $search_box .= '</form>';
       $search_box .= '</div>';

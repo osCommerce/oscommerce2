@@ -13,21 +13,21 @@
   use OSC\OM\OSCOM;
 
   $cl_box_groups[] = array(
-    'heading' => BOX_HEADING_REPORTS,
+    'heading' => OSCOM::getDef('box_heading_reports'),
     'apps' => array(
       array(
         'code' => FILENAME_STATS_PRODUCTS_VIEWED,
-        'title' => BOX_REPORTS_PRODUCTS_VIEWED,
+        'title' => OSCOM::getDef('box_reports_products_viewed'),
         'link' => OSCOM::link(FILENAME_STATS_PRODUCTS_VIEWED)
       ),
       array(
         'code' => FILENAME_STATS_PRODUCTS_PURCHASED,
-        'title' => BOX_REPORTS_PRODUCTS_PURCHASED,
+        'title' => OSCOM::getDef('box_reports_products_purchased'),
         'link' => OSCOM::link(FILENAME_STATS_PRODUCTS_PURCHASED)
       ),
       array(
         'code' => FILENAME_STATS_CUSTOMERS,
-        'title' => BOX_REPORTS_ORDERS_TOTAL,
+        'title' => OSCOM::getDef('box_reports_orders_total'),
         'link' => OSCOM::link(FILENAME_STATS_CUSTOMERS)
       )
     )

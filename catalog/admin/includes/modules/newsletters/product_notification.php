@@ -87,7 +87,7 @@ function selectAll(FormName, SelectBox) {
   }
 
   if (x<1) {
-    alert(\'' . JS_PLEASE_SELECT_PRODUCTS . '\');
+    alert(\'' . OSCOM::getDef('js_please_select_products') . '\');
     return false;
   } else {
     return true;
@@ -95,15 +95,15 @@ function selectAll(FormName, SelectBox) {
 }
 //--></script>';
 
-      $global_button = HTML::button(BUTTON_GLOBAL, 'fa fa-globe', OSCOM::link(FILENAME_NEWSLETTERS, 'page=' . $_GET['page'] . '&nID=' . $_GET['nID'] . '&action=confirm&global=true'));
+      $global_button = HTML::button(OSCOM::getDef('button_global'), 'fa fa-globe', OSCOM::link(FILENAME_NEWSLETTERS, 'page=' . $_GET['page'] . '&nID=' . $_GET['nID'] . '&action=confirm&global=true'));
 
-      $cancel_button = HTML::button(IMAGE_CANCEL, 'fa fa-close', OSCOM::link(FILENAME_NEWSLETTERS, 'page=' . $_GET['page'] . '&nID=' . $_GET['nID']));
+      $cancel_button = HTML::button(OSCOM::getDef('image_cancel'), 'fa fa-close', OSCOM::link(FILENAME_NEWSLETTERS, 'page=' . $_GET['page'] . '&nID=' . $_GET['nID']));
 
       $choose_audience_string .= '<form name="notifications" action="' . OSCOM::link(FILENAME_NEWSLETTERS, 'page=' . $_GET['page'] . '&nID=' . $_GET['nID'] . '&action=confirm') . '" method="post" onsubmit="return selectAll(\'notifications\', \'chosen[]\')"><table border="0" width="100%" cellspacing="0" cellpadding="2">' . "\n" .
                                  '  <tr>' . "\n" .
-                                 '    <td align="center" class="smallText"><strong>' . TEXT_PRODUCTS . '</strong><br />' . HTML::selectField('products', $products_array, '', 'size="20" style="width: 20em;" multiple') . '</td>' . "\n" .
-                                 '    <td align="center" class="smallText">&nbsp;<br />' . $global_button . '<br /><br /><br /><input type="button" value="' . BUTTON_SELECT . '" style="width: 8em;" onClick="mover(\'remove\');"><br /><br /><input type="button" value="' . BUTTON_UNSELECT . '" style="width: 8em;" onClick="mover(\'add\');"><br /><br /><br />' . HTML::button(IMAGE_SEND, 'fa fa-envelope') . '<br /><br />' . $cancel_button . '</td>' . "\n" .
-                                 '    <td align="center" class="smallText"><strong>' . TEXT_SELECTED_PRODUCTS . '</strong><br />' . HTML::selectField('chosen[]', array(), '', 'size="20" style="width: 20em;" multiple') . '</td>' . "\n" .
+                                 '    <td align="center" class="smallText"><strong>' . OSCOM::getDef('text_products') . '</strong><br />' . HTML::selectField('products', $products_array, '', 'size="20" style="width: 20em;" multiple') . '</td>' . "\n" .
+                                 '    <td align="center" class="smallText">&nbsp;<br />' . $global_button . '<br /><br /><br /><input type="button" value="' . OSCOM::getDef('button_select') . '" style="width: 8em;" onClick="mover(\'remove\');"><br /><br /><input type="button" value="' . OSCOM::getDef('button_unselect') . '" style="width: 8em;" onClick="mover(\'add\');"><br /><br /><br />' . HTML::button(OSCOM::getDef('image_send'), 'fa fa-envelope') . '<br /><br />' . $cancel_button . '</td>' . "\n" .
+                                 '    <td align="center" class="smallText"><strong>' . OSCOM::getDef('text_selected_products') . '</strong><br />' . HTML::selectField('chosen[]', array(), '', 'size="20" style="width: 20em;" multiple') . '</td>' . "\n" .
                                  '  </tr>' . "\n" .
                                  '</table></form>';
 
@@ -161,7 +161,7 @@ function selectAll(FormName, SelectBox) {
 
       $confirm_string = '<table border="0" cellspacing="0" cellpadding="2">' . "\n" .
                         '  <tr>' . "\n" .
-                        '    <td class="main"><font color="#ff0000"><strong>' . sprintf(TEXT_COUNT_CUSTOMERS, sizeof($audience)) . '</strong></font></td>' . "\n" .
+                        '    <td class="main"><font color="#ff0000"><strong>' . sprintf(OSCOM::getDef('text_count_customers'), sizeof($audience)) . '</strong></font></td>' . "\n" .
                         '  </tr>' . "\n" .
                         '  <tr>' . "\n" .
                         '    <td>&nbsp;</td>' . "\n" .
@@ -188,9 +188,9 @@ function selectAll(FormName, SelectBox) {
             $confirm_string .= HTML::hiddenField('chosen[]', $chosen[$i]);
           }
         }
-        $confirm_string .= HTML::button(IMAGE_SEND, 'fa fa-envelope');
+        $confirm_string .= HTML::button(OSCOM::getDef('image_send'), 'fa fa-envelope');
       }
-      $confirm_string .= HTML::button(IMAGE_CANCEL, 'fa fa-close', OSCOM::link(FILENAME_NEWSLETTERS, 'page=' . $_GET['page'] . '&nID=' . $_GET['nID'] . '&action=send')) . '</td>' . "\n" .
+      $confirm_string .= HTML::button(OSCOM::getDef('image_cancel'), 'fa fa-close', OSCOM::link(FILENAME_NEWSLETTERS, 'page=' . $_GET['page'] . '&nID=' . $_GET['nID'] . '&action=send')) . '</td>' . "\n" .
                          '  </tr>' . "\n" .
                          '</table>';
 

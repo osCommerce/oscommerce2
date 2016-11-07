@@ -1,0 +1,3 @@
+module_navbar_reviews_title = Reviews
+module_navbar_reviews_description = Show Reviews Link in Navbar.
+module_navbar_reviews_public_text = <li><a href="{{reviews_url}}"><i class="fa fa-comment"></i><span class="hidden-sm"> Reviews</span></a></li>

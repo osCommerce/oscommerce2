@@ -1,0 +1,14 @@
+navbar_title_1 = Checkout
+navbar_title_2 = Shipping Method
+heading_title = Delivery Information
+table_heading_shipping_address = Shipping Address
+text_choose_shipping_destination = Please choose from your address book where you would like the items to be delivered to.
+title_shipping_address = Shipping Address:
+table_heading_shipping_method = Shipping Method
+text_choose_shipping_method = Please select the preferred shipping method to use on this order.
+title_please_select = Please Select
+text_enter_shipping_information = This is currently the only shipping method available to use on this order.
+table_heading_comments = Add Comments About Your Order
+title_continue_checkout_procedure = Continue Checkout Procedure
+text_continue_checkout_procedure = to select the preferred payment method.
+error_no_shipping_available_to_shipping_address = Shipping is currently not available for the selected shipping address. Please select or create a new shipping address to use with your purchase.

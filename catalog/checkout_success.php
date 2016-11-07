@@ -41,14 +41,14 @@
 
   $OSCOM_Language->loadDefinitions('checkout_success');
 
-  $breadcrumb->add(NAVBAR_TITLE_1);
-  $breadcrumb->add(NAVBAR_TITLE_2);
+  $breadcrumb->add(OSCOM::getDef('navbar_title_1'));
+  $breadcrumb->add(OSCOM::getDef('navbar_title_2'));
 
   require($oscTemplate->getFile('template_top.php'));
 ?>
 
 <div class="page-header">
-  <h1><?php echo HEADING_TITLE; ?></h1>
+  <h1><?php echo OSCOM::getDef('heading_title'); ?></h1>
 </div>
 
 <?php echo HTML::form('order', OSCOM::link('checkout_success.php', 'action=update'), 'post', 'class="form-horizontal" role="form"'); ?>
@@ -59,7 +59,7 @@
 
 <div class="contentContainer">
   <div class="buttonSet">
-    <div class="text-right"><?php echo HTML::button(IMAGE_BUTTON_CONTINUE, 'fa fa-angle-right', null, null, 'btn-success'); ?></div>
+    <div class="text-right"><?php echo HTML::button(OSCOM::getDef('image_button_continue'), 'fa fa-angle-right', null, null, 'btn-success'); ?></div>
   </div>
 </div>
 

@@ -1,0 +1,4 @@
+heading_title = Apps
+table_heading_apps = Installed Apps
+table_heading_vendor = Vendor
+table_heading_version = Version

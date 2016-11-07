@@ -8,6 +8,8 @@
 <title>osCommerce, Starting Your Online Business</title>
 <link rel="icon" type="image/png" href="images/oscommerce_icon.png">
 
+<meta name="generator" content="osCommerce Online Merchant" />
+
 <link href="../ext/bootstrap/css/bootstrap.min.css" rel="stylesheet">
 
 <script src="../ext/jquery/jquery-2.2.3.min.js"></script>

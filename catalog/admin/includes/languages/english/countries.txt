@@ -1,0 +1,14 @@
+heading_title = Countries
+table_heading_country_name = Country
+table_heading_country_codes = ISO Codes
+table_heading_action = Action
+text_info_edit_intro = Please make any necessary changes
+text_info_country_name = Name:
+text_info_country_code_2 = ISO Code (2):
+text_info_country_code_3 = ISO Code (3):
+text_info_address_format = Address Format:
+text_info_insert_intro = Please enter the new country with its related data
+text_info_delete_intro = Are you sure you want to delete this country?
+text_info_heading_new_country = New Country
+text_info_heading_edit_country = Edit Country
+text_info_heading_delete_country = Delete Country

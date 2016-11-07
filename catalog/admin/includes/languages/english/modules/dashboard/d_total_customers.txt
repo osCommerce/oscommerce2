@@ -1,0 +1,3 @@
+module_admin_dashboard_total_customers_title = New Customers Chart (last 7 days)
+module_admin_dashboard_total_customers_description = Show the new customers chart of the last 7 days
+module_admin_dashboard_total_customers_chart_link = New Customers

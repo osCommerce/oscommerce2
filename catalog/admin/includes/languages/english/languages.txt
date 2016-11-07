@@ -1,0 +1,16 @@
+heading_title = Languages
+table_heading_language_name = Language
+table_heading_language_code = Code
+table_heading_action = Action
+text_info_edit_intro = Please make any necessary changes
+text_info_language_name = Name:
+text_info_language_code = Code:
+text_info_language_image = Image:
+text_info_language_directory = Directory:
+text_info_language_sort_order = Sort Order:
+text_info_insert_intro = Please enter the new language with its related data
+text_info_delete_intro = Are you sure you want to delete this language?
+text_info_heading_new_language = New Language
+text_info_heading_edit_language = Edit Language
+text_info_heading_delete_language = Delete Language
+error_remove_default_language = Error: The default language can not be removed. Please set another language as default, and try again.

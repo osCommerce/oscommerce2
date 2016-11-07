@@ -24,7 +24,7 @@
     function __construct() {
       $this->directory = OSCOM::getConfig('dir_root', $this->site) . 'includes/modules/action_recorder/';
       $this->language_directory = OSCOM::getConfig('dir_root', $this->site) . 'includes/languages/';
-      $this->title = MODULE_CFG_MODULE_ACTION_RECORDER_TITLE;
+      $this->title = OSCOM::getDef('module_cfg_module_action_recorder_title');
     }
   }
 ?>

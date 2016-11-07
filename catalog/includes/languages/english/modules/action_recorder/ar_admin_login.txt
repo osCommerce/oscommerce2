@@ -1,0 +1,2 @@
+module_action_recorder_admin_login_title = Administration Tool Login
+module_action_recorder_admin_login_description = Record usage of Administration Tool logins.

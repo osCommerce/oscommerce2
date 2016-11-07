@@ -33,7 +33,7 @@
   $mysql_charsets = [
     [
       'id' => 'auto',
-      'text' => ACTION_UTF8_CONVERSION_FROM_AUTODETECT
+      'text' => OSCOM::getDef('action_utf8_conversion_from_autodetect')
     ]
   ];
 
@@ -42,21 +42,21 @@
   while ($Qcharsets->fetch()) {
     $mysql_charsets[] = [
       'id' => $Qcharsets->value('Charset'),
-      'text' => sprintf(ACTION_UTF8_CONVERSION_FROM, $Qcharsets->value('Charset'))
+      'text' => sprintf(OSCOM::getDef('action_utf8_conversion_from'), $Qcharsets->value('Charset'))
     ];
   }
 
   $action = null;
   $actions = array(array('id' => 'check',
-                         'text' => ACTION_CHECK_TABLES),
+                         'text' => OSCOM::getDef('action_check_tables')),
                    array('id' => 'analyze',
-                         'text' => ACTION_ANALYZE_TABLES),
+                         'text' => OSCOM::getDef('action_analyze_tables')),
                    array('id' => 'optimize',
-                         'text' => ACTION_OPTIMIZE_TABLES),
+                         'text' => OSCOM::getDef('action_optimize_tables')),
                    array('id' => 'repair',
-                         'text' => ACTION_REPAIR_TABLES),
+                         'text' => OSCOM::getDef('action_repair_tables')),
                    array('id' => 'utf8',
-                         'text' => ACTION_UTF8_CONVERSION));
+                         'text' => OSCOM::getDef('action_utf8_conversion')));
 
   if ( isset($_POST['action']) ) {
     if ( in_array($_POST['action'], array('check', 'analyze', 'optimize', 'repair', 'utf8')) ) {
@@ -83,9 +83,9 @@
     case 'repair':
       tep_set_time_limit(0);
 
-      $table_headers = array(TABLE_HEADING_TABLE,
-                             TABLE_HEADING_MSG_TYPE,
-                             TABLE_HEADING_MSG,
+      $table_headers = array(OSCOM::getDef('table_heading_table'),
+                             OSCOM::getDef('table_heading_msg_type'),
+                             OSCOM::getDef('table_heading_msg'),
                              HTML::checkboxField('masterblaster'));
 
       $table_data = array();
@@ -132,10 +132,10 @@
       tep_set_time_limit(0);
 
       if ( isset($_POST['dryrun']) ) {
-        $table_headers = array(TABLE_HEADING_QUERIES);
+        $table_headers = array(OSCOM::getDef('table_heading_queries'));
       } else {
-        $table_headers = array(TABLE_HEADING_TABLE,
-                               TABLE_HEADING_MSG,
+        $table_headers = array(OSCOM::getDef('table_heading_table'),
+                               OSCOM::getDef('table_heading_msg'),
                                HTML::checkboxField('masterblaster'));
       }
 
@@ -192,11 +192,11 @@
 
     default:
       $table_headers = [
-        TABLE_HEADING_TABLE,
-        TABLE_HEADING_ROWS,
-        TABLE_HEADING_SIZE,
-        TABLE_HEADING_ENGINE,
-        TABLE_HEADING_COLLATION,
+        OSCOM::getDef('table_heading_table'),
+        OSCOM::getDef('table_heading_rows'),
+        OSCOM::getDef('table_heading_size'),
+        OSCOM::getDef('table_heading_engine'),
+        OSCOM::getDef('table_heading_collation'),
         HTML::checkboxField('masterblaster')
       ];
 
@@ -221,11 +221,11 @@
 
 <?php
   if ( isset($action) ) {
-    echo '<div style="float: right;">' . HTML::button(IMAGE_BACK, 'fa fa-chevron-left', OSCOM::link('database_tables.php')) . '</div>';
+    echo '<div style="float: right;">' . HTML::button(OSCOM::getDef('image_back'), 'fa fa-chevron-left', OSCOM::link('database_tables.php')) . '</div>';
   }
 ?>
 
-<h1 class="pageHeading"><?php echo HEADING_TITLE; ?></h1>
+<h1 class="pageHeading"><?php echo OSCOM::getDef('heading_title'); ?></h1>
 
 <?php
   echo HTML::form('sql', OSCOM::link('database_tables.php'));
@@ -260,7 +260,7 @@
 ?>
 
 <div class="main" style="text-align: right;">
-  <?php echo '<span class="runUtf8" style="display: none;">' . sprintf(ACTION_UTF8_DRY_RUN, HTML::checkboxField('dryrun')) . '</span>' . HTML::selectField('action', $actions, '', 'id="sqlActionsMenu"') . '<span class="runUtf8" style="display: none;">&nbsp;' . HTML::selectField('from_charset', $mysql_charsets) . '</span>&nbsp;' . HTML::button(BUTTON_ACTION_GO); ?>
+  <?php echo '<span class="runUtf8" style="display: none;">' . sprintf(OSCOM::getDef('action_utf8_dry_run'), HTML::checkboxField('dryrun')) . '</span>' . HTML::selectField('action', $actions, '', 'id="sqlActionsMenu"') . '<span class="runUtf8" style="display: none;">&nbsp;' . HTML::selectField('from_charset', $mysql_charsets) . '</span>&nbsp;' . HTML::button(OSCOM::getDef('button_action_go')); ?>
 </div>
 
 <?php

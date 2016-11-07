@@ -1,0 +1,2 @@
+module_content_checkout_success_redirect_old_order_title = Redirect Old Order
+module_content_checkout_success_redirect_old_order_description = Redirect the customer when an old order is being viewed.

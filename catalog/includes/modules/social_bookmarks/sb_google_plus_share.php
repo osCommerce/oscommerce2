@@ -27,9 +27,9 @@
     function __construct() {
       $this->lang = Registry::get('Language');
 
-      $this->title = MODULE_SOCIAL_BOOKMARKS_GOOGLE_PLUS_SHARE_TITLE;
-      $this->public_title = MODULE_SOCIAL_BOOKMARKS_GOOGLE_PLUS_SHARE_PUBLIC_TITLE;
-      $this->description = MODULE_SOCIAL_BOOKMARKS_GOOGLE_PLUS_SHARE_DESCRIPTION;
+      $this->title = OSCOM::getDef('module_social_bookmarks_google_plus_share_title');
+      $this->public_title = OSCOM::getDef('module_social_bookmarks_google_plus_share_public_title');
+      $this->description = OSCOM::getDef('module_social_bookmarks_google_plus_share_description');
 
       if ( defined('MODULE_SOCIAL_BOOKMARKS_GOOGLE_PLUS_SHARE_STATUS') ) {
         $this->sort_order = MODULE_SOCIAL_BOOKMARKS_GOOGLE_PLUS_SHARE_SORT_ORDER;

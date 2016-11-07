@@ -112,9 +112,12 @@ class Admin extends \OSC\OM\SitesAbstract
         }
 
 // include the language translations
-        $_system_locale_numeric = setlocale(LC_NUMERIC, 0);
         $OSCOM_Language->loadDefinitions('main');
-        setlocale(LC_NUMERIC, $_system_locale_numeric); // Prevent LC_ALL from setting LC_NUMERIC to a locale with 1,0 float/decimal values instead of 1.0 (see bug #634)
+
+// Prevent LC_ALL from setting LC_NUMERIC to a locale with 1,0 float/decimal values instead of 1.0 (see bug #634)
+        $system_locale_numeric = setlocale(LC_NUMERIC, 0);
+        setlocale(LC_ALL, explode(';', OSCOM::getDef('system_locale')));
+        setlocale(LC_NUMERIC, $system_locale_numeric);
 
         $current_page = basename($PHP_SELF);
 

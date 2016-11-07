@@ -1,0 +1,3 @@
+module_content_checkout_success_product_notifications_title = Product Notifications
+module_content_checkout_success_product_notifications_description = Add product notification to checkout success page
+module_content_checkout_success_product_notifications_text_notify_products = <strong>Please notify me of updates to the products I have selected below</strong>

@@ -35,9 +35,9 @@
 
 // check if the cache directory exists
   if (is_dir(Cache::getPath())) {
-    if (!FileSystem::isWritable(Cache::getPath())) $OSCOM_MessageStack->add(ERROR_CACHE_DIRECTORY_NOT_WRITEABLE, 'error');
+    if (!FileSystem::isWritable(Cache::getPath())) $OSCOM_MessageStack->add(OSCOM::getDef('error_cache_directory_not_writeable'), 'error');
   } else {
-    $OSCOM_MessageStack->add(ERROR_CACHE_DIRECTORY_DOES_NOT_EXIST, 'error');
+    $OSCOM_MessageStack->add(OSCOM::getDef('error_cache_directory_does_not_exist'), 'error');
   }
 
   $cache_files = [];
@@ -56,16 +56,16 @@
 ?>
 
 <div class="pull-right">
-  <?= HTML::button(IMAGE_DELETE, 'fa fa-recycle', OSCOM::link('cache.php', 'action=resetAll'), null, 'btn-danger'); ?>
+  <?= HTML::button(OSCOM::getDef('image_delete'), 'fa fa-recycle', OSCOM::link('cache.php', 'action=resetAll'), null, 'btn-danger'); ?>
 </div>
 
-<h2><i class="fa fa-database"></i> <a href="<?= OSCOM::link('cache.php'); ?>"><?= HEADING_TITLE; ?></a></h2>
+<h2><i class="fa fa-database"></i> <a href="<?= OSCOM::link('cache.php'); ?>"><?= OSCOM::getDef('heading_title'); ?></a></h2>
 
 <table class="oscom-table table table-hover">
   <thead>
     <tr class="info">
-      <th><?= TABLE_HEADING_CACHE; ?></th>
-      <th class="text-right"><?= TABLE_HEADING_CACHE_NUMBER_OF_FILES; ?></th>
+      <th><?= OSCOM::getDef('table_heading_cache'); ?></th>
+      <th class="text-right"><?= OSCOM::getDef('table_heading_cache_number_of_files'); ?></th>
       <th class="action"></th>
     </tr>
   </thead>
@@ -78,7 +78,7 @@
     <tr>
       <td><?= $key; ?></td>
       <td class="text-right"><?= count($cache_files[$key]); ?></td>
-      <td class="action"><a href="<?= OSCOM::link(FILENAME_CACHE, 'action=reset&block=' . $key); ?>"><i class="fa fa-recycle" title="<?= IMAGE_DELETE; ?>"></i></a></td>
+      <td class="action"><a href="<?= OSCOM::link(FILENAME_CACHE, 'action=reset&block=' . $key); ?>"><i class="fa fa-recycle" title="<?= OSCOM::getDef('image_delete'); ?>"></i></a></td>
     </tr>
 
 <?php
@@ -89,7 +89,7 @@
 </table>
 
 <p>
-  <?= '<strong>' . TEXT_CACHE_DIRECTORY . '</strong> ' . FileSystem::displayPath(Cache::getPath()); ?>
+  <?= '<strong>' . OSCOM::getDef('text_cache_directory') . '</strong> ' . FileSystem::displayPath(Cache::getPath()); ?>
 </p>
 
 <?php

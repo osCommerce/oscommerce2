@@ -17,13 +17,13 @@
 
   $OSCOM_Language->loadDefinitions('reviews');
 
-  $breadcrumb->add(NAVBAR_TITLE, OSCOM::link('reviews.php'));
+  $breadcrumb->add(OSCOM::getDef('navbar_title'), OSCOM::link('reviews.php'));
 
   require($oscTemplate->getFile('template_top.php'));
 ?>
 
 <div class="page-header">
-  <h1><?php echo HEADING_TITLE; ?></h1>
+  <h1><?php echo OSCOM::getDef('heading_title'); ?></h1>
 </div>
 
 <div class="contentContainer">
@@ -40,11 +40,11 @@
 
   <div class="row">
     <div class="col-sm-6 pagenumber hidden-xs">
-      <?php echo $Qreviews->getPageSetLabel(TEXT_DISPLAY_NUMBER_OF_REVIEWS); ?>
+      <?php echo $Qreviews->getPageSetLabel(OSCOM::getDef('text_display_number_of_reviews')); ?>
     </div>
     <div class="col-sm-6">
       <span class="pull-right pagenav"><ul class="pagination"><?php echo $Qreviews->getPageSetLinks(tep_get_all_get_params(array('page', 'info'))); ?></ul></span>
-      <span class="pull-right"><?php echo TEXT_RESULT_PAGE; ?></span>
+      <span class="pull-right"><?php echo OSCOM::getDef('text_result_page'); ?></span>
     </div>
   </div>
 <?php
@@ -56,8 +56,20 @@
     while ($Qreviews->fetch()) {
       echo '<blockquote class="col-sm-6">';
       echo '  <p><span class="pull-left">' . HTML::image(OSCOM::linkImage($Qreviews->value('products_image')), $Qreviews->value('products_name'), SMALL_IMAGE_WIDTH, SMALL_IMAGE_HEIGHT) . '</span>' . $Qreviews->valueProtected('reviews_text') . ' ... </p><div class="clearfix"></div>';
-      $review_name = $Qreviews->valueProtected('customers_name');
-      echo '  <footer>' . sprintf(REVIEWS_TEXT_RATED, HTML::stars($Qreviews->value('reviews_rating')), $review_name, $review_name) . '<a href="' . OSCOM::link('product_reviews.php', 'products_id=' . $Qreviews->valueInt('products_id')) . '"><span class="pull-right label label-info">' . REVIEWS_TEXT_READ_MORE . '</span></a></footer>';
+      
+	  $review_name = $Qreviews->valueProtected('customers_name');
+      
+	  echo '<footer>';
+        $review_name = $Qreviews->valueProtected('customers_name');
+        echo OSCOM::getDef('reviews_text_rated', [
+		'reviews_rating' => HTML::stars($Qreviews->value('reviews_rating')),
+		'review_name' => $review_name
+		]);	 
+	  
+	  echo '<a href="' . OSCOM::link('product_reviews.php', 'products_id=' . $Qreviews->valueInt('products_id')) . '">';
+	  echo '<span class="pull-right label label-info">' . OSCOM::getDef('reviews_text_read_more') . '</span>';
+	  echo '</a>';
+	  echo '</footer>';
       echo '</blockquote>';
     }
     ?>
@@ -69,7 +81,7 @@
 ?>
 
   <div class="alert alert-info">
-    <?php echo TEXT_NO_REVIEWS; ?>
+    <?php echo OSCOM::getDef('text_no_reviews'); ?>
   </div>
 
 <?php
@@ -79,11 +91,11 @@
 ?>
 <div class="row">
   <div class="col-sm-6 pagenumber hidden-xs">
-    <?php echo $Qreviews->getPageSetLabel(TEXT_DISPLAY_NUMBER_OF_REVIEWS); ?>
+    <?php echo $Qreviews->getPageSetLabel(OSCOM::getDef('text_display_number_of_reviews')); ?>
   </div>
   <div class="col-sm-6">
     <span class="pull-right pagenav"><ul class="pagination"><?php echo $Qreviews->getPageSetLinks(tep_get_all_get_params(array('page', 'info'))); ?></ul></span>
-    <span class="pull-right"><?php echo TEXT_RESULT_PAGE; ?></span>
+    <span class="pull-right"><?php echo OSCOM::getDef('text_result_page'); ?></span>
   </div>
 </div>
 <?php

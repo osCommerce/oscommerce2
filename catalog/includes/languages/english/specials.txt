@@ -1,0 +1,6 @@
+navbar_title = Specials
+heading_title = Get Them While They're Hot!
+text_no_products = There are no special offers available.
+meta_seo_title = Special Offers Page
+meta_seo_description = Specials Description
+meta_seo_keywords = special offers, reduced prices

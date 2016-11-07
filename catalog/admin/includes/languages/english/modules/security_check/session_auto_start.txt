@@ -1,0 +1,1 @@
+warning_session_auto_start = session.auto_start is enabled - please disable this php feature in php.ini and restart the web server.

@@ -10,6 +10,7 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\OSCOM;
   use OSC\OM\Registry;
 
   class cm_header_buttons {
@@ -24,9 +25,9 @@
       $this->code = get_class($this);
       $this->group = basename(dirname(__FILE__));
 
-      $this->title = MODULE_CONTENT_HEADER_BUTTONS_TITLE;
-      $this->description = MODULE_CONTENT_HEADER_BUTTONS_DESCRIPTION;
-      $this->description .= '<div class="secWarning">' . MODULE_CONTENT_BOOTSTRAP_ROW_DESCRIPTION . '</div>';
+      $this->title = OSCOM::getDef('module_content_header_buttons_title');
+      $this->description = OSCOM::getDef('module_content_header_buttons_description');
+      $this->description .= '<div class="secWarning">' . OSCOM::getDef('module_content_bootstrap_row_description') . '</div>';
 
       if ( defined('MODULE_CONTENT_HEADER_BUTTONS_STATUS') ) {
         $this->sort_order = MODULE_CONTENT_HEADER_BUTTONS_SORT_ORDER;

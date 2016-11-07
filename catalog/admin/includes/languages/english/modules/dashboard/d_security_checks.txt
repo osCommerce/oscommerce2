@@ -1,0 +1,3 @@
+module_admin_dashboard_security_checks_title = Security Checks
+module_admin_dashboard_security_checks_description = Run security checks
+module_admin_dashboard_security_checks_success = This is a properly configured installation of osCommerce Online Merchant!

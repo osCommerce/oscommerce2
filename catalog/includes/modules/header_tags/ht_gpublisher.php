@@ -11,6 +11,7 @@
 */
 
   use OSC\OM\HTML;
+  use OSC\OM\OSCOM;
   use OSC\OM\Registry;
 
   class ht_gpublisher {
@@ -22,8 +23,8 @@
     var $enabled = false;
 
     function __construct() {
-      $this->title = MODULE_HEADER_TAGS_GPUBLISHER_TITLE;
-      $this->description = MODULE_HEADER_TAGS_GPUBLISHER_DESCRIPTION;
+      $this->title = OSCOM::getDef('module_header_tags_gpublisher_title');
+      $this->description = OSCOM::getDef('module_header_tags_gpublisher_description');
 
       if ( defined('MODULE_HEADER_TAGS_GPUBLISHER_STATUS') ) {
         $this->sort_order = MODULE_HEADER_TAGS_GPUBLISHER_SORT_ORDER;

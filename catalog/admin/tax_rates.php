@@ -80,7 +80,7 @@
       <tr>
         <td><table border="0" width="100%" cellspacing="0" cellpadding="0">
           <tr>
-            <td class="pageHeading"><?php echo HEADING_TITLE; ?></td>
+            <td class="pageHeading"><?php echo OSCOM::getDef('heading_title'); ?></td>
           </tr>
         </table></td>
       </tr>
@@ -89,11 +89,11 @@
           <tr>
             <td valign="top"><table border="0" width="100%" cellspacing="0" cellpadding="2">
               <tr class="dataTableHeadingRow">
-                <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_TAX_RATE_PRIORITY; ?></td>
-                <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_TAX_CLASS_TITLE; ?></td>
-                <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_ZONE; ?></td>
-                <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_TAX_RATE; ?></td>
-                <td class="dataTableHeadingContent" align="right"><?php echo TABLE_HEADING_ACTION; ?>&nbsp;</td>
+                <td class="dataTableHeadingContent"><?php echo OSCOM::getDef('table_heading_tax_rate_priority'); ?></td>
+                <td class="dataTableHeadingContent"><?php echo OSCOM::getDef('table_heading_tax_class_title'); ?></td>
+                <td class="dataTableHeadingContent"><?php echo OSCOM::getDef('table_heading_zone'); ?></td>
+                <td class="dataTableHeadingContent"><?php echo OSCOM::getDef('table_heading_tax_rate'); ?></td>
+                <td class="dataTableHeadingContent" align="right"><?php echo OSCOM::getDef('table_heading_action'); ?>&nbsp;</td>
               </tr>
 <?php
   $Qrates = $OSCOM_Db->prepare('select SQL_CALC_FOUND_ROWS r.tax_rates_id, z.geo_zone_id, z.geo_zone_name, tc.tax_class_title, tc.tax_class_id, r.tax_priority, r.tax_rate, r.tax_description, r.date_added, r.last_modified from :table_tax_class tc, :table_tax_rates r left join :table_geo_zones z on r.tax_zone_id = z.geo_zone_id where r.tax_class_id = tc.tax_class_id limit :page_set_offset, :page_set_max_results');
@@ -115,7 +115,7 @@
                 <td class="dataTableContent"><?php echo $Qrates->value('tax_class_title'); ?></td>
                 <td class="dataTableContent"><?php echo $Qrates->value('geo_zone_name'); ?></td>
                 <td class="dataTableContent"><?php echo tep_display_tax_value($Qrates->value('tax_rate')); ?>%</td>
-                <td class="dataTableContent" align="right"><?php if (isset($trInfo) && is_object($trInfo) && ($Qrates->valueInt('tax_rates_id') === (int)$trInfo->tax_rates_id)) { echo HTML::image(OSCOM::linkImage('icon_arrow_right.gif'), ''); } else { echo '<a href="' . OSCOM::link(FILENAME_TAX_RATES, 'page=' . $_GET['page'] . '&tID=' . $Qrates->valueInt('tax_rates_id')) . '">' . HTML::image(OSCOM::linkImage('icon_info.gif'), IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
+                <td class="dataTableContent" align="right"><?php if (isset($trInfo) && is_object($trInfo) && ($Qrates->valueInt('tax_rates_id') === (int)$trInfo->tax_rates_id)) { echo HTML::image(OSCOM::linkImage('icon_arrow_right.gif'), ''); } else { echo '<a href="' . OSCOM::link(FILENAME_TAX_RATES, 'page=' . $_GET['page'] . '&tID=' . $Qrates->valueInt('tax_rates_id')) . '">' . HTML::image(OSCOM::linkImage('icon_info.gif'), OSCOM::getDef('image_icon_info')) . '</a>'; } ?>&nbsp;</td>
               </tr>
 <?php
   }
@@ -123,14 +123,14 @@
               <tr>
                 <td colspan="5"><table border="0" width="100%" cellspacing="0" cellpadding="2">
                   <tr>
-                    <td class="smallText" valign="top"><?php echo $Qrates->getPageSetLabel(TEXT_DISPLAY_NUMBER_OF_TAX_RATES); ?></td>
+                    <td class="smallText" valign="top"><?php echo $Qrates->getPageSetLabel(OSCOM::getDef('text_display_number_of_tax_rates')); ?></td>
                     <td class="smallText" align="right"><?php echo $Qrates->getPageSetLinks(); ?></td>
                   </tr>
 <?php
   if (empty($action)) {
 ?>
                   <tr>
-                    <td class="smallText" colspan="5" align="right"><?php echo HTML::button(IMAGE_NEW_TAX_RATE, 'fa fa-plus', OSCOM::link(FILENAME_TAX_RATES, 'page=' . $_GET['page'] . '&action=new')); ?></td>
+                    <td class="smallText" colspan="5" align="right"><?php echo HTML::button(OSCOM::getDef('image_new_tax_rate'), 'fa fa-plus', OSCOM::link(FILENAME_TAX_RATES, 'page=' . $_GET['page'] . '&action=new')); ?></td>
                   </tr>
 <?php
   }
@@ -144,44 +144,44 @@
 
   switch ($action) {
     case 'new':
-      $heading[] = array('text' => '<strong>' . TEXT_INFO_HEADING_NEW_TAX_RATE . '</strong>');
+      $heading[] = array('text' => '<strong>' . OSCOM::getDef('text_info_heading_new_tax_rate') . '</strong>');
 
       $contents = array('form' => HTML::form('rates', OSCOM::link(FILENAME_TAX_RATES, 'page=' . $_GET['page'] . '&action=insert')));
-      $contents[] = array('text' => TEXT_INFO_INSERT_INTRO);
-      $contents[] = array('text' => '<br />' . TEXT_INFO_CLASS_TITLE . '<br />' . tep_tax_classes_pull_down('name="tax_class_id" style="font-size:10px"'));
-      $contents[] = array('text' => '<br />' . TEXT_INFO_ZONE_NAME . '<br />' . tep_geo_zones_pull_down('name="tax_zone_id" style="font-size:10px"'));
-      $contents[] = array('text' => '<br />' . TEXT_INFO_TAX_RATE . '<br />' . HTML::inputField('tax_rate'));
-      $contents[] = array('text' => '<br />' . TEXT_INFO_RATE_DESCRIPTION . '<br />' . HTML::inputField('tax_description'));
-      $contents[] = array('text' => '<br />' . TEXT_INFO_TAX_RATE_PRIORITY . '<br />' . HTML::inputField('tax_priority'));
-      $contents[] = array('align' => 'center', 'text' => '<br />' . HTML::button(IMAGE_SAVE, 'fa fa-save') . HTML::button(IMAGE_CANCEL, 'fa fa-close', OSCOM::link(FILENAME_TAX_RATES, 'page=' . $_GET['page'])));
+      $contents[] = array('text' => OSCOM::getDef('text_info_insert_intro'));
+      $contents[] = array('text' => '<br />' . OSCOM::getDef('text_info_class_title') . '<br />' . tep_tax_classes_pull_down('name="tax_class_id" style="font-size:10px"'));
+      $contents[] = array('text' => '<br />' . OSCOM::getDef('text_info_zone_name') . '<br />' . tep_geo_zones_pull_down('name="tax_zone_id" style="font-size:10px"'));
+      $contents[] = array('text' => '<br />' . OSCOM::getDef('text_info_tax_rate') . '<br />' . HTML::inputField('tax_rate'));
+      $contents[] = array('text' => '<br />' . OSCOM::getDef('text_info_rate_description') . '<br />' . HTML::inputField('tax_description'));
+      $contents[] = array('text' => '<br />' . OSCOM::getDef('text_info_tax_rate_priority') . '<br />' . HTML::inputField('tax_priority'));
+      $contents[] = array('align' => 'center', 'text' => '<br />' . HTML::button(OSCOM::getDef('image_save'), 'fa fa-save') . HTML::button(OSCOM::getDef('image_cancel'), 'fa fa-close', OSCOM::link(FILENAME_TAX_RATES, 'page=' . $_GET['page'])));
       break;
     case 'edit':
-      $heading[] = array('text' => '<strong>' . TEXT_INFO_HEADING_EDIT_TAX_RATE . '</strong>');
+      $heading[] = array('text' => '<strong>' . OSCOM::getDef('text_info_heading_edit_tax_rate') . '</strong>');
 
       $contents = array('form' => HTML::form('rates', OSCOM::link(FILENAME_TAX_RATES, 'page=' . $_GET['page'] . '&tID=' . $trInfo->tax_rates_id  . '&action=save')));
-      $contents[] = array('text' => TEXT_INFO_EDIT_INTRO);
-      $contents[] = array('text' => '<br />' . TEXT_INFO_CLASS_TITLE . '<br />' . tep_tax_classes_pull_down('name="tax_class_id" style="font-size:10px"', $trInfo->tax_class_id));
-      $contents[] = array('text' => '<br />' . TEXT_INFO_ZONE_NAME . '<br />' . tep_geo_zones_pull_down('name="tax_zone_id" style="font-size:10px"', $trInfo->geo_zone_id));
-      $contents[] = array('text' => '<br />' . TEXT_INFO_TAX_RATE . '<br />' . HTML::inputField('tax_rate', $trInfo->tax_rate));
-      $contents[] = array('text' => '<br />' . TEXT_INFO_RATE_DESCRIPTION . '<br />' . HTML::inputField('tax_description', $trInfo->tax_description));
-      $contents[] = array('text' => '<br />' . TEXT_INFO_TAX_RATE_PRIORITY . '<br />' . HTML::inputField('tax_priority', $trInfo->tax_priority));
-      $contents[] = array('align' => 'center', 'text' => '<br />' . HTML::button(IMAGE_SAVE, 'fa fa-save') . HTML::button(IMAGE_CANCEL, 'fa fa-close', OSCOM::link(FILENAME_TAX_RATES, 'page=' . $_GET['page'] . '&tID=' . $trInfo->tax_rates_id)));
+      $contents[] = array('text' => OSCOM::getDef('text_info_edit_intro'));
+      $contents[] = array('text' => '<br />' . OSCOM::getDef('text_info_class_title') . '<br />' . tep_tax_classes_pull_down('name="tax_class_id" style="font-size:10px"', $trInfo->tax_class_id));
+      $contents[] = array('text' => '<br />' . OSCOM::getDef('text_info_zone_name') . '<br />' . tep_geo_zones_pull_down('name="tax_zone_id" style="font-size:10px"', $trInfo->geo_zone_id));
+      $contents[] = array('text' => '<br />' . OSCOM::getDef('text_info_tax_rate') . '<br />' . HTML::inputField('tax_rate', $trInfo->tax_rate));
+      $contents[] = array('text' => '<br />' . OSCOM::getDef('text_info_rate_description') . '<br />' . HTML::inputField('tax_description', $trInfo->tax_description));
+      $contents[] = array('text' => '<br />' . OSCOM::getDef('text_info_tax_rate_priority') . '<br />' . HTML::inputField('tax_priority', $trInfo->tax_priority));
+      $contents[] = array('align' => 'center', 'text' => '<br />' . HTML::button(OSCOM::getDef('image_save'), 'fa fa-save') . HTML::button(OSCOM::getDef('image_cancel'), 'fa fa-close', OSCOM::link(FILENAME_TAX_RATES, 'page=' . $_GET['page'] . '&tID=' . $trInfo->tax_rates_id)));
       break;
     case 'delete':
-      $heading[] = array('text' => '<strong>' . TEXT_INFO_HEADING_DELETE_TAX_RATE . '</strong>');
+      $heading[] = array('text' => '<strong>' . OSCOM::getDef('text_info_heading_delete_tax_rate') . '</strong>');
 
       $contents = array('form' => HTML::form('rates', OSCOM::link(FILENAME_TAX_RATES, 'page=' . $_GET['page'] . '&tID=' . $trInfo->tax_rates_id  . '&action=deleteconfirm')));
-      $contents[] = array('text' => TEXT_INFO_DELETE_INTRO);
+      $contents[] = array('text' => OSCOM::getDef('text_info_delete_intro'));
       $contents[] = array('text' => '<br /><strong>' . $trInfo->tax_class_title . ' ' . number_format($trInfo->tax_rate, TAX_DECIMAL_PLACES) . '%</strong>');
-      $contents[] = array('align' => 'center', 'text' => '<br />' . HTML::button(IMAGE_DELETE, 'fa fa-trash') . HTML::button(IMAGE_CANCEL, 'fa fa-close', OSCOM::link(FILENAME_TAX_RATES, 'page=' . $_GET['page'] . '&tID=' . $trInfo->tax_rates_id)));
+      $contents[] = array('align' => 'center', 'text' => '<br />' . HTML::button(OSCOM::getDef('image_delete'), 'fa fa-trash') . HTML::button(OSCOM::getDef('image_cancel'), 'fa fa-close', OSCOM::link(FILENAME_TAX_RATES, 'page=' . $_GET['page'] . '&tID=' . $trInfo->tax_rates_id)));
       break;
     default:
       if (is_object($trInfo)) {
         $heading[] = array('text' => '<strong>' . $trInfo->tax_class_title . '</strong>');
-        $contents[] = array('align' => 'center', 'text' => HTML::button(IMAGE_EDIT, 'fa fa-edit', OSCOM::link(FILENAME_TAX_RATES, 'page=' . $_GET['page'] . '&tID=' . $trInfo->tax_rates_id . '&action=edit')) . HTML::button(IMAGE_DELETE, 'fa fa-trash', OSCOM::link(FILENAME_TAX_RATES, 'page=' . $_GET['page'] . '&tID=' . $trInfo->tax_rates_id . '&action=delete')));
-        $contents[] = array('text' => '<br />' . TEXT_INFO_DATE_ADDED . ' ' . DateTime::toShort($trInfo->date_added));
-        $contents[] = array('text' => '' . TEXT_INFO_LAST_MODIFIED . ' ' . DateTime::toShort($trInfo->last_modified));
-        $contents[] = array('text' => '<br />' . TEXT_INFO_RATE_DESCRIPTION . '<br />' . $trInfo->tax_description);
+        $contents[] = array('align' => 'center', 'text' => HTML::button(OSCOM::getDef('image_edit'), 'fa fa-edit', OSCOM::link(FILENAME_TAX_RATES, 'page=' . $_GET['page'] . '&tID=' . $trInfo->tax_rates_id . '&action=edit')) . HTML::button(OSCOM::getDef('image_delete'), 'fa fa-trash', OSCOM::link(FILENAME_TAX_RATES, 'page=' . $_GET['page'] . '&tID=' . $trInfo->tax_rates_id . '&action=delete')));
+        $contents[] = array('text' => '<br />' . OSCOM::getDef('text_info_date_added') . ' ' . DateTime::toShort($trInfo->date_added));
+        $contents[] = array('text' => '' . OSCOM::getDef('text_info_last_modified') . ' ' . DateTime::toShort($trInfo->last_modified));
+        $contents[] = array('text' => '<br />' . OSCOM::getDef('text_info_rate_description') . '<br />' . $trInfo->tax_description);
       }
       break;
   }

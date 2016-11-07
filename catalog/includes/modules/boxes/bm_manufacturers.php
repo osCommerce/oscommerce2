@@ -23,8 +23,8 @@
     var $enabled = false;
 
     function __construct() {
-      $this->title = MODULE_BOXES_MANUFACTURERS_TITLE;
-      $this->description = MODULE_BOXES_MANUFACTURERS_DESCRIPTION;
+      $this->title = OSCOM::getDef('module_boxes_manufacturers_title');
+      $this->description = OSCOM::getDef('module_boxes_manufacturers_description');
 
       if ( defined('MODULE_BOXES_MANUFACTURERS_STATUS') ) {
         $this->sort_order = MODULE_BOXES_MANUFACTURERS_SORT_ORDER;
@@ -70,7 +70,7 @@
           $manufacturers_array = array();
 
           if (MAX_MANUFACTURERS_LIST < 2) {
-            $manufacturers_array[] = array('id' => '', 'text' => PULL_DOWN_DEFAULT);
+            $manufacturers_array[] = array('id' => '', 'text' => OSCOM::getDef('pull_down_default'));
           }
 
           foreach ($manufacturers as $m) {

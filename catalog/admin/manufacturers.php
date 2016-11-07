@@ -129,7 +129,7 @@
       <tr>
         <td width="100%"><table border="0" width="100%" cellspacing="0" cellpadding="0">
           <tr>
-            <td class="pageHeading"><?php echo HEADING_TITLE; ?></td>
+            <td class="pageHeading"><?php echo OSCOM::getDef('heading_title'); ?></td>
           </tr>
         </table></td>
       </tr>
@@ -138,8 +138,8 @@
           <tr>
             <td valign="top"><table border="0" width="100%" cellspacing="0" cellpadding="2">
               <tr class="dataTableHeadingRow">
-                <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_MANUFACTURERS; ?></td>
-                <td class="dataTableHeadingContent" align="right"><?php echo TABLE_HEADING_ACTION; ?>&nbsp;</td>
+                <td class="dataTableHeadingContent"><?php echo OSCOM::getDef('table_heading_manufacturers'); ?></td>
+                <td class="dataTableHeadingContent" align="right"><?php echo OSCOM::getDef('table_heading_action'); ?>&nbsp;</td>
               </tr>
 <?php
   $Qmanufacturers = $OSCOM_Db->prepare('select SQL_CALC_FOUND_ROWS manufacturers_id, manufacturers_name, manufacturers_image, date_added, last_modified from :table_manufacturers order by manufacturers_name limit :page_set_offset, :page_set_max_results');
@@ -161,7 +161,7 @@
     }
 ?>
                 <td class="dataTableContent"><?php echo $Qmanufacturers->value('manufacturers_name'); ?></td>
-                <td class="dataTableContent" align="right"><?php if (isset($mInfo) && is_object($mInfo) && ($Qmanufacturers->valueInt('manufacturers_id') === (int)$mInfo->manufacturers_id)) { echo HTML::image(OSCOM::linkImage('icon_arrow_right.gif')); } else { echo '<a href="' . OSCOM::link(FILENAME_MANUFACTURERS, 'page=' . $_GET['page'] . '&mID=' . $Qmanufacturers->valueInt('manufacturers_id')) . '">' . HTML::image(OSCOM::linkImage('icon_info.gif'), IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
+                <td class="dataTableContent" align="right"><?php if (isset($mInfo) && is_object($mInfo) && ($Qmanufacturers->valueInt('manufacturers_id') === (int)$mInfo->manufacturers_id)) { echo HTML::image(OSCOM::linkImage('icon_arrow_right.gif')); } else { echo '<a href="' . OSCOM::link(FILENAME_MANUFACTURERS, 'page=' . $_GET['page'] . '&mID=' . $Qmanufacturers->valueInt('manufacturers_id')) . '">' . HTML::image(OSCOM::linkImage('icon_info.gif'), OSCOM::getDef('image_icon_info')) . '</a>'; } ?>&nbsp;</td>
               </tr>
 <?php
   }
@@ -169,7 +169,7 @@
               <tr>
                 <td colspan="2"><table border="0" width="100%" cellspacing="0" cellpadding="2">
                   <tr>
-                    <td class="smallText" valign="top"><?php echo $Qmanufacturers->getPageSetLabel(TEXT_DISPLAY_NUMBER_OF_MANUFACTURERS); ?></td>
+                    <td class="smallText" valign="top"><?php echo $Qmanufacturers->getPageSetLabel(OSCOM::getDef('text_display_number_of_manufacturers')); ?></td>
                     <td class="smallText" align="right"><?php echo $Qmanufacturers->getPageSetLinks(); ?></td>
                   </tr>
                 </table></td>
@@ -178,7 +178,7 @@
   if (empty($action)) {
 ?>
               <tr>
-                <td align="right" colspan="2" class="smallText"><?php echo HTML::button(IMAGE_INSERT, 'fa fa-plus', OSCOM::link(FILENAME_MANUFACTURERS, 'page=' . $_GET['page'] . (isset($mInfo) ? '&mID=' . $mInfo->manufacturers_id : '') . '&action=new')); ?></td>
+                <td align="right" colspan="2" class="smallText"><?php echo HTML::button(OSCOM::getDef('image_insert'), 'fa fa-plus', OSCOM::link(FILENAME_MANUFACTURERS, 'page=' . $_GET['page'] . (isset($mInfo) ? '&mID=' . $mInfo->manufacturers_id : '') . '&action=new')); ?></td>
               </tr>
 <?php
   }
@@ -190,12 +190,12 @@
 
   switch ($action) {
     case 'new':
-      $heading[] = array('text' => '<strong>' . TEXT_HEADING_NEW_MANUFACTURER . '</strong>');
+      $heading[] = array('text' => '<strong>' . OSCOM::getDef('text_heading_new_manufacturer') . '</strong>');
 
       $contents = array('form' => HTML::form('manufacturers', OSCOM::link(FILENAME_MANUFACTURERS, 'action=insert', 'post', 'enctype="multipart/form-data"')));
-      $contents[] = array('text' => TEXT_NEW_INTRO);
-      $contents[] = array('text' => '<br />' . TEXT_MANUFACTURERS_NAME . '<br />' . HTML::inputField('manufacturers_name'));
-      $contents[] = array('text' => '<br />' . TEXT_MANUFACTURERS_IMAGE . '<br />' . HTML::fileField('manufacturers_image'));
+      $contents[] = array('text' => OSCOM::getDef('text_new_intro'));
+      $contents[] = array('text' => '<br />' . OSCOM::getDef('text_manufacturers_name') . '<br />' . HTML::inputField('manufacturers_name'));
+      $contents[] = array('text' => '<br />' . OSCOM::getDef('text_manufacturers_image') . '<br />' . HTML::fileField('manufacturers_image'));
 
       $manufacturer_inputs_string = '';
       $languages = tep_get_languages();
@@ -203,16 +203,16 @@
         $manufacturer_inputs_string .= '<br />' . HTML::image(OSCOM::link('Shop/includes/languages/' . $languages[$i]['directory'] . '/images/' . $languages[$i]['image']), $languages[$i]['name']) . '&nbsp;' . HTML::inputField('manufacturers_url[' . $languages[$i]['id'] . ']');
       }
 
-      $contents[] = array('text' => '<br />' . TEXT_MANUFACTURERS_URL . $manufacturer_inputs_string);
-      $contents[] = array('align' => 'center', 'text' => '<br />' . HTML::button(IMAGE_SAVE, 'fa fa-save') . HTML::button(IMAGE_CANCEL, 'fa fa-close', OSCOM::link(FILENAME_MANUFACTURERS, 'page=' . $_GET['page'] . '&mID=' . $_GET['mID'])));
+      $contents[] = array('text' => '<br />' . OSCOM::getDef('text_manufacturers_url') . $manufacturer_inputs_string);
+      $contents[] = array('align' => 'center', 'text' => '<br />' . HTML::button(OSCOM::getDef('image_save'), 'fa fa-save') . HTML::button(OSCOM::getDef('image_cancel'), 'fa fa-close', OSCOM::link(FILENAME_MANUFACTURERS, 'page=' . $_GET['page'] . '&mID=' . $_GET['mID'])));
       break;
     case 'edit':
-      $heading[] = array('text' => '<strong>' . TEXT_HEADING_EDIT_MANUFACTURER . '</strong>');
+      $heading[] = array('text' => '<strong>' . OSCOM::getDef('text_heading_edit_manufacturer') . '</strong>');
 
       $contents = array('form' => HTML::form('manufacturers', OSCOM::link(FILENAME_MANUFACTURERS, 'page=' . $_GET['page'] . '&mID=' . $mInfo->manufacturers_id . '&action=save', 'post', 'enctype="multipart/form-data"')));
-      $contents[] = array('text' => TEXT_EDIT_INTRO);
-      $contents[] = array('text' => '<br />' . TEXT_MANUFACTURERS_NAME . '<br />' . HTML::inputField('manufacturers_name', $mInfo->manufacturers_name));
-      $contents[] = array('text' => '<br />' . TEXT_MANUFACTURERS_IMAGE . '<br />' . HTML::fileField('manufacturers_image') . '<br />' . $mInfo->manufacturers_image);
+      $contents[] = array('text' => OSCOM::getDef('text_edit_intro'));
+      $contents[] = array('text' => '<br />' . OSCOM::getDef('text_manufacturers_name') . '<br />' . HTML::inputField('manufacturers_name', $mInfo->manufacturers_name));
+      $contents[] = array('text' => '<br />' . OSCOM::getDef('text_manufacturers_image') . '<br />' . HTML::fileField('manufacturers_image') . '<br />' . $mInfo->manufacturers_image);
 
       $manufacturer_inputs_string = '';
       $languages = tep_get_languages();
@@ -220,33 +220,33 @@
         $manufacturer_inputs_string .= '<br />' . HTML::image(OSCOM::link('Shop/includes/languages/' . $languages[$i]['directory'] . '/images/' . $languages[$i]['image']), $languages[$i]['name']) . '&nbsp;' . HTML::inputField('manufacturers_url[' . $languages[$i]['id'] . ']', tep_get_manufacturer_url($mInfo->manufacturers_id, $languages[$i]['id']));
       }
 
-      $contents[] = array('text' => '<br />' . TEXT_MANUFACTURERS_URL . $manufacturer_inputs_string);
-      $contents[] = array('align' => 'center', 'text' => '<br />' . HTML::button(IMAGE_SAVE, 'fa fa-save') . HTML::button(IMAGE_CANCEL, 'fa fa-close', OSCOM::link(FILENAME_MANUFACTURERS, 'page=' . $_GET['page'] . '&mID=' . $mInfo->manufacturers_id)));
+      $contents[] = array('text' => '<br />' . OSCOM::getDef('text_manufacturers_url') . $manufacturer_inputs_string);
+      $contents[] = array('align' => 'center', 'text' => '<br />' . HTML::button(OSCOM::getDef('image_save'), 'fa fa-save') . HTML::button(OSCOM::getDef('image_cancel'), 'fa fa-close', OSCOM::link(FILENAME_MANUFACTURERS, 'page=' . $_GET['page'] . '&mID=' . $mInfo->manufacturers_id)));
       break;
     case 'delete':
-      $heading[] = array('text' => '<strong>' . TEXT_HEADING_DELETE_MANUFACTURER . '</strong>');
+      $heading[] = array('text' => '<strong>' . OSCOM::getDef('text_heading_delete_manufacturer') . '</strong>');
 
       $contents = array('form' => HTML::form('manufacturers', OSCOM::link(FILENAME_MANUFACTURERS, 'page=' . $_GET['page'] . '&mID=' . $mInfo->manufacturers_id . '&action=deleteconfirm')));
-      $contents[] = array('text' => TEXT_DELETE_INTRO);
+      $contents[] = array('text' => OSCOM::getDef('text_delete_intro'));
       $contents[] = array('text' => '<br /><strong>' . $mInfo->manufacturers_name . '</strong>');
-      $contents[] = array('text' => '<br />' . HTML::checkboxField('delete_image', '', true) . ' ' . TEXT_DELETE_IMAGE);
+      $contents[] = array('text' => '<br />' . HTML::checkboxField('delete_image', '', true) . ' ' . OSCOM::getDef('text_delete_image'));
 
       if ($mInfo->products_count > 0) {
-        $contents[] = array('text' => '<br />' . HTML::checkboxField('delete_products') . ' ' . TEXT_DELETE_PRODUCTS);
-        $contents[] = array('text' => '<br />' . sprintf(TEXT_DELETE_WARNING_PRODUCTS, $mInfo->products_count));
+        $contents[] = array('text' => '<br />' . HTML::checkboxField('delete_products') . ' ' . OSCOM::getDef('text_delete_products'));
+        $contents[] = array('text' => '<br />' . sprintf(OSCOM::getDef('text_delete_warning_products'), $mInfo->products_count));
       }
 
-      $contents[] = array('align' => 'center', 'text' => '<br />' . HTML::button(IMAGE_DELETE, 'fa fa-trash') . HTML::button(IMAGE_CANCEL, 'fa fa-close', OSCOM::link(FILENAME_MANUFACTURERS, 'page=' . $_GET['page'] . '&mID=' . $mInfo->manufacturers_id)));
+      $contents[] = array('align' => 'center', 'text' => '<br />' . HTML::button(OSCOM::getDef('image_delete'), 'fa fa-trash') . HTML::button(OSCOM::getDef('image_cancel'), 'fa fa-close', OSCOM::link(FILENAME_MANUFACTURERS, 'page=' . $_GET['page'] . '&mID=' . $mInfo->manufacturers_id)));
       break;
     default:
       if (isset($mInfo) && is_object($mInfo)) {
         $heading[] = array('text' => '<strong>' . $mInfo->manufacturers_name . '</strong>');
 
-        $contents[] = array('align' => 'center', 'text' => HTML::button(IMAGE_EDIT, 'fa fa-edit', OSCOM::link(FILENAME_MANUFACTURERS, 'page=' . $_GET['page'] . '&mID=' . $mInfo->manufacturers_id . '&action=edit')) . HTML::button(IMAGE_DELETE, 'fa fa-trash', OSCOM::link(FILENAME_MANUFACTURERS, 'page=' . $_GET['page'] . '&mID=' . $mInfo->manufacturers_id . '&action=delete')));
-        $contents[] = array('text' => '<br />' . TEXT_DATE_ADDED . ' ' . DateTime::toShort($mInfo->date_added));
-        if (tep_not_null($mInfo->last_modified)) $contents[] = array('text' => TEXT_LAST_MODIFIED . ' ' . DateTime::toShort($mInfo->last_modified));
+        $contents[] = array('align' => 'center', 'text' => HTML::button(OSCOM::getDef('image_edit'), 'fa fa-edit', OSCOM::link(FILENAME_MANUFACTURERS, 'page=' . $_GET['page'] . '&mID=' . $mInfo->manufacturers_id . '&action=edit')) . HTML::button(OSCOM::getDef('image_delete'), 'fa fa-trash', OSCOM::link(FILENAME_MANUFACTURERS, 'page=' . $_GET['page'] . '&mID=' . $mInfo->manufacturers_id . '&action=delete')));
+        $contents[] = array('text' => '<br />' . OSCOM::getDef('text_date_added') . ' ' . DateTime::toShort($mInfo->date_added));
+        if (tep_not_null($mInfo->last_modified)) $contents[] = array('text' => OSCOM::getDef('text_last_modified') . ' ' . DateTime::toShort($mInfo->last_modified));
         $contents[] = array('text' => '<br />' . tep_info_image($mInfo->manufacturers_image, $mInfo->manufacturers_name));
-        $contents[] = array('text' => '<br />' . TEXT_PRODUCTS . ' ' . $mInfo->products_count);
+        $contents[] = array('text' => '<br />' . OSCOM::getDef('text_products') . ' ' . $mInfo->products_count);
       }
       break;
   }

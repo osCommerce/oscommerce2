@@ -43,7 +43,7 @@ class Shop extends \OSC\OM\SitesAbstract
         }
 
         $OSCOM_Language = new Language();
-        $OSCOM_Language->setUseCache(true);
+//        $OSCOM_Language->setUseCache(true);
         Registry::set('Language', $OSCOM_Language);
 
 // set php_self in the global scope
@@ -76,16 +76,19 @@ class Shop extends \OSC\OM\SitesAbstract
         }
 
 // include the language translations
-        $system_locale_numeric = setlocale(LC_NUMERIC, 0);
         $OSCOM_Language->loadDefinitions('main');
-        setlocale(LC_NUMERIC, $system_locale_numeric); // Prevent LC_ALL from setting LC_NUMERIC to a locale with 1,0 float/decimal values instead of 1.0 (see bug #634)
+
+// Prevent LC_ALL from setting LC_NUMERIC to a locale with 1,0 float/decimal values instead of 1.0 (see bug #634)
+        $system_locale_numeric = setlocale(LC_NUMERIC, 0);
+        setlocale(LC_ALL, explode(';', OSCOM::getDef('system_locale')));
+        setlocale(LC_NUMERIC, $system_locale_numeric);
 
 // currency
-        if (!isset($_SESSION['currency']) || isset($_GET['currency']) || ((USE_DEFAULT_LANGUAGE_CURRENCY == 'true') && (LANGUAGE_CURRENCY != $_SESSION['currency']))) {
+        if (!isset($_SESSION['currency']) || isset($_GET['currency']) || ((USE_DEFAULT_LANGUAGE_CURRENCY == 'true') && (OSCOM::getDef('language_currency') != $_SESSION['currency']))) {
             if (isset($_GET['currency']) && $currencies->is_set($_GET['currency'])) {
                 $_SESSION['currency'] = $_GET['currency'];
             } else {
-                $_SESSION['currency'] = ((USE_DEFAULT_LANGUAGE_CURRENCY == 'true') && $currencies->is_set(LANGUAGE_CURRENCY)) ? LANGUAGE_CURRENCY : DEFAULT_CURRENCY;
+                $_SESSION['currency'] = ((USE_DEFAULT_LANGUAGE_CURRENCY == 'true') && $currencies->is_set(OSCOM::getDef('language_currency'))) ? OSCOM::getDef('language_currency') : DEFAULT_CURRENCY;
             }
         }
 
@@ -109,8 +112,8 @@ class Shop extends \OSC\OM\SitesAbstract
 
         $breadcrumb = new \breadcrumb();
 
-        $breadcrumb->add(HEADER_TITLE_TOP, OSCOM::getConfig('http_server', 'Shop'));
-        $breadcrumb->add(HEADER_TITLE_CATALOG, OSCOM::link('index.php'));
+        $breadcrumb->add(OSCOM::getDef('header_title_top'), OSCOM::getConfig('http_server', 'Shop'));
+        $breadcrumb->add(OSCOM::getDef('header_title_catalog'), OSCOM::link('index.php'));
     }
 
     public function setPage()

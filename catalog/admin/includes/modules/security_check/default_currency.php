@@ -29,7 +29,7 @@
     }
 
     function getMessage() {
-      return ERROR_NO_DEFAULT_CURRENCY_DEFINED;
+      return OSCOM::getDef('error_no_default_currency_defined');
     }
   }
 ?>

@@ -1,0 +1,5 @@
+heading_title = Products Expected
+table_heading_products = Products
+table_heading_date_expected = Date Expected
+table_heading_action = Action
+text_info_date_expected = Date Expected:

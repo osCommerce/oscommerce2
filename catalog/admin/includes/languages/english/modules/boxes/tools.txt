@@ -1,0 +1,14 @@
+admin_menu_shop_tools = Tools
+admin_menu_shop_tools_action_recorder = Action Recorder
+admin_menu_shop_tools_backup = Database Backup
+admin_menu_shop_tools_banner_manager = Banner Manager
+admin_menu_shop_tools_cache = Cache Control
+admin_menu_shop_tools_online_update = Online Update
+admin_menu_shop_tools_server_info = Server Info
+box_heading_tools = Tools
+box_tools_define_language = Define Languages
+box_tools_mail = Send Email
+box_tools_newsletter_manager = Newsletter Manager
+box_tools_sec_dir_permissions = Security Directory Permissions
+box_tools_server_info = Server Info
+box_tools_whos_online = Who's Online

@@ -1,0 +1,3 @@
+module_social_bookmarks_digg_title = Digg
+module_social_bookmarks_digg_description = Share products on Digg.
+module_social_bookmarks_digg_public_title = Share on Digg

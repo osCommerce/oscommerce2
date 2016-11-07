@@ -22,8 +22,8 @@
     var $enabled = false;
 
     function __construct() {
-      $this->title = MODULE_BOXES_ORDER_HISTORY_TITLE;
-      $this->description = MODULE_BOXES_ORDER_HISTORY_DESCRIPTION;
+      $this->title = OSCOM::getDef('module_boxes_order_history_title');
+      $this->description = OSCOM::getDef('module_boxes_order_history_description');
 
       if ( defined('MODULE_BOXES_ORDER_HISTORY_STATUS') ) {
         $this->sort_order = MODULE_BOXES_ORDER_HISTORY_SORT_ORDER;

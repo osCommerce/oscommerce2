@@ -9,7 +9,10 @@
 
   Released under the GNU General Public License
 */
+
+use OSC\OM\OSCOM;
+
 ?>
 <div class="col-sm-<?php echo $content_width; ?> text-main">
-  <?php echo MODULE_CONTENT_TEXT_MAIN_TEXT; ?>
+  <?php echo OSCOM::getDef('module_content_text_main_text'); ?>
 </div>

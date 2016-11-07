@@ -1,0 +1,4 @@
+admin_menu_shop_configuration = Configuration
+admin_menu_shop_configuration_administrators = Administrators
+box_heading_configuration = Configuration
+box_configuration_store_logo = Store Logo

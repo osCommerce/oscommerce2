@@ -1,0 +1,2 @@
+module_content_header_messagestack_title = Message Stack Notifications
+module_content_header_messagestack_description = Show the Message Stack Notifications on your site.

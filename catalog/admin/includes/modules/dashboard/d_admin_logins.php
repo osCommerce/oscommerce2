@@ -23,8 +23,8 @@
     var $enabled = false;
 
     function d_admin_logins() {
-      $this->title = MODULE_ADMIN_DASHBOARD_ADMIN_LOGINS_TITLE;
-      $this->description = MODULE_ADMIN_DASHBOARD_ADMIN_LOGINS_DESCRIPTION;
+      $this->title = OSCOM::getDef('module_admin_dashboard_admin_logins_title');
+      $this->description = OSCOM::getDef('module_admin_dashboard_admin_logins_description');
 
       if ( defined('MODULE_ADMIN_DASHBOARD_ADMIN_LOGINS_STATUS') ) {
         $this->sort_order = MODULE_ADMIN_DASHBOARD_ADMIN_LOGINS_SORT_ORDER;
@@ -38,8 +38,8 @@
       $output = '<table class="table table-hover">
                    <thead>
                      <tr class="info">
-                       <th>' . MODULE_ADMIN_DASHBOARD_ADMIN_LOGINS_TITLE . '</th>
-                       <th class="text-right">' . MODULE_ADMIN_DASHBOARD_ADMIN_LOGINS_DATE . '</th>
+                       <th>' . OSCOM::getDef('module_admin_dashboard_admin_logins_title') . '</th>
+                       <th class="text-right">' . OSCOM::getDef('module_admin_dashboard_admin_logins_date') . '</th>
                      </tr>
                    </thead>
                    <tbody>';

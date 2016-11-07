@@ -29,7 +29,7 @@
     }
 
     function getMessage() {
-      return WARNING_SESSION_AUTO_START;
+      return OSCOM::getDef('warning_session_auto_start');
     }
   }
 ?>

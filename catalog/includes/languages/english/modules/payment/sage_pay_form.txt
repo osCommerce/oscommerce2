@@ -1,0 +1,7 @@
+module_payment_sage_pay_form_text_title = Sage Pay Form
+module_payment_sage_pay_form_text_public_title = Credit Card or Bank Card (Processed by Sage Pay)
+module_payment_sage_pay_form_text_description = <img src="images/icon_info.gif" border="0" />&nbsp;<a href="http://library.oscommerce.com/Package&en&sage_pay&oscom23&form" target="_blank" style="text-decoration: underline; font-weight: bold;">View Online Documentation</a><br /><br /><img src="images/icon_popup.gif" border="0">&nbsp;<a href="https://support.sagepay.com/apply/default.aspx?PartnerID=E194E079-84A9-493C-AB9A-91CB362D3238&PromotionCode=osc3MF" target="_blank" style="text-decoration: underline; font-weight: bold;">Visit Sage Pay Website</a>&nbsp;<a href="javascript:toggleDivBlock('sagePayInfo');">(info)</a><span id="sagePayInfo" style="display: none;"><br /><i>Using the above link to signup at Sage Pay grants osCommerce a small financial bonus for referring a customer.</i></span>
+module_payment_sage_pay_form_error_admin_mcrypt = This module requires Mcrypt to be enabled in PHP and will not load until it has been enabled on this webserver.
+module_payment_sage_pay_form_error_admin_configuration = This module will not load until the Vendor Login Name and Encryption Password parameters have been configured. Please edit and configure the settings of this module.
+module_payment_sage_pay_form_error_title = There has been an error processing your order transaction
+module_payment_sage_pay_form_error_general = Please try again and if problems persist, please try another payment method.

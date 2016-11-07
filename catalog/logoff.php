@@ -18,7 +18,7 @@
 
   $OSCOM_Language->loadDefinitions('logoff');
 
-  $breadcrumb->add(NAVBAR_TITLE);
+  $breadcrumb->add(OSCOM::getDef('navbar_title'));
 
   unset($_SESSION['customer_id']);
   unset($_SESSION['customer_default_address_id']);
@@ -54,18 +54,18 @@
 ?>
 
 <div class="page-header">
-  <h1><?php echo HEADING_TITLE; ?></h1>
+  <h1><?php echo OSCOM::getDef('heading_title'); ?></h1>
 </div>
 
 <div class="contentContainer">
   <div class="contentText">
     <div class="alert alert-danger">
-      <?php echo TEXT_MAIN; ?>
+      <?php echo OSCOM::getDef('text_main'); ?>
     </div>
   </div>
 
   <div class="buttonSet">
-    <div class="text-right"><?php echo HTML::button(IMAGE_BUTTON_CONTINUE, 'fa fa-angle-right', OSCOM::link('index.php'), null, 'btn-danger'); ?></div>
+    <div class="text-right"><?php echo HTML::button(OSCOM::getDef('image_button_continue'), 'fa fa-angle-right', OSCOM::link('index.php'), null, 'btn-danger'); ?></div>
   </div>
 </div>
 

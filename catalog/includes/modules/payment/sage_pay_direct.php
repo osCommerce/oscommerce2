@@ -26,9 +26,9 @@
       $this->api_version = '3.00';
 
       $this->code = 'sage_pay_direct';
-      $this->title = MODULE_PAYMENT_SAGE_PAY_DIRECT_TEXT_TITLE;
-      $this->public_title = MODULE_PAYMENT_SAGE_PAY_DIRECT_TEXT_PUBLIC_TITLE;
-      $this->description = MODULE_PAYMENT_SAGE_PAY_DIRECT_TEXT_DESCRIPTION;
+      $this->title = OSCOM::getDef('module_payment_sage_pay_direct_text_title');
+      $this->public_title = OSCOM::getDef('module_payment_sage_pay_direct_text_public_title');
+      $this->description = OSCOM::getDef('module_payment_sage_pay_direct_text_description');
       $this->sort_order = defined('MODULE_PAYMENT_SAGE_PAY_DIRECT_SORT_ORDER') ? MODULE_PAYMENT_SAGE_PAY_DIRECT_SORT_ORDER : 0;
       $this->enabled = defined('MODULE_PAYMENT_SAGE_PAY_DIRECT_STATUS') && (MODULE_PAYMENT_SAGE_PAY_DIRECT_STATUS == 'True') ? true : false;
       $this->order_status = defined('MODULE_PAYMENT_SAGE_PAY_DIRECT_ORDER_STATUS_ID') && ((int)MODULE_PAYMENT_SAGE_PAY_DIRECT_ORDER_STATUS_ID > 0) ? (int)MODULE_PAYMENT_SAGE_PAY_DIRECT_ORDER_STATUS_ID : 0;
@@ -43,14 +43,14 @@
       }
 
       if ( !function_exists('curl_init') ) {
-        $this->description = '<div class="secWarning">' . MODULE_PAYMENT_SAGE_PAY_DIRECT_ERROR_ADMIN_CURL . '</div>' . $this->description;
+        $this->description = '<div class="secWarning">' . OSCOM::getDef('module_payment_sage_pay_direct_error_admin_curl') . '</div>' . $this->description;
 
         $this->enabled = false;
       }
 
       if ( $this->enabled === true ) {
         if ( !tep_not_null(MODULE_PAYMENT_SAGE_PAY_DIRECT_VENDOR_LOGIN_NAME) ) {
-          $this->description = '<div class="secWarning">' . MODULE_PAYMENT_SAGE_PAY_DIRECT_ERROR_ADMIN_CONFIGURATION . '</div>' . $this->description;
+          $this->description = '<div class="secWarning">' . OSCOM::getDef('module_payment_sage_pay_direct_error_admin_configuration') . '</div>' . $this->description;
 
           $this->enabled = false;
         }
@@ -166,14 +166,14 @@
             if (MODULE_PAYMENT_SAGE_PAY_DIRECT_VERIFY_WITH_CVC == 'True') {
               $content .= '<tr class="moduleRowExtra" id="sagepay_card_cvc_' . $Qtokens->valueInt('id') . '">' .
                           '  <td width="40" valign="top">&nbsp;</td>' .
-                          '  <td valign="top">' . MODULE_PAYMENT_SAGE_PAY_DIRECT_CREDIT_CARD_CVC . '&nbsp;' . HTML::inputField('cc_cvc_tokens_nh-dns[' . $Qtokens->valueInt('id') . ']', '', 'size="5" maxlength="4"') . '</td>' .
+                          '  <td valign="top">' . OSCOM::getDef('module_payment_sage_pay_direct_credit_card_cvc') . '&nbsp;' . HTML::inputField('cc_cvc_tokens_nh-dns[' . $Qtokens->valueInt('id') . ']', '', 'size="5" maxlength="4"') . '</td>' .
                           '</tr>';
             }
           } while ($Qtokens->fetch());
 
           $content .= '<tr class="moduleRow" id="sagepay_card_0">' .
                       '  <td width="40" valign="top"><input type="radio" name="sagepay_card" value="0" /></td>' .
-                      '  <td valign="top">' . MODULE_PAYMENT_SAGE_PAY_DIRECT_CREDIT_CARD_NEW . '</td>' .
+                      '  <td valign="top">' . OSCOM::getDef('module_payment_sage_pay_direct_credit_card_new') . '</td>' .
                       '</tr>' .
                       '</table>';
         }
@@ -181,40 +181,40 @@
 
       $content .= '<table id="sagepay_table_new_card" border="0" width="100%" cellspacing="0" cellpadding="2">' .
                   '<tr>' .
-                  '  <td width="30%">' . MODULE_PAYMENT_SAGE_PAY_DIRECT_CREDIT_CARD_TYPE . '</td>' .
+                  '  <td width="30%">' . OSCOM::getDef('module_payment_sage_pay_direct_credit_card_type') . '</td>' .
                   '  <td>' . HTML::selectField('cc_type', $card_types, '', 'id="sagepay_card_type"') . '</td>' .
                   '</tr>' .
                   '<tr>' .
-                  '  <td width="30%">' . MODULE_PAYMENT_SAGE_PAY_DIRECT_CREDIT_CARD_OWNER . '</td>' .
+                  '  <td width="30%">' . OSCOM::getDef('module_payment_sage_pay_direct_credit_card_owner') . '</td>' .
                   '  <td>' . HTML::inputField('cc_owner', $order->billing['firstname'] . ' ' . $order->billing['lastname'], 'maxlength="50"') . '</td>' .
                   '</tr>' .
                   '<tr>' .
-                  '  <td width="30%">' . MODULE_PAYMENT_SAGE_PAY_DIRECT_CREDIT_CARD_NUMBER . '</td>' .
+                  '  <td width="30%">' . OSCOM::getDef('module_payment_sage_pay_direct_credit_card_number') . '</td>' .
                   '  <td>' . HTML::inputField('cc_number_nh-dns', '', 'maxlength="20"') . '</td>' .
                   '</tr>';
 
       if ( (MODULE_PAYMENT_SAGE_PAY_DIRECT_ALLOW_MAESTRO == 'True') || (MODULE_PAYMENT_SAGE_PAY_DIRECT_ALLOW_AMEX == 'True') ) {
         $content .= '<tr>' .
-                    '  <td width="30%">' . MODULE_PAYMENT_SAGE_PAY_DIRECT_CREDIT_CARD_STARTS . '</td>' .
-                    '  <td>' . HTML::selectField('cc_starts_month', $months_array, '', 'id="sagepay_card_date_start"') . '&nbsp;' . HTML::selectField('cc_starts_year', $year_valid_from_array) . '&nbsp;' . MODULE_PAYMENT_SAGE_PAY_DIRECT_CREDIT_CARD_STARTS_INFO . '</td>' .
+                    '  <td width="30%">' . OSCOM::getDef('module_payment_sage_pay_direct_credit_card_starts') . '</td>' .
+                    '  <td>' . HTML::selectField('cc_starts_month', $months_array, '', 'id="sagepay_card_date_start"') . '&nbsp;' . HTML::selectField('cc_starts_year', $year_valid_from_array) . '&nbsp;' . OSCOM::getDef('module_payment_sage_pay_direct_credit_card_starts_info') . '</td>' .
                     '</tr>';
       }
 
       $content .= '<tr>' .
-                  '  <td width="30%">' . MODULE_PAYMENT_SAGE_PAY_DIRECT_CREDIT_CARD_EXPIRES . '</td>' .
+                  '  <td width="30%">' . OSCOM::getDef('module_payment_sage_pay_direct_credit_card_expires') . '</td>' .
                   '  <td>' . HTML::selectField('cc_expires_month', $months_array) . '&nbsp;' . HTML::selectField('cc_expires_year', $year_valid_to_array) . '</td>' .
                   '</tr>';
 
       if ( (MODULE_PAYMENT_SAGE_PAY_DIRECT_ALLOW_MAESTRO == 'True') ) {
         $content .= '<tr>' .
-                    '  <td width="30%">' . MODULE_PAYMENT_SAGE_PAY_DIRECT_CREDIT_CARD_ISSUE_NUMBER . '</td>' .
-                    '  <td>' . HTML::inputField('cc_issue_nh-dns', '', 'id="sagepay_card_issue" size="3" maxlength="2"') . '&nbsp;' . MODULE_PAYMENT_SAGE_PAY_DIRECT_CREDIT_CARD_ISSUE_NUMBER_INFO . '</td>' .
+                    '  <td width="30%">' . OSCOM::getDef('module_payment_sage_pay_direct_credit_card_issue_number') . '</td>' .
+                    '  <td>' . HTML::inputField('cc_issue_nh-dns', '', 'id="sagepay_card_issue" size="3" maxlength="2"') . '&nbsp;' . OSCOM::getDef('module_payment_sage_pay_direct_credit_card_issue_number_info') . '</td>' .
                     '</tr>';
       }
 
       if (MODULE_PAYMENT_SAGE_PAY_DIRECT_VERIFY_WITH_CVC == 'True') {
         $content .= '<tr>' .
-                    '  <td width="30%">' . MODULE_PAYMENT_SAGE_PAY_DIRECT_CREDIT_CARD_CVC . '</td>' .
+                    '  <td width="30%">' . OSCOM::getDef('module_payment_sage_pay_direct_credit_card_cvc') . '</td>' .
                     '  <td>' . HTML::inputField('cc_cvc_nh-dns', '', 'size="5" maxlength="4"') . '</td>' .
                     '</tr>';
       }
@@ -222,7 +222,7 @@
       if ( MODULE_PAYMENT_SAGE_PAY_DIRECT_TOKENS == 'True' ) {
         $content .= '<tr>' .
                     '  <td width="30%">&nbsp;</td>' .
-                    '  <td>' . HTML::checkboxField('cc_save', 'true') . ' ' . MODULE_PAYMENT_SAGE_PAY_DIRECT_CREDIT_CARD_SAVE . '</td>' .
+                    '  <td>' . HTML::checkboxField('cc_save', 'true') . ' ' . OSCOM::getDef('module_payment_sage_pay_direct_credit_card_save') . '</td>' .
                     '</tr>';
       }
 
@@ -621,45 +621,45 @@
     }
 
     function get_error() {
-      $message = MODULE_PAYMENT_SAGE_PAY_DIRECT_ERROR_GENERAL;
+      $message = OSCOM::getDef('module_payment_sage_pay_direct_error_general');
 
       if ( isset($_GET['error']) && tep_not_null($_GET['error']) ) {
         if ( is_numeric($_GET['error']) && $this->errorMessageNumberExists($_GET['error']) ) {
-          $message = $this->getErrorMessage($_GET['error']) . ' ' . MODULE_PAYMENT_SAGE_PAY_DIRECT_ERROR_GENERAL;
+          $message = $this->getErrorMessage($_GET['error']) . ' ' . OSCOM::getDef('module_payment_sage_pay_direct_error_general');
         } else {
           switch ($_GET['error']) {
             case 'cardtype':
-              $message = MODULE_PAYMENT_SAGE_PAY_DIRECT_ERROR_CARDTYPE;
+              $message = OSCOM::getDef('module_payment_sage_pay_direct_error_cardtype');
               break;
 
             case 'cardowner':
-              $message = MODULE_PAYMENT_SAGE_PAY_DIRECT_ERROR_CARDOWNER;
+              $message = OSCOM::getDef('module_payment_sage_pay_direct_error_cardowner');
               break;
 
             case 'cardnumber':
-              $message = MODULE_PAYMENT_SAGE_PAY_DIRECT_ERROR_CARDNUMBER;
+              $message = OSCOM::getDef('module_payment_sage_pay_direct_error_cardnumber');
               break;
 
             case 'cardstart':
-              $message = MODULE_PAYMENT_SAGE_PAY_DIRECT_ERROR_CARDSTART;
+              $message = OSCOM::getDef('module_payment_sage_pay_direct_error_cardstart');
               break;
 
             case 'cardexpires':
-              $message = MODULE_PAYMENT_SAGE_PAY_DIRECT_ERROR_CARDEXPIRES;
+              $message = OSCOM::getDef('module_payment_sage_pay_direct_error_cardexpires');
               break;
 
             case 'cardissue':
-              $message = MODULE_PAYMENT_SAGE_PAY_DIRECT_ERROR_CARDISSUE;
+              $message = OSCOM::getDef('module_payment_sage_pay_direct_error_cardissue');
               break;
 
             case 'cardcvc':
-              $message = MODULE_PAYMENT_SAGE_PAY_DIRECT_ERROR_CARDCVC;
+              $message = OSCOM::getDef('module_payment_sage_pay_direct_error_cardcvc');
               break;
           }
         }
       }
 
-      $error = array('title' => MODULE_PAYMENT_SAGE_PAY_DIRECT_ERROR_TITLE,
+      $error = array('title' => OSCOM::getDef('module_payment_sage_pay_direct_error_title'),
                      'error' => $message);
 
       return $error;
@@ -1074,12 +1074,12 @@ EOD;
     }
 
     function getTestLinkInfo() {
-      $dialog_title = MODULE_PAYMENT_SAGE_PAY_DIRECT_DIALOG_CONNECTION_TITLE;
-      $dialog_button_close = MODULE_PAYMENT_SAGE_PAY_DIRECT_DIALOG_CONNECTION_BUTTON_CLOSE;
-      $dialog_success = MODULE_PAYMENT_SAGE_PAY_DIRECT_DIALOG_CONNECTION_SUCCESS;
-      $dialog_failed = MODULE_PAYMENT_SAGE_PAY_DIRECT_DIALOG_CONNECTION_FAILED;
-      $dialog_error = MODULE_PAYMENT_SAGE_PAY_DIRECT_DIALOG_CONNECTION_ERROR;
-      $dialog_connection_time = MODULE_PAYMENT_SAGE_PAY_DIRECT_DIALOG_CONNECTION_TIME;
+      $dialog_title = OSCOM::getDef('module_payment_sage_pay_direct_dialog_connection_title');
+      $dialog_button_close = OSCOM::getDef('module_payment_sage_pay_direct_dialog_connection_button_close');
+      $dialog_success = OSCOM::getDef('module_payment_sage_pay_direct_dialog_connection_success');
+      $dialog_failed = OSCOM::getDef('module_payment_sage_pay_direct_dialog_connection_failed');
+      $dialog_error = OSCOM::getDef('module_payment_sage_pay_direct_dialog_connection_error');
+      $dialog_connection_time = OSCOM::getDef('module_payment_sage_pay_direct_dialog_connection_time');
 
       $test_url = OSCOM::link('modules.php', 'set=payment&module=' . $this->code . '&action=install&subaction=conntest');
 
@@ -1132,7 +1132,7 @@ function openTestConnectionDialog() {
 </script>
 EOD;
 
-      $info = '<p><img src="images/icons/locked.gif" border="0">&nbsp;<a href="javascript:openTestConnectionDialog();" style="text-decoration: underline; font-weight: bold;">' . MODULE_PAYMENT_SAGE_PAY_DIRECT_DIALOG_CONNECTION_LINK_TITLE . '</a></p>' .
+      $info = '<p><img src="images/icons/locked.gif" border="0">&nbsp;<a href="javascript:openTestConnectionDialog();" style="text-decoration: underline; font-weight: bold;">' . OSCOM::getDef('module_payment_sage_pay_direct_dialog_connection_link_title') . '</a></p>' .
               '<div id="testConnectionDialog" style="display: none;"><p>';
 
       if ( MODULE_PAYMENT_SAGE_PAY_DIRECT_TRANSACTION_SERVER == 'Live' ) {
@@ -1141,7 +1141,7 @@ EOD;
         $info .= 'Test Server:<br />https://test.sagepay.com/gateway/service/vspdirect-register.vsp';
       }
 
-      $info .= '</p><div id="testConnectionDialogProgress"><p>' . MODULE_PAYMENT_SAGE_PAY_DIRECT_DIALOG_CONNECTION_GENERAL_TEXT . '</p><div id="tcdprogressbar"></div></div></div>' .
+      $info .= '</p><div id="testConnectionDialogProgress"><p>' . OSCOM::getDef('module_payment_sage_pay_direct_dialog_connection_general_text') . '</p><div id="tcdprogressbar"></div></div></div>' .
                $js;
 
       return $info;

@@ -11,6 +11,7 @@
 */
 
   use OSC\OM\HTML;
+  use OSC\OM\OSCOM;
   use OSC\OM\Registry;
 
   class ht_category_seo {
@@ -22,8 +23,8 @@
     var $enabled = false;
 
     function __construct() {
-      $this->title = MODULE_HEADER_TAGS_CATEGORY_SEO_TITLE;
-      $this->description = MODULE_HEADER_TAGS_CATEGORY_SEO_DESCRIPTION;
+      $this->title = OSCOM::getDef('module_header_tags_category_seo_title');
+      $this->description = OSCOM::getDef('module_header_tags_category_seo_description');
 
       if ( defined('MODULE_HEADER_TAGS_CATEGORY_SEO_STATUS') ) {
         $this->sort_order = MODULE_HEADER_TAGS_CATEGORY_SEO_SORT_ORDER;

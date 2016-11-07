@@ -1,0 +1,3 @@
+module_header_tags_category_title_title = Category Title
+module_header_tags_category_title_description = Add the title of the current category to the page title
+module_header_tags_category_seo_separator =  | 
