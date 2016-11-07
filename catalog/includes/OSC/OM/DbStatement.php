@@ -345,21 +345,21 @@ class DbStatement extends \PDOStatement
 
 // previous window of pages
         if ($cur_window_num > 1) {
-            $output .= '<li><a href="' . OSCOM::link($PHP_SELF, $parameters . $this->page_set_keyword . '=' . (($cur_window_num - 1) * $this->page_set_total_rows)) . '" title=" ' . sprintf(OSCOM::getDef('prevnext_title_prev_set_of_no_page'), $this->page_set_total_rows) . ' ">...</a></li>';
+            $output .= '<li><a href="' . OSCOM::link($PHP_SELF, $parameters . $this->page_set_keyword . '=' . (($cur_window_num - 1) * $this->page_set_total_rows)) . '" title=" ' . OSCOM::getDef('prevnext_title_prev_set_of_no_page', ['page_set_total_rows' => $this->page_set_total_rows]) . ' ">...</a></li>';
         }
 
 // page nn button
         for ($jump_to_page = 1 + (($cur_window_num - 1) * $this->page_set_total_rows); ($jump_to_page <= ($cur_window_num * $this->page_set_total_rows)) && ($jump_to_page <= $number_of_pages); $jump_to_page++) {
             if ($jump_to_page == $this->page_set) {
-                $output .= '<li class="active"><a href="' . OSCOM::link($PHP_SELF, $parameters . $this->page_set_keyword . '=' . $jump_to_page) . '" title=" ' . sprintf(OSCOM::getDef('prevnext_title_page_no'), $jump_to_page) . ' ">' . $jump_to_page . '<span class="sr-only">(current)</span></a></li>';
+                $output .= '<li class="active"><a href="' . OSCOM::link($PHP_SELF, $parameters . $this->page_set_keyword . '=' . $jump_to_page) . '" title=" ' . OSCOM::getDef('prevnext_title_page_no', ['jump_to_page' => $jump_to_page]) . ' ">' . $jump_to_page . '<span class="sr-only">(current)</span></a></li>';
             } else {
-                $output .= '<li><a href="' . OSCOM::link($PHP_SELF, $parameters . $this->page_set_keyword . '=' . $jump_to_page) . '" title=" ' . sprintf(OSCOM::getDef('prevnext_title_page_no'), $jump_to_page) . ' ">' . $jump_to_page . '</a></li>';
+                $output .= '<li><a href="' . OSCOM::link($PHP_SELF, $parameters . $this->page_set_keyword . '=' . $jump_to_page) . '" title=" ' . OSCOM::getDef('prevnext_title_page_no', ['jump_to_page' => $jump_to_page]) . ' ">' . $jump_to_page . '</a></li>';
             }
         }
 
 // next window of pages
         if ($cur_window_num < $max_window_num) {
-            $output .= '<a href="' . OSCOM::link($PHP_SELF, $parameters . $this->page_set_keyword . '=' . (($cur_window_num) * $this->page_set_total_rows + 1)) . '" class="pageResults" title=" ' . sprintf(OSCOM::getDef('prevnext_title_next_set_of_no_page'), $this->page_set_total_rows) . ' ">...</a>&nbsp;';
+            $output .= '<a href="' . OSCOM::link($PHP_SELF, $parameters . $this->page_set_keyword . '=' . (($cur_window_num) * $this->page_set_total_rows + 1)) . '" class="pageResults" title=" ' . OSCOM::getDef('prevnext_title_prev_set_of_no_page', ['page_set_total_rows' => $this->page_set_total_rows]) . ' ">...</a>&nbsp;';
         }
 
 // next button
