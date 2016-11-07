@@ -102,7 +102,7 @@
     if (count(glob(ErrorHandler::getDirectory() . 'errors-*.txt')) > 0) {
 ?>
 
-        <li><a><i class="fa fa-exclamation-circle text-danger"></i></a>
+        <li><a href="<?= OSCOM::link('error_log.php'); ?>"><i class="fa fa-exclamation-circle text-danger"></i></a>
           <ul class="dropdown-menu">
             <li><a href="<?= OSCOM::link('error_log.php'); ?>">View Error Log</a></li>
           </ul>
