@@ -57,8 +57,8 @@
 
 <div class="page-header">
   <div class="row">
-    <h1 class="col-sm-4" itemprop="name"><?php echo $products_name; ?></h1>
-    <h2 class="col-sm-8 text-right-not-xs"><?php echo $products_price; ?></h2>
+    <h1 class="col-sm-8" itemprop="name"><?php echo $products_name; ?></h1>
+    <h2 class="col-sm-4 text-right-not-xs"><?php echo $products_price; ?></h2>
   </div>
 </div>
 
