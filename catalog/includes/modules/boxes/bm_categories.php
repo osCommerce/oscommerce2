@@ -6,6 +6,7 @@
   * @license MIT; https://www.oscommerce.com/license/mit.txt
   */
 
+  use OSC\OM\OSCOM;
   use OSC\OM\Registry;
 
   class bm_categories {
