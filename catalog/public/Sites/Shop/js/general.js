@@ -1,13 +1,9 @@
-/*
-  $Id$
-
-  osCommerce, Open Source E-Commerce Solutions
-  http://www.oscommerce.com
-
-  Copyright (c) 2015 osCommerce
-
-  Released under the GNU General Public License
-*/
+/**
+  * osCommerce Online Merchant
+  *
+  * @copyright (c) 2016 osCommerce; https://www.oscommerce.com
+  * @license MIT; https://www.oscommerce.com/license/mit.txt
+  */
 
 function SetFocus(TargetFormName) {
   var target = 0;
@@ -21,7 +17,7 @@ function SetFocus(TargetFormName) {
   }
 
   var TargetForm = document.forms[target];
-    
+
   for (i=0; i<TargetForm.length; i++) {
     if ( (TargetForm.elements[i].type != "image") && (TargetForm.elements[i].type != "hidden") && (TargetForm.elements[i].type != "reset") && (TargetForm.elements[i].type != "submit") ) {
       TargetForm.elements[i].focus();
@@ -70,7 +66,7 @@ function IsValidDate(DateToCheck, FormatString) {
 
   strDateToCheck = DateToCheck.toLowerCase();
   strFormatString = FormatString.toLowerCase();
-  
+
   if (strDateToCheck.length != strFormatString.length) {
     return false;
   }
@@ -171,7 +167,7 @@ function IsValidDate(DateToCheck, FormatString) {
   if (intday > intDaysArray[intMonth - 1]) {
     return false;
   }
-  
+
   return true;
 }
 

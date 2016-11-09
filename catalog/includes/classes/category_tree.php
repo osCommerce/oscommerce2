@@ -1,10 +1,10 @@
 <?php
 /**
- * osCommerce Online Merchant
- *
- * @copyright Copyright (c) 2015 osCommerce; http://www.oscommerce.com
- * @license GNU General Public License; http://www.oscommerce.com/gpllicense.txt
- */
+  * osCommerce Online Merchant
+  *
+  * @copyright (c) 2016 osCommerce; https://www.oscommerce.com
+  * @license MIT; https://www.oscommerce.com/license/mit.txt
+  */
 
   use OSC\OM\OSCOM;
   use OSC\OM\Registry;

@@ -1,14 +1,10 @@
 <?php
-/*
-  $Id: $
-
-  osCommerce, Open Source E-Commerce Solutions
-  http://www.oscommerce.com
-
-  Copyright (c) 2015 osCommerce
-
-  Released under the GNU General Public License
-*/
+/**
+  * osCommerce Online Merchant
+  *
+  * @copyright (c) 2016 osCommerce; https://www.oscommerce.com
+  * @license MIT; https://www.oscommerce.com/license/mit.txt
+  */
 
   $errors = array('400' => 'The syntax of the request was not understood by the server.',
                   '401' => 'The request needs user authentication.',

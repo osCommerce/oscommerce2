@@ -1,11 +1,7 @@
-# $Id$
+# osCommerce Online Merchant
 #
-# osCommerce, Open Source E-Commerce Solutions
-# http://www.oscommerce.com
-#
-# Copyright (c) 2015 osCommerce
-#
-# Released under the GNU General Public License
+# @copyright (c) 2016 osCommerce; https://www.oscommerce.com
+# @license MIT; https://www.oscommerce.com/license/mit.txt
 #
 # NOTE: * Please make any modifications to this file by hand!
 #       * DO NOT use a mysqldump created file for new changes!

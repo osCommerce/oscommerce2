@@ -1,3 +1,10 @@
+/**
+  * osCommerce Online Merchant
+  *
+  * @copyright (c) 2016 osCommerce; https://www.oscommerce.com
+  * @license MIT; https://www.oscommerce.com/license/mit.txt
+  */
+
 function SetFocus() {
   if (document.forms.length > 0) {
     isNotAdminLanguage:
