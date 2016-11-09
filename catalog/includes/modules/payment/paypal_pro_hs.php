@@ -39,6 +39,12 @@
           $this->title .= ' [Sandbox]';
           $this->public_title .= ' (' . $this->code . '; Sandbox)';
         }
+
+        if ( OSCOM_APP_PAYPAL_HS_STATUS == '1' ) {
+          $this->api_url = 'https://api-3t.paypal.com/nvp';
+        } else {
+          $this->api_url = 'https://api-3t.sandbox.paypal.com/nvp';
+        }
       }
 
       if ( !function_exists('curl_init') ) {
@@ -391,14 +397,6 @@ EOD;
         $result = $this->_app->getApiResult('APP', 'GetTransactionDetails', array('TRANSACTIONID' => $HTTP_GET_VARS['tx']), (OSCOM_APP_PAYPAL_HS_STATUS == '1') ? 'live' : 'sandbox');
       } elseif ( isset($HTTP_POST_VARS['txn_id']) && !empty($HTTP_POST_VARS['txn_id']) ) { // paypal payment
         $result = $this->_app->getApiResult('APP', 'GetTransactionDetails', array('TRANSACTIONID' => $HTTP_POST_VARS['txn_id']), (OSCOM_APP_PAYPAL_HS_STATUS == '1') ? 'live' : 'sandbox');
-      }
-
-      if ( OSCOM_APP_PAYPAL_GATEWAY == '0' ) { // Payflow
-        echo '<pre>';
-        var_dump($HTTP_GET_VARS);
-        var_dump($HTTP_POST_VARS);
-        var_dump($result);
-        exit;
       }
 
       if ( !in_array($result['ACK'], array('Success', 'SuccessWithWarning')) ) {

@@ -31,8 +31,14 @@
         $this->_req_notes[] = $OSCOM_PayPal->getDef('module_login_error_curl');
       }
 
-      if ( ((OSCOM_APP_PAYPAL_LOGIN_STATUS == '1') && (!tep_not_null(OSCOM_APP_PAYPAL_LOGIN_LIVE_CLIENT_ID) || !tep_not_null(OSCOM_APP_PAYPAL_LOGIN_LIVE_SECRET))) || ((OSCOM_APP_PAYPAL_LOGIN_STATUS == '0') && (!tep_not_null(OSCOM_APP_PAYPAL_LOGIN_SANDBOX_CLIENT_ID) || !tep_not_null(OSCOM_APP_PAYPAL_LOGIN_SANDBOX_SECRET))) ) {
-        $this->_req_notes[] = $OSCOM_PayPal->getDef('module_login_error_credentials');
+      if ( defined('OSCOM_APP_PAYPAL_LOGIN_STATUS') ) {
+        if ( ((OSCOM_APP_PAYPAL_LOGIN_STATUS == '1') && (!tep_not_null(OSCOM_APP_PAYPAL_LOGIN_LIVE_CLIENT_ID) || !tep_not_null(OSCOM_APP_PAYPAL_LOGIN_LIVE_SECRET))) || ((OSCOM_APP_PAYPAL_LOGIN_STATUS == '0') && (!tep_not_null(OSCOM_APP_PAYPAL_LOGIN_SANDBOX_CLIENT_ID) || !tep_not_null(OSCOM_APP_PAYPAL_LOGIN_SANDBOX_SECRET))) ) {
+          $this->_req_notes[] = $OSCOM_PayPal->getDef('module_login_error_credentials');
+        }
+
+        $this->_req_notes[] = $OSCOM_PayPal->getDef('module_login_notice_paypal_app_return_url', array(
+          'return_url' => tep_catalog_href_link('login.php', 'action=paypal_login', 'SSL')
+        ));
       }
     }
 

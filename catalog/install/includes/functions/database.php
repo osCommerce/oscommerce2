@@ -86,20 +86,20 @@
       $sql_length = strlen($restore_query);
       $pos = strpos($restore_query, ';');
       for ($i=$pos; $i<$sql_length; $i++) {
-        if ($restore_query[0] == '#') {
+        if (substr($restore_query, 0, 1) == '#') {
           $restore_query = ltrim(substr($restore_query, strpos($restore_query, "\n")));
           $sql_length = strlen($restore_query);
           $i = strpos($restore_query, ';')-1;
           continue;
         }
-        if ($restore_query[($i+1)] == "\n") {
+        if (substr($restore_query, $i+1, 1) == "\n") {
           for ($j=($i+2); $j<$sql_length; $j++) {
-            if (trim($restore_query[$j]) != '') {
+            if (trim(substr($restore_query, $j, 1)) != '') {
               $next = substr($restore_query, $j, 6);
-              if ($next[0] == '#') {
+              if (substr($next, 0, 1) == '#') {
 // find out where the break position is so we can remove this line (#comment line)
                 for ($k=$j; $k<$sql_length; $k++) {
-                  if ($restore_query[$k] == "\n") break;
+                  if (substr($restore_query, $k, 1) == "\n") break;
                 }
                 $query = substr($restore_query, 0, $i+1);
                 $restore_query = substr($restore_query, $k);

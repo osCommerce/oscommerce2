@@ -14,33 +14,9 @@
     var $_code = 'paypal';
     var $_title = 'PayPal App';
     var $_version;
-    var $_api_version = '112';
+    var $_api_version = '204';
+    var $_identifier = 'osCommerce_PPapp_v5';
     var $_definitions = array();
-
-    function isReqApiCountrySupported($country_id) {
-      $country_query = tep_db_query("select countries_iso_code_2 from " . TABLE_COUNTRIES . " where countries_id = '" . (int)$country_id . "'");
-      $country = tep_db_fetch_array($country_query);
-
-      return in_array($country['countries_iso_code_2'], $this->getReqApiCountries());
-    }
-
-    function getReqApiCountries() {
-      static $countries;
-
-      if ( !isset($countries) ) {
-        $countries = array();
-
-        foreach ( file(DIR_FS_CATALOG . 'includes/apps/paypal/req_api_countries.txt') as $c ) {
-          $c = trim($c);
-
-          if ( !empty($c) ) {
-            $countries[]= $c;
-          }
-        }
-      }
-
-      return $countries;
-    }
 
     function log($module, $action, $result, $request, $response, $server, $is_ipn = false) {
       global $customer_id;
@@ -197,6 +173,10 @@
     }
 
     function hasCredentials($module, $type = null) {
+      if ( !defined('OSCOM_APP_PAYPAL_' . $module . '_STATUS') ) {
+        return false;
+      }
+
       $server = constant('OSCOM_APP_PAYPAL_' . $module . '_STATUS');
 
       if ( !in_array($server, array('1', '0')) ) {
@@ -277,11 +257,11 @@
     }
 
     function getApiCredentials($server, $type) {
-      if ( $server == 'live' ) {
+      if ( ($server == 'live') && defined('OSCOM_APP_PAYPAL_LIVE_API_' . strtoupper($type)) ) {
         return constant('OSCOM_APP_PAYPAL_LIVE_API_' . strtoupper($type));
+      } elseif ( defined('OSCOM_APP_PAYPAL_SANDBOX_API_' . strtoupper($type)) ) {
+        return constant('OSCOM_APP_PAYPAL_SANDBOX_API_' . strtoupper($type));
       }
-
-      return constant('OSCOM_APP_PAYPAL_SANDBOX_API_' . strtoupper($type));
     }
 
     function getParameters($module) {
@@ -343,7 +323,7 @@
         $cfg = new $cfg_class();
 
         if ( !defined($key) ) {
-          $this->saveParameter($key, $cfg->default);
+          $this->saveParameter($key, $cfg->default, isset($cfg->title) ? $cfg->title : null, isset($cfg->description) ? $cfg->description : null, isset($cfg->set_func) ? $cfg->set_func : null);
         }
 
         if ( !isset($cfg->app_configured) || ($cfg->app_configured !== false) ) {
@@ -643,6 +623,10 @@
 
     function getApiVersion() {
       return $this->_api_version;
+    }
+
+    function getIdentifier() {
+      return $this->_identifier;
     }
 
     function hasAlert() {

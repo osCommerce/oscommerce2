@@ -24,7 +24,7 @@
                     'TENDER' => 'P',
                     'TRXTYPE' => (OSCOM_APP_PAYPAL_DP_TRANSACTION_METHOD == '1') ? 'S' : 'A',
                     'ACTION' => 'D',
-                    'BUTTONSOURCE' => 'OSCOM23_ECPF');
+                    'BUTTONSOURCE' => $OSCOM_PayPal->getIdentifier());
 
     if ( is_array($extra_params) && !empty($extra_params) ) {
       $params = array_merge($params, $extra_params);

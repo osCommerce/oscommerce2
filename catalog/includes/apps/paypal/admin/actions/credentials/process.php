@@ -15,11 +15,13 @@
   if ( $current_module == 'PP' ) {
     $data = array('OSCOM_APP_PAYPAL_LIVE_SELLER_EMAIL' => isset($HTTP_POST_VARS['live_email']) ? tep_db_prepare_input($HTTP_POST_VARS['live_email']) : '',
                   'OSCOM_APP_PAYPAL_LIVE_SELLER_EMAIL_PRIMARY' => isset($HTTP_POST_VARS['live_email_primary']) ? tep_db_prepare_input($HTTP_POST_VARS['live_email_primary']) : '',
+                  'OSCOM_APP_PAYPAL_LIVE_MERCHANT_ID' => isset($HTTP_POST_VARS['live_merchant_id']) ? tep_db_prepare_input($HTTP_POST_VARS['live_merchant_id']) : '',
                   'OSCOM_APP_PAYPAL_LIVE_API_USERNAME' => isset($HTTP_POST_VARS['live_username']) ? tep_db_prepare_input($HTTP_POST_VARS['live_username']) : '',
                   'OSCOM_APP_PAYPAL_LIVE_API_PASSWORD' => isset($HTTP_POST_VARS['live_password']) ? tep_db_prepare_input($HTTP_POST_VARS['live_password']) : '',
                   'OSCOM_APP_PAYPAL_LIVE_API_SIGNATURE' => isset($HTTP_POST_VARS['live_signature']) ? tep_db_prepare_input($HTTP_POST_VARS['live_signature']) : '',
                   'OSCOM_APP_PAYPAL_SANDBOX_SELLER_EMAIL' => isset($HTTP_POST_VARS['sandbox_email']) ? tep_db_prepare_input($HTTP_POST_VARS['sandbox_email']) : '',
                   'OSCOM_APP_PAYPAL_SANDBOX_SELLER_EMAIL_PRIMARY' => isset($HTTP_POST_VARS['sandbox_email_primary']) ? tep_db_prepare_input($HTTP_POST_VARS['sandbox_email_primary']) : '',
+                  'OSCOM_APP_PAYPAL_SANDBOX_MERCHANT_ID' => isset($HTTP_POST_VARS['sandbox_merchant_id']) ? tep_db_prepare_input($HTTP_POST_VARS['sandbox_merchant_id']) : '',
                   'OSCOM_APP_PAYPAL_SANDBOX_API_USERNAME' => isset($HTTP_POST_VARS['sandbox_username']) ? tep_db_prepare_input($HTTP_POST_VARS['sandbox_username']) : '',
                   'OSCOM_APP_PAYPAL_SANDBOX_API_PASSWORD' => isset($HTTP_POST_VARS['sandbox_password']) ? tep_db_prepare_input($HTTP_POST_VARS['sandbox_password']) : '',
                   'OSCOM_APP_PAYPAL_SANDBOX_API_SIGNATURE' => isset($HTTP_POST_VARS['sandbox_signature']) ? tep_db_prepare_input($HTTP_POST_VARS['sandbox_signature']) : '');

@@ -1,6 +1,6 @@
 privacy_title = Privacy Policy
 
-privacy_body = <h3>API Credentials <small>(available for :api_req_countries countries only)</small></h3>
+privacy_body = <h3>API Credentials</h3>
 
 <p>The PayPal App for osCommerce Online Merchant allows store owners to automatically setup and configure the App with their PayPal API credentials without the need to enter them manually. This is performed securely by granting osCommerce access to retrieve the API credentials from the store owners PayPal account.</p>
 
@@ -86,7 +86,7 @@ privacy_body = <h3>API Credentials <small>(available for :api_req_countries coun
 </ul>
 
 <div class="pp-panel pp-panel-info">
-  <p>The parameters of each transaction sent to and recieved from PayPal can be inspected on the PayPal App Log page.</p>
+  <p>The parameters of each transaction sent to and received from PayPal can be inspected on the PayPal App Log page.</p>
 </div>
 
 <h3>App Updates</h3>
