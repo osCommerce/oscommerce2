@@ -11,6 +11,7 @@ namespace OSC\OM;
 use OSC\OM\Cache;
 use OSC\OM\Db;
 use OSC\OM\HTML;
+use OSC\OM\Language;
 use OSC\OM\OSCOM;
 use OSC\OM\Registry;
 
@@ -293,7 +294,11 @@ class DbStatement extends \PDOStatement
             $from++;
         }
 
-        return sprintf($text, $from, $to, $this->page_set_total_rows);
+        return Language::parseDefinition($text, [
+            'listing_from' => $from,
+            'listing_to' => $to,
+            'listing_total' => $this->page_set_total_rows
+        ]);
     }
 
     public function getPageSetLinks($parameters = null)

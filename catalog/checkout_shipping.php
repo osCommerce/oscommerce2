@@ -113,7 +113,7 @@
         list($module, $method) = explode('_', $_SESSION['shipping']);
         if ( is_object($GLOBALS[$module]) || ($_SESSION['shipping'] == 'free_free') ) {
           if ($_SESSION['shipping'] == 'free_free') {
-            $quote[0]['methods'][0]['title'] = FREE_SHIPPING_TITLE;
+            $quote[0]['methods'][0]['title'] = OSCOM::getDef('free_shipping_title');
             $quote[0]['methods'][0]['cost'] = '0';
           } else {
             $quote = $shipping_modules->quote($method, $module);
@@ -244,9 +244,9 @@
 
     <div class="contentText">
       <div class="panel panel-success">
-        <div class="panel-heading"><strong><?php echo FREE_SHIPPING_TITLE; ?></strong>&nbsp;<?php echo $quotes[$i]['icon']; ?></div>
+        <div class="panel-heading"><strong><?= OSCOM::getDef('free_shipping_title'); ?></strong>&nbsp;<?php echo $quotes[$i]['icon']; ?></div>
         <div class="panel-body">
-          <?php echo sprintf(FREE_SHIPPING_DESCRIPTION, $currencies->format(MODULE_ORDER_TOTAL_SHIPPING_FREE_SHIPPING_OVER)) . HTML::hiddenField('shipping', 'free_free'); ?>
+          <?php echo OSCOM::getDef('free_shipping_description', ['amount' => $currencies->format(MODULE_ORDER_TOTAL_SHIPPING_FREE_SHIPPING_OVER)]) . HTML::hiddenField('shipping', 'free_free'); ?>
         </div>
       </div>
     </div>

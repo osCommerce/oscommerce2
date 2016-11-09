@@ -10,4 +10,4 @@ text_order_products = Products:
 text_order_cost = Order Cost:
 text_view_order = View Order
 text_no_purchases = You have not yet made any purchases.
-text_display_number_of_orders = Displaying <strong>%d</strong> to <strong>%d</strong> (of <strong>%d</strong> orders)
+text_display_number_of_orders = Displaying <strong>{{listing_from}}</strong> to <strong>{{listing_to}}</strong> (of <strong>{{listing_total}}</strong> orders)
