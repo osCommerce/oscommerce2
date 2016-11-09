@@ -172,15 +172,24 @@ class Language
             $def = $this->definitions[$scope][$key];
 
             if (is_array($values) && !empty($values)) {
-                $def = preg_replace_callback('/\{\{([A-Za-z0-9-_]+)\}\}/', function($matches) use ($values) {
-                    return isset($values[$matches[1]]) ? $values[$matches[1]] : $matches[1];
-                }, $def);
+                $def = $this->parseDefinition($def, $values);
             }
 
             return $def;
         }
 
         return $key;
+    }
+
+    public static function parseDefinition($string, $values)
+    {
+        if (is_array($values) && !empty($values)) {
+            $string = preg_replace_callback('/\{\{([A-Za-z0-9-_]+)\}\}/', function($matches) use ($values) {
+                return isset($values[$matches[1]]) ? $values[$matches[1]] : $matches[1];
+            }, $string);
+        }
+
+        return $string;
     }
 
     public function definitionsExist($group, $language_code = null)
