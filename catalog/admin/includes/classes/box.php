@@ -1,27 +1,10 @@
 <?php
-/*
-  $Id$
-
-  osCommerce, Open Source E-Commerce Solutions
-  http://www.oscommerce.com
-
-  Copyright (c) 2003 osCommerce
-
-  Released under the GNU General Public License
-
-  Example usage:
-
-  $heading = array();
-  $heading[] = array('params' => 'class="menuBoxHeading"',
-                     'text'  => BOX_HEADING_TOOLS,
-                     'link'  => OSCOM::link(basename($PHP_SELF));
-
-  $contents = array();
-  $contents[] = array('text'  => SOME_TEXT);
-
-  $box = new box;
-  echo $box->infoBox($heading, $contents);
-*/
+/**
+  * osCommerce Online Merchant
+  *
+  * @copyright (c) 2016 osCommerce; https://www.oscommerce.com
+  * @license MIT; https://www.oscommerce.com/license/mit.txt
+  */
 
   class box extends tableBlock {
     function box() {
