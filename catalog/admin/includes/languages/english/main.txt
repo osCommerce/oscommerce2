@@ -153,7 +153,6 @@ icon_success = Success
 icon_tick = True
 icon_unlocked = Unlocked
 icon_warning = Warning
-text_result_page = Page %s of %d
 text_display_number_of_banners = Displaying <strong>{{listing_from}}</strong> to <strong>{{listing_to}}</strong> (of <strong>{{listing_total}}</strong> banners)
 text_display_number_of_countries = Displaying <strong>{{listing_from}}</strong> to <strong>{{listing_to}}</strong> (of <strong>{{listing_total}}</strong> countries)
 text_display_number_of_customers = Displaying <strong>{{listing_from}}</strong> to <strong>{{listing_to}}</strong> (of <strong>{{listing_total}}</strong> customers)
