@@ -7,4 +7,4 @@ table_heading_action = Action
 text_filter_search = Search
 text_all_modules = -- All Modules --
 text_guest = Guest
-success_expired_entries = Success: %s expired entries were removed.
+success_expired_entries = Success: {{expired_entries}} expired entries were removed.

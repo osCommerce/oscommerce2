@@ -245,12 +245,12 @@
 
       if (ACCOUNT_GENDER == 'true') {
          if ($gender == 'm') {
-           $email_text = sprintf(OSCOM::getDef('email_greet_mr'), $lastname);
+           $email_text = OSCOM::getDef('email_greet_mr', ['lastname' => $lastname]);
          } else {
-           $email_text = sprintf(OSCOM::getDef('email_greet_ms'), $lastname);
+           $email_text = OSCOM::getDef('email_greet_ms', ['lastname' => $lastname]);
          }
       } else {
-        $email_text = sprintf(OSCOM::getDef('email_greet_none'), $firstname);
+        $email_text = OSCOM::getDef('email_greet_none', ['firstname' => $firstname]);
       }
 
       $email_text .= "\n\n" .
@@ -283,7 +283,7 @@
 ?>
 
 <div class="alert alert-warning">
-  <?php echo sprintf(OSCOM::getDef('text_origin_login'), OSCOM::link('login.php', tep_get_all_get_params())); ?><span class="text-danger pull-right text-right"><?php echo OSCOM::getDef('form_required_information'); ?></span>
+  <?php echo OSCOM::getDef('text_origin_login', ['login_link' => OSCOM::link('login.php', tep_get_all_get_params())]); ?><span class="text-danger pull-right text-right"><?php echo OSCOM::getDef('form_required_information'); ?></span>
 </div>
 
 <?php echo HTML::form('create_account', OSCOM::link('create_account.php'), 'post', 'class="form-horizontal"', ['tokenize' => true, 'action' => 'process']); ?>

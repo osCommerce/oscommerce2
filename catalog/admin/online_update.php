@@ -529,7 +529,7 @@
     }
 
     if (!empty($new_version)) {
-      $OSCOM_MessageStack->add(sprintf(OSCOM::getDef('version_upgrades_available'), $new_version['version']), 'warning', 'versionCheck');
+      $OSCOM_MessageStack->add(OSCOM::getDef('version_upgrades_available', ['version' => $new_version['version']]), 'warning', 'versionCheck');
     } else {
       $OSCOM_MessageStack->add(OSCOM::getDef('version_running_latest'), 'success', 'versionCheck');
     }

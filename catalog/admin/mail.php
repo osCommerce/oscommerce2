@@ -80,7 +80,7 @@
   }
 
   if (isset($_GET['mail_sent_to'])) {
-    $OSCOM_MessageStack->add(sprintf(OSCOM::getDef('notice_email_sent_to'), $_GET['mail_sent_to']), 'success');
+    $OSCOM_MessageStack->add(OSCOM::getDef('notice_email_sent_to', ['mail_sent_to' => $_GET['mail_sent_to']]), 'success');
   }
 
   require($oscTemplate->getFile('template_top.php'));

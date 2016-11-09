@@ -57,8 +57,8 @@
 
 <div class="page-header">
   <div class="row">
-    <h1 class="col-sm-4" itemprop="name"><?php echo $products_name; ?></h1>
-    <h2 class="col-sm-8 text-right-not-xs"><?php echo $products_price; ?></h2>
+    <h1 class="col-sm-8" itemprop="name"><?php echo $products_name; ?></h1>
+    <h2 class="col-sm-4 text-right-not-xs"><?php echo $products_price; ?></h2>
   </div>
 </div>
 
@@ -74,7 +74,7 @@
   echo '<div class="col-sm-8 text-center alert alert-success" itemprop="aggregateRating" itemscope itemtype="http://schema.org/AggregateRating">';
   echo '  <meta itemprop="ratingValue" content="' . max(1, (int)round($Qa->value('average'))) . '" />';
   echo '  <meta itemprop="bestRating" content="5" />';
-  echo    sprintf(OSCOM::getDef('reviews_text_average'), $Qa->valueInt('count'), HTML::stars(round($Qa->value('average'))));
+  echo    OSCOM::getDef('reviews_text_average', ['count' =>  $Qa->valueInt('count'), 'average' =>  HTML::stars(round($Qa->value('average')))]);
   echo '</div>';
 ?>
 

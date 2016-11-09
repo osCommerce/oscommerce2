@@ -113,7 +113,7 @@
       $file_writeable = true;
       if (!FileSystem::isWritable($file)) {
         $file_writeable = false;
-        $OSCOM_MessageStack->add(sprintf(OSCOM::getDef('error_file_not_writeable'), $file), 'error', 'defineLanguage');
+        $OSCOM_MessageStack->add(OSCOM::getDef('error_file_not_writeable', ['file' => $file]), 'error', 'defineLanguage');
         echo $OSCOM_MessageStack->get('defineLanguage');
       }
 

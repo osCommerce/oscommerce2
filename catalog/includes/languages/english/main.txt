@@ -90,8 +90,8 @@ prevnext_title_first_page = First Page
 prevnext_title_previous_page = Previous Page
 prevnext_title_next_page = Next Page
 prevnext_title_last_page = Last Page
-prevnext_title_page_no = Page %d
-prevnext_title_prev_set_of_no_page = Previous Set of %d Pages
+prevnext_title_page_no = Page {{jump_to_page}}
+prevnext_title_prev_set_of_no_page = Previous Set of {{page_set_total_rows}} Pages
 prevnext_title_next_set_of_no_page = Next Set of %d Pages
 prevnext_button_first = &lt;&lt;FIRST
 prevnext_button_prev = [&lt;&lt;&nbsp;Prev]
@@ -107,7 +107,7 @@ image_button_continue = Continue
 image_button_delete = Delete
 image_button_login = Sign In
 image_button_in_cart = Add to Cart
-image_button_pay_total_now = Pay Now (%s)
+image_button_pay_total_now = Pay Now ({{total}})
 image_button_pay_total_processing = Processing, please wait ..
 image_button_reviews = Reviews
 image_button_search = Search
@@ -131,7 +131,7 @@ text_search_placeholder = Search
 form_required_information = <span class="fa fa-asterisk text-danger"></span> Required information
 form_required_input = <span><span class="fa fa-asterisk form-control-feedback text-danger"></span></span>
 reviews_text_rated = Rated {{reviews_rating}} by <cite title="{{review_name}}" itemprop="author">{{review_name}}</cite>
-reviews_text_average = Average rating based on <span itemprop="ratingCount">%s</span> review(s) %s
+reviews_text_average = Average rating based on <span itemprop="ratingCount">{{count}}</span> review(s) {{average}}
 reviews_text_title = What our customers say...
 text_sort_by = Sort By
 table_heading_image =
@@ -143,8 +143,8 @@ table_heading_price = Price
 table_heading_weight = Weight
 table_heading_buy_now = Buy Now
 table_heading_latest_added = Latest Products
-product_subscribed = %s has been added to your Notification List
-product_unsubscribed = %s has been removed from your Notification List
-product_added = %s has been added to your Cart
-product_removed = %s has been removed from your Cart
+product_subscribed = {{products_name}} has been added to your Notification List
+product_unsubscribed = {{products_name}} has been removed from your Notification List
+product_added = {{products_name}} has been added to your Cart
+product_removed = {{products_name}} has been removed from your Cart
 module_content_bootstrap_row_description =

@@ -129,10 +129,10 @@
   }
 
   function ht_product_colorbox_thumbnail_number() {
-    return sprintf(OSCOM::getDef('module_header_tags_product_colorbox_thumbnail_layout'), MODULE_HEADER_TAGS_PRODUCT_COLORBOX_LAYOUT, array_sum(str_split(MODULE_HEADER_TAGS_PRODUCT_COLORBOX_LAYOUT)));
+    return OSCOM::getDef('module_header_tags_product_colorbox_thumbnail_layout', ['product_colorbox_layout' => MODULE_HEADER_TAGS_PRODUCT_COLORBOX_LAYOUT, 'sum_product_colorbox_layout' => array_sum(str_split(MODULE_HEADER_TAGS_PRODUCT_COLORBOX_LAYOUT))]);
   }
 
-  function ht_product_colorbox_edit_pages($values, $key) {
+  function ht_product_colorbox_edit_pages($values, $key) { 
     global $PHP_SELF;
 
     $file_extension = substr($PHP_SELF, strrpos($PHP_SELF, '.'));

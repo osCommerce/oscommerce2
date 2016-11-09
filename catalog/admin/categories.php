@@ -641,7 +641,7 @@ function updateNet() {
 
 <?php echo HTML::form('new_product', OSCOM::link(FILENAME_CATEGORIES, 'cPath=' . $cPath . (isset($_GET['pID']) ? '&pID=' . $_GET['pID'] : '') . '&action=' . $form_action), 'post', 'enctype="multipart/form-data"'); ?>
 
-<h1 class="pageHeading"><?php echo sprintf(OSCOM::getDef('text_new_product'), tep_output_generated_category_path($current_category_id)); ?></h1>
+<h1 class="pageHeading"><?php echo OSCOM::getDef('text_new_product', ['generated_category_path' => tep_output_generated_category_path($current_category_id)]); ?></h1>
 
 <div id="productTabs">
   <ul id="productTabsMain" class="nav nav-tabs">
@@ -962,7 +962,7 @@ $(function() {
         <td>&nbsp;</td>
       </tr>
       <tr>
-        <td class="main"><?php echo sprintf(OSCOM::getDef('text_product_more_information'), $pInfo->products_url); ?></td>
+        <td class="main"><?php echo OSCOM::getDef('text_product_more_information', ['products_url' => $pInfo->products_url]); ?></td>
       </tr>
 <?php
         }
@@ -974,13 +974,13 @@ $(function() {
         if ($pInfo->products_date_available > date('Y-m-d')) {
 ?>
       <tr>
-        <td align="center" class="smallText"><?php echo sprintf(OSCOM::getDef('text_product_date_available'), DateTime::toLong($pInfo->products_date_available)); ?></td>
+        <td align="center" class="smallText"><?php echo OSCOM::getDef('text_product_date_available', ['products_date_available' => DateTime::toLong($pInfo->products_date_available)]); ?></td>
       </tr>
 <?php
         } else {
 ?>
       <tr>
-        <td align="center" class="smallText"><?php echo sprintf(OSCOM::getDef('text_product_date_added'), DateTime::toLong($pInfo->products_date_added)); ?></td>
+        <td align="center" class="smallText"><?php echo OSCOM::getDef('text_product_date_added', ['products_date_added' => DateTime::toLong($pInfo->products_date_added)]); ?></td>
       </tr>
 <?php
         }
@@ -1120,8 +1120,8 @@ $(function() {
             $contents = array('form' => HTML::form('categories', OSCOM::link(FILENAME_CATEGORIES, 'action=delete_category_confirm&cPath=' . $cPath)) . HTML::hiddenField('categories_id', $cInfo->categories_id));
             $contents[] = array('text' => OSCOM::getDef('text_delete_category_intro'));
             $contents[] = array('text' => '<strong>' . $cInfo->categories_name . '</strong>');
-            if ($cInfo->childs_count > 0) $contents[] = array('text' => sprintf(OSCOM::getDef('text_delete_warning_childs'), $cInfo->childs_count));
-            if ($cInfo->products_count > 0) $contents[] = array('text' => sprintf(OSCOM::getDef('text_delete_warning_products'), $cInfo->products_count));
+            if ($cInfo->childs_count > 0) $contents[] = array('text' => OSCOM::getDef('text_delete_warning_childs', ['childs_count' => $cInfo->childs_count]));
+            if ($cInfo->products_count > 0) $contents[] = array('text' => OSCOM::getDef('text_delete_warning_products', ['products_count' => $cInfo->products_count]));
             $contents[] = array('text' => HTML::button(OSCOM::getDef('image_delete'), 'fa fa-trash', null, null, 'btn-danger') . HTML::button(OSCOM::getDef('image_cancel'), null, OSCOM::link(FILENAME_CATEGORIES, 'cPath=' . $cPath . '&cID=' . $cInfo->categories_id), null, 'btn-link'));
           }
           break;
@@ -1131,8 +1131,8 @@ $(function() {
             $heading[] = array('text' => OSCOM::getDef('text_info_heading_move_category'));
 
             $contents = array('form' => HTML::form('categories', OSCOM::link(FILENAME_CATEGORIES, 'action=move_category_confirm&cPath=' . $cPath)) . HTML::hiddenField('categories_id', $cInfo->categories_id));
-            $contents[] = array('text' => sprintf(OSCOM::getDef('text_move_categories_intro'), $cInfo->categories_name));
-            $contents[] = array('text' => sprintf(OSCOM::getDef('text_move'), $cInfo->categories_name) . '<br />' . HTML::selectField('move_to_category_id', tep_get_category_tree(), $current_category_id));
+            $contents[] = array('text' => OSCOM::getDef('text_move_categories_intro', ['categories_name' => $cInfo->categories_name]));
+            $contents[] = array('text' => OSCOM::getDef('text_move', ['item_name' => $cInfo->categories_name]) . '<br />' . HTML::selectField('move_to_category_id', tep_get_category_tree(), $current_category_id));
             $contents[] = array('text' => HTML::button(OSCOM::getDef('image_move'), 'fa fa-share', null, null, 'btn-success') . HTML::button(OSCOM::getDef('image_cancel'), null, OSCOM::link(FILENAME_CATEGORIES, 'cPath=' . $cPath . '&cID=' . $cInfo->categories_id), null, 'btn-link'));
           }
           break;
@@ -1166,9 +1166,9 @@ $(function() {
           $heading[] = array('text' => OSCOM::getDef('text_info_heading_move_product'));
 
           $contents = array('form' => HTML::form('products', OSCOM::link(FILENAME_CATEGORIES, 'action=move_product_confirm&cPath=' . $cPath)) . HTML::hiddenField('products_id', $pInfo->products_id));
-          $contents[] = array('text' => sprintf(OSCOM::getDef('text_move_products_intro'), $pInfo->products_name));
+          $contents[] = array('text' => OSCOM::getDef('text_move_products_intro', ['products_name' => $pInfo->products_name]));
           $contents[] = array('text' => OSCOM::getDef('text_info_current_categories') . '<br /><strong>' . tep_output_generated_category_path($pInfo->products_id, 'product') . '</strong>');
-          $contents[] = array('text' => sprintf(OSCOM::getDef('text_move'), $pInfo->products_name) . '<br />' . HTML::selectField('move_to_category_id', tep_get_category_tree(), $current_category_id));
+          $contents[] = array('text' => OSCOM::getDef('text_move', ['item_name' => $pInfo->products_name]) . '<br />' . HTML::selectField('move_to_category_id', tep_get_category_tree(), $current_category_id));
           $contents[] = array('text' => HTML::button(OSCOM::getDef('image_move'), 'fa fa-share', null, null, 'btn-success') . HTML::button(OSCOM::getDef('image_cancel'), null, OSCOM::link(FILENAME_CATEGORIES, 'cPath=' . $cPath . '&pID=' . $pInfo->products_id), null, 'btn-link'));
           break;
 

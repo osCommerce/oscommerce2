@@ -15,7 +15,7 @@ use OSC\OM\OSCOM;
 ?>
 <div class="col-sm-<?php echo $content_width; ?> category-new-products">
 
-  <h3><?php echo sprintf(OSCOM::getDef('module_content_in_new_products_heading'), strftime('%B')); ?></h3>
+  <h3><?php echo OSCOM::getDef('module_content_in_new_products_heading', ['current_month' => strftime('%B')]); ?></h3>
 
   <div class="row" itemtype="http://schema.org/ItemList">
     <meta itemprop="numberOfItems" content="<?php echo (int)$num_new_products; ?>" />

@@ -145,15 +145,15 @@
       if (!FileSystem::isWritable($this->destination)) {
         if (is_dir($this->destination)) {
           if ($this->message_location == 'direct') {
-            $OSCOM_MessageStack->add(sprintf(OSCOM::getDef('error_destination_not_writeable'), $this->destination), 'error');
+            $OSCOM_MessageStack->add(OSCOM::getDef('error_destination_not_writeable', ['destination' => $this->destination]), 'error');
           } else {
-            $OSCOM_MessageStack->add(sprintf(OSCOM::getDef('error_destination_not_writeable'), $this->destination), 'error');
+            $OSCOM_MessageStack->add(OSCOM::getDef('error_destination_not_writeable', ['destination' => $this->destination]), 'error');
           }
         } else {
           if ($this->message_location == 'direct') {
-            $OSCOM_MessageStack->add(sprintf(OSCOM::getDef('error_destination_does_not_exist'), $this->destination), 'error');
+            $OSCOM_MessageStack->add(OSCOM::getDef('error_destination_does_not_exist', ['destination' => $this->destination]), 'error');
           } else {
-            $OSCOM_MessageStack->add(sprintf(OSCOM::getDef('error_destination_does_not_exist'), $this->destination), 'error');
+            $OSCOM_MessageStack->add(OSCOM::getDef('error_destination_does_not_exist', ['destination' => $this->destination]), 'error');
           }
         }
 

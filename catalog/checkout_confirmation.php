@@ -290,7 +290,7 @@
       if (is_array($payment_modules->modules)) {
         echo $payment_modules->process_button();
       }
-      echo HTML::button(sprintf(OSCOM::getDef('image_button_pay_total_now'), $currencies->format($order->info['total'], true, $order->info['currency'], $order->info['currency_value'])), 'fa fa-ok', null, array('params' => 'data-button="payNow"'), 'btn-success');
+      echo HTML::button(OSCOM::getDef('image_button_pay_total_now', ['total' => $currencies->format($order->info['total'], true, $order->info['currency'], $order->info['currency_value'])]), 'fa fa-ok', null, array('params' => 'data-button="payNow"'), 'btn-success');
       ?>
     </div>
   </div>

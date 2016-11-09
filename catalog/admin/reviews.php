@@ -173,7 +173,7 @@
         </table></td>
       </tr>
       <tr>
-        <td class="main"><strong><?php echo OSCOM::getDef('entry_rating'); ?></strong>&nbsp;<?php echo HTML::image(OSCOM::linkImage('Shop/stars_' . $rInfo->reviews_rating . '.gif'), sprintf(OSCOM::getDef('text_of_5_stars'), $rInfo->reviews_rating)); ?>&nbsp;<small>[<?php echo sprintf(OSCOM::getDef('text_of_5_stars'), $rInfo->reviews_rating); ?>]</small></td>
+        <td class="main"><strong><?php echo OSCOM::getDef('entry_rating'); ?></strong>&nbsp;<?php echo HTML::image(OSCOM::linkImage('Shop/stars_' . $rInfo->reviews_rating . '.gif'), OSCOM::getDef('text_of_5_stars', ['reviews_rating' => $rInfo->reviews_rating])); ?>&nbsp;<small>[<?php echo OSCOM::getDef('text_of_5_stars', ['reviews_rating' => $rInfo->reviews_rating]); ?>]</small></td>
       </tr>
 <?php
       if (tep_not_null($_POST)) {

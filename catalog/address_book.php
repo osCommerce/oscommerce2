@@ -60,7 +60,7 @@
 
   <h2><?php echo OSCOM::getDef('address_book_title'); ?></h2>
 
-  <div class="alert alert-warning"><?php echo sprintf(OSCOM::getDef('text_maximum_entries'), MAX_ADDRESS_BOOK_ENTRIES); ?></div>
+  <div class="alert alert-warning"><?php echo OSCOM::getDef('text_maximum_entries', ['max_address_book_entries' => MAX_ADDRESS_BOOK_ENTRIES]); ?></div>
 
   <div class="contentText row">
 <?php

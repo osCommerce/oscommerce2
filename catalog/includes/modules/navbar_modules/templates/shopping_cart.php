@@ -4,9 +4,9 @@ use OSC\OM\OSCOM;
 if ($_SESSION['cart']->count_contents() > 0) {
   ?>
   <li class="dropdown">
-    <a class="dropdown-toggle" data-toggle="dropdown" href="#"><?php echo sprintf(OSCOM::getDef('module_navbar_shopping_cart_contents'), $_SESSION['cart']->count_contents()); ?></a>
+    <a class="dropdown-toggle" data-toggle="dropdown" href="#"><?php echo OSCOM::getDef('module_navbar_shopping_cart_contents', ['count_contents' => $_SESSION['cart']->count_contents()]); ?></a>
     <ul class="dropdown-menu">
-      <li><?php echo '<a href="' . OSCOM::link('shopping_cart.php') . '">' . sprintf(OSCOM::getDef('module_navbar_shopping_cart_has_contents'), $_SESSION['cart']->count_contents(), $currencies->format($_SESSION['cart']->show_total())) . '</a>'; ?></li>
+<li><?php echo '<a href="' . OSCOM::link('shopping_cart.php') . '">' . OSCOM::getDef('module_navbar_shopping_cart_has_contents', ['count_contents' => $_SESSION['cart']->count_contents(), 'show_total'=> $currencies->format($_SESSION['cart']->show_total())]) . '</a>'; ?></li>
       <li role="separator" class="divider"></li>
       <?php
       foreach ($_SESSION['cart']->get_products() as $k => $v) {

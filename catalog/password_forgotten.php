@@ -50,7 +50,7 @@
       } else {
         $actionRecorder->record(false);
 
-        $messageStack->add('password_forgotten', sprintf(OSCOM::getDef('error_action_recorder'), (defined('MODULE_ACTION_RECORDER_RESET_PASSWORD_MINUTES') ? (int)MODULE_ACTION_RECORDER_RESET_PASSWORD_MINUTES : 5)));
+        $messageStack->add('password_forgotten', OSCOM::getDef('error_action_recorder', ['module_action_recorder_reset_password_minutes' => (defined('MODULE_ACTION_RECORDER_RESET_PASSWORD_MINUTES') ? (int)MODULE_ACTION_RECORDER_RESET_PASSWORD_MINUTES : 5)]));
       }
     } else {
       $messageStack->add('password_forgotten', OSCOM::getDef('text_no_email_address_found'));

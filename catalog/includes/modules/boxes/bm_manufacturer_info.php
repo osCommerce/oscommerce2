@@ -54,7 +54,7 @@
           }
 
           if (!empty($Qmanufacturer->value('manufacturers_url'))) {
-            $manufacturer_info_string .= '<div class="text-center"><a href="' . OSCOM::link('redirect.php', 'action=manufacturer&manufacturers_id=' . $Qmanufacturer->valueInt('manufacturers_id')) . '" target="_blank">' . sprintf(OSCOM::getDef('module_boxes_manufacturer_info_box_homepage'), $Qmanufacturer->value('manufacturers_name')) . '</a></div>';
+            $manufacturer_info_string .= '<div class="text-center"><a href="' . OSCOM::link('redirect.php', 'action=manufacturer&manufacturers_id=' . $Qmanufacturer->valueInt('manufacturers_id')) . '" target="_blank">' . OSCOM::getDef('module_boxes_manufacturer_info_box_homepage', ['manufacturers_name' => $Qmanufacturer->value('manufacturers_name')]) . '</a></div>';
           }
 
           ob_start();

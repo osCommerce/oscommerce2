@@ -1,1 +1,1 @@
-text_count_customers = Customers receiving newsletter: %s
+text_count_customers = Customers receiving newsletter: {{count}}

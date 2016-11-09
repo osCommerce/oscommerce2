@@ -73,7 +73,7 @@
 // display random review box
           $rand_review_text = tep_break_string($Qreview->valueProtected('reviews_text'), 15, '-<br />');
 
-          $reviews_box_contents = '<div class="text-center"><a href="' . OSCOM::link('product_reviews.php', 'products_id=' . $Qreview->valueInt('products_id')) . '">' . HTML::image(OSCOM::linkImage($Qreview->value('products_image')), $Qreview->value('products_name'), SMALL_IMAGE_WIDTH, SMALL_IMAGE_HEIGHT) . '</a></div><div><a href="' . OSCOM::link('product_reviews.php', 'products_id=' . $Qreview->valueInt('products_id')) . '">' . $rand_review_text . '</a>...</div><div class="text-center" title="' .  sprintf(OSCOM::getDef('module_boxes_reviews_box_text_of_5_stars'), $Qreview->valueInt('reviews_rating')) . '">' . HTML::stars($Qreview->valueInt('reviews_rating')) . '</div>';
+          $reviews_box_contents = '<div class="text-center"><a href="' . OSCOM::link('product_reviews.php', 'products_id=' . $Qreview->valueInt('products_id')) . '">' . HTML::image(OSCOM::linkImage($Qreview->value('products_image')), $Qreview->value('products_name'), SMALL_IMAGE_WIDTH, SMALL_IMAGE_HEIGHT) . '</a></div><div><a href="' . OSCOM::link('product_reviews.php', 'products_id=' . $Qreview->valueInt('products_id')) . '">' . $rand_review_text . '</a>...</div><div class="text-center" title="' .  OSCOM::getDef('module_boxes_reviews_box_text_of_5_stars', ['reviews_rating' => $Qreview->valueInt('reviews_rating')]) . '">' . HTML::stars($Qreview->valueInt('reviews_rating')) . '</div>';
         }
       } elseif (isset($_GET['products_id'])) {
 // display 'write a review' box

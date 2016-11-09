@@ -82,19 +82,19 @@
 
       $actionRecorder->record(false);
 
-      $messageStack->add('friend', sprintf(OSCOM::getDef('error_action_recorder'), (defined('MODULE_ACTION_RECORDER_TELL_A_FRIEND_EMAIL_MINUTES') ? (int)MODULE_ACTION_RECORDER_TELL_A_FRIEND_EMAIL_MINUTES : 15)));
+      $messageStack->add('friend', OSCOM::getDef('error_action_recorder', ['module_action_recorder_tell_a_friend_email_minutes' => (defined('MODULE_ACTION_RECORDER_TELL_A_FRIEND_EMAIL_MINUTES') ? (int)MODULE_ACTION_RECORDER_TELL_A_FRIEND_EMAIL_MINUTES : 15)]));
     }
 
     if ($error == false) {
-      $email_subject = sprintf(OSCOM::getDef('text_email_subject'), $from_name, STORE_NAME);
-      $email_body = sprintf(OSCOM::getDef('text_email_intro'), $to_name, $from_name, $Qproduct->value('products_name'), STORE_NAME) . "\n\n";
+      $email_subject = OSCOM::getDef('text_email_subject', ['from_name' => $from_name, 'store_name' => STORE_NAME]);
+      $email_body = OSCOM::getDef('text_email_intro', ['to_name' => $to_name, 'from_name' => $from_name, 'products_name' => $Qproduct->value('products_name'), 'store_name' => STORE_NAME]) . "\n\n";
 
       if (tep_not_null($message)) {
         $email_body .= $message . "\n\n";
       }
 
-      $email_body .= sprintf(OSCOM::getDef('text_email_link'), OSCOM::link('product_info.php', 'products_id=' . $Qproduct->valueInt('products_id'), false)) . "\n\n" .
-                     sprintf(OSCOM::getDef('text_email_signature'), STORE_NAME . "\n" . OSCOM::link('index.php', null, false) . "\n");
+      $email_body .= OSCOM::getDef('text_email_link', ['email_product_link' => OSCOM::link('product_info.php', 'products_id=' . $Qproduct->valueInt('products_id'), false)]) . "\n\n" .
+                     OSCOM::getDef('text_email_signature', ['email_store_name_link' => STORE_NAME . "\n" . OSCOM::link('index.php', null, false) . "\n"]);
 
       $tellfriendEmail = new Mail($to_email_address, $to_name, $from_email_address, $from_name, $email_subject);
       $tellfriendEmail->setBody($email_body);
@@ -102,7 +102,7 @@
 
       $actionRecorder->record();
 
-      $messageStack->add_session('header', sprintf(OSCOM::getDef('text_email_successful_sent'), $Qproduct->value('products_name'), HTML::outputProtected($to_name)), 'success');
+      $messageStack->add_session('header', OSCOM::getDef('text_email_successful_sent', ['email_products_name' => $Qproduct->value('products_name'), 'to_name' => HTML::outputProtected($to_name)]), 'success');
 
       OSCOM::redirect('product_info.php', 'products_id=' . $Qproduct->valueInt('products_id'));
     }
@@ -119,7 +119,7 @@
 ?>
 
 <div class="page-header">
-  <h1><?php echo sprintf(OSCOM::getDef('heading_title'), $Qproduct->value('products_name')); ?></h1>
+  <h1><?php echo OSCOM::getDef('heading_title', ['products_name' => $Qproduct->value('products_name')]); ?></h1>
 </div>
 
 <?php

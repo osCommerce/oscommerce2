@@ -52,7 +52,7 @@
   }
 
   if (!FileSystem::isWritable(OSCOM::getConfig('dir_root', 'Shop') . 'images/')) {
-    $OSCOM_MessageStack->add(sprintf(OSCOM::getDef('error_images_directory_not_writeable'), OSCOM::link(FILENAME_SEC_DIR_PERMISSIONS)), 'error');
+    $OSCOM_MessageStack->add(OSCOM::getDef('error_images_directory_not_writeable', ['sec_dir_permissions_link' => OSCOM::link(FILENAME_SEC_DIR_PERMISSIONS)]), 'error');
   }
 
   require($oscTemplate->getFile('template_top.php'));
