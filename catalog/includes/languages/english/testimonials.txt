@@ -1,4 +1,0 @@
-navbar_title = Testimonials
-heading_title = Customer Testimonials
-text_no_testimonials = There are no Testimonials to display.
-text_display_number_of_testimonials = Displaying <b>{{listing_from}}</b> to <b>{{listing_to}}</b> (of <b>{{listing_total}}</b> Testimonials)
