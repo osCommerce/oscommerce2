@@ -157,7 +157,7 @@ class Language
         }
 
         if (!isset($height) || !is_int($height)) {
-            $height = $width;
+            $height = 12;
         }
 
         return HTML::image(OSCOM::link('Shop/public/third_party/flag-icon-css/flags/4x3/' . $this->get('image', $language_code) . '.svg', null, false), $this->get('name', $language_code), $width, $height);
