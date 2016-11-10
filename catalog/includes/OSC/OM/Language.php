@@ -319,27 +319,23 @@ class Language
 
     public function getDefinitionsFromFile($filename)
     {
-        if (!is_file($filename)) {
-            trigger_error('OSC\OM\Language::getDefinitionsFromFile() - Filename does not exist: ' . $filename);
-
-            return false;
-        }
-
         $defs = [];
 
-        foreach (file($filename) as $line) {
-            $line = trim($line);
+        if (is_file($filename)) {
+            foreach (file($filename) as $line) {
+                $line = trim($line);
 
-            if (!empty($line) && (substr($line, 0, 1) != '#')) {
-                $delimiter = strpos($line, '=');
+                if (!empty($line) && (substr($line, 0, 1) != '#')) {
+                    $delimiter = strpos($line, '=');
 
-                if (($delimiter !== false) && (preg_match('/^[A-Za-z0-9_-]/', substr($line, 0, $delimiter)) === 1) && (substr_count(substr($line, 0, $delimiter), ' ') === 1)) {
-                    $key = trim(substr($line, 0, $delimiter));
-                    $value = trim(substr($line, $delimiter + 1));
+                    if (($delimiter !== false) && (preg_match('/^[A-Za-z0-9_-]/', substr($line, 0, $delimiter)) === 1) && (substr_count(substr($line, 0, $delimiter), ' ') === 1)) {
+                        $key = trim(substr($line, 0, $delimiter));
+                        $value = trim(substr($line, $delimiter + 1));
 
-                    $defs[$key] = $value;
-                } elseif (isset($key)) {
-                    $defs[$key] .= "\n" . $line;
+                        $defs[$key] = $value;
+                    } elseif (isset($key)) {
+                        $defs[$key] .= "\n" . $line;
+                    }
                 }
             }
         }
