@@ -7,7 +7,7 @@ $OSCOM_Language = Registry::get('Language');
 ?>
 
 <li class="dropdown">
-  <a class="dropdown-toggle" data-toggle="dropdown" href="#"><span class="fa fa-fw fa-language"></span> <?php echo OSCOM::getDef('module_navbar_languages_selected_language'); ?></a>
+  <a class="dropdown-toggle" data-toggle="dropdown" href="#"><span class="fa fa-fw fa-language"></span> <?php echo $OSCOM_Language->get('name') . ' <span class="caret"></span>'; ?></a>
 
   <ul class="dropdown-menu">
 

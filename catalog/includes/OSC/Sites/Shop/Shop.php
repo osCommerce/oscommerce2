@@ -42,10 +42,6 @@ class Shop extends \OSC\OM\SitesAbstract
             define($Qcfg->value('k'), $Qcfg->value('v'));
         }
 
-        $OSCOM_Language = new Language();
-//        $OSCOM_Language->setUseCache(true);
-        Registry::set('Language', $OSCOM_Language);
-
 // set php_self in the global scope
         $req = parse_url($_SERVER['SCRIPT_NAME']);
         $PHP_SELF = substr($req['path'], strlen(OSCOM::getConfig('http_path', 'Shop')));
@@ -57,6 +53,10 @@ class Shop extends \OSC\OM\SitesAbstract
         $OSCOM_Session->start();
 
         $this->ignored_actions[] = session_name();
+
+        $OSCOM_Language = new Language();
+//        $OSCOM_Language->setUseCache(true);
+        Registry::set('Language', $OSCOM_Language);
 
 // create the shopping cart
         if (!isset($_SESSION['cart']) || !is_object($_SESSION['cart']) || (get_class($_SESSION['cart']) != 'shoppingCart')) {

@@ -44,9 +44,6 @@ class Admin extends \OSC\OM\SitesAbstract
             define($Qcfg->value('k'), $Qcfg->value('v'));
         }
 
-        $OSCOM_Language = new Language();
-        Registry::set('Language', $OSCOM_Language);
-
 // Used in the "Backup Manager" to compress backups
         define('LOCAL_EXE_GZIP', 'gzip');
         define('LOCAL_EXE_GUNZIP', 'gunzip');
@@ -61,6 +58,9 @@ class Admin extends \OSC\OM\SitesAbstract
         Registry::set('Session', $OSCOM_Session);
 
         $OSCOM_Session->start();
+
+        $OSCOM_Language = new Language();
+        Registry::set('Language', $OSCOM_Language);
 
 // set the language
         if (!isset($_SESSION['language']) || isset($_GET['language'])) {
