@@ -506,7 +506,7 @@
 
 <div>
   <span class="pull-right"><?= $Qorders->getPageSetLinks(tep_get_all_get_params()); ?></span>
-  <span><?= $Qorders->getPageSetLabel(OSCOM::getDef('text_display_number_of_orders')); ?></span>
+  <?= $Qorders->getPageSetLabel(OSCOM::getDef('text_display_number_of_orders')); ?>
 </div>
 
 <?php

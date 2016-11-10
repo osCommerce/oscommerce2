@@ -172,7 +172,7 @@
 
 <div>
   <span class="pull-right"><?= $Qactions->getPageSetLinks((isset($_GET['module']) && in_array($_GET['module'], $modules_array) && is_object($GLOBALS[$_GET['module']]) ? 'module=' . $_GET['module'] : null) . '&' . (isset($_GET['search']) && !empty($_GET['search']) ? 'search=' . $_GET['search'] : null)); ?></span>
-  <span><?= $Qactions->getPageSetLabel(OSCOM::getDef('text_display_number_of_entries')); ?></span>
+  <?= $Qactions->getPageSetLabel(OSCOM::getDef('text_display_number_of_entries')); ?>
 </div>
 
 <?php

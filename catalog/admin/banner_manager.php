@@ -450,7 +450,7 @@
 
 <div>
   <span class="pull-right"><?= $Qbanners->getPageSetLinks(); ?></span>
-  <span><?= $Qbanners->getPageSetLabel(OSCOM::getDef('text_display_number_of_banners')); ?></span>
+  <?= $Qbanners->getPageSetLabel(OSCOM::getDef('text_display_number_of_banners')); ?>
 </div>
 
 <div id="statsModal" class="modal" tabindex="-1" role="dialog">
