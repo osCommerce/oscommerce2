@@ -279,7 +279,7 @@
       $contents[] = array('text' => OSCOM::getDef('text_info_insert_intro'));
       $contents[] = array('text' => '<br />' . OSCOM::getDef('text_info_language_name') . '<br />' . HTML::inputField('name'));
       $contents[] = array('text' => '<br />' . OSCOM::getDef('text_info_language_code') . '<br />' . HTML::inputField('code'));
-      $contents[] = array('text' => '<br />' . OSCOM::getDef('text_info_language_image') . '<br />' . HTML::inputField('image', 'icon.gif'));
+      $contents[] = array('text' => '<br />' . OSCOM::getDef('text_info_language_image') . '<br />' . HTML::inputField('image'));
       $contents[] = array('text' => '<br />' . OSCOM::getDef('text_info_language_directory') . '<br />' . HTML::inputField('directory'));
       $contents[] = array('text' => '<br />' . OSCOM::getDef('text_info_language_sort_order') . '<br />' . HTML::inputField('sort_order'));
       $contents[] = array('text' => '<br />' . HTML::checkboxField('default') . ' ' . OSCOM::getDef('text_set_default'));
