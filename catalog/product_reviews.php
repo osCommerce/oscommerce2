@@ -107,7 +107,7 @@
     <?php echo $Qreviews->getPageSetLabel(OSCOM::getDef('text_display_number_of_reviews')); ?>
   </div>
   <div class="col-sm-6">
-    <spanclass="pull-right pagenav"><ul class="pagination"><?php echo $Qreviews->getPageSetLinks(tep_get_all_get_params(array('page', 'info'))); ?></ul></span>
+    <spanclass="pull-right pagenav"><?php echo $Qreviews->getPageSetLinks(tep_get_all_get_params(array('page', 'info'))); ?></span>
     <span class="pull-right"><?php echo OSCOM::getDef('text_result_page'); ?></span>
   </div>
 </div>
@@ -131,7 +131,7 @@
         echo OSCOM::getDef('reviews_text_rated', [
 		'reviews_rating' => HTML::stars($Qreviews->value('reviews_rating')),
 		'review_name' => $review_name
-		]);        
+		]);
         ?>
         </footer>
       </blockquote>
@@ -158,7 +158,7 @@
     <?php echo $Qreviews->getPageSetLabel(OSCOM::getDef('text_display_number_of_reviews')); ?>
   </div>
   <div class="col-sm-6">
-    <span class="pull-right pagenav"><ul class="pagination"><?php echo $Qreviews->getPageSetLinks(tep_get_all_get_params(array('page', 'info'))); ?></ul></span>
+    <span class="pull-right pagenav"><?php echo $Qreviews->getPageSetLinks(tep_get_all_get_params(array('page', 'info'))); ?></span>
     <span class="pull-right"><?php echo OSCOM::getDef('text_result_page'); ?></span>
   </div>
 </div>

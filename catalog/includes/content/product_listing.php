@@ -24,7 +24,7 @@
     <?php echo $Qlisting->getPageSetLabel(OSCOM::getDef('text_display_number_of_products')); ?>
   </div>
   <div class="col-sm-6">
-    <div class="pull-right pagenav"><ul class="pagination"><?php echo $Qlisting->getPageSetLinks(tep_get_all_get_params(array('page', 'info', 'x', 'y'))); ?></ul></div>
+    <div class="pull-right pagenav"><?php echo $Qlisting->getPageSetLinks(tep_get_all_get_params(array('page', 'info', 'x', 'y'))); ?></div>
     <span class="pull-right"><?php echo OSCOM::getDef('text_result_page'); ?></span>
   </div>
 </div>
@@ -182,7 +182,7 @@ if ( ($Qlisting->getPageSetTotalRows() > 0) && ((PREV_NEXT_BAR_LOCATION == '2') 
     <?php echo $Qlisting->getPageSetLabel(OSCOM::getDef('text_display_number_of_products')); ?>
   </div>
   <div class="col-sm-6">
-    <div class="pull-right pagenav"><ul class="pagination"><?php echo $Qlisting->getPageSetLinks(tep_get_all_get_params(array('page', 'info', 'x', 'y'))); ?></ul></div>
+    <div class="pull-right pagenav"><?php echo $Qlisting->getPageSetLinks(tep_get_all_get_params(array('page', 'info', 'x', 'y'))); ?></div>
     <span class="pull-right"><?php echo OSCOM::getDef('text_result_page'); ?></span>
   </div>
 </div>

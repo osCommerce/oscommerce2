@@ -294,11 +294,11 @@ class DbStatement extends \PDOStatement
             $from++;
         }
 
-        return Language::parseDefinition($text, [
+        return '<span class="pagination">' . Language::parseDefinition($text, [
             'listing_from' => $from,
             'listing_to' => $to,
             'listing_total' => $this->page_set_total_rows
-        ]);
+        ]) . '</span>';
     }
 
     public function getPageSetLinks($parameters = null)
@@ -330,7 +330,7 @@ class DbStatement extends \PDOStatement
             ];
         }
 
-        $output = '<ul style="margin-top: 0;" class="pagination">';
+        $output = '<ul class="pagination">';
 
         if ($number_of_pages > 1) {
             $output .= '<li>' . HTML::selectField('pageset' . $this->page_set_keyword, $pages, $this->page_set, 'style="vertical-align: top; display: inline-block; float: left; width: 80px;" data-pageseturl="' . HTML::output(OSCOM::link($PHP_SELF, $parameters . $this->page_set_keyword . '=PAGESETGOTO')) . '"') . '</li>';

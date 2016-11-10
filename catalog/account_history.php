@@ -72,7 +72,7 @@
 ?>
   <div class="row">
     <div class="col-md-6 pagenumber"><?php echo $Qorders->getPageSetLabel(OSCOM::getDef('text_display_number_of_orders')); ?></div>
-    <div class="col-md-6"><span class="pull-right pagenav"><ul class="pagination"><?php echo $Qorders->getPageSetLinks(tep_get_all_get_params(array('page', 'info', 'x', 'y'))); ?></ul></span><span class="pull-right"><?php echo OSCOM::getDef('text_result_page'); ?></span></div>
+    <div class="col-md-6"><span class="pull-right pagenav"><?php echo $Qorders->getPageSetLinks(tep_get_all_get_params(array('page', 'info', 'x', 'y'))); ?></span><span class="pull-right"><?php echo OSCOM::getDef('text_result_page'); ?></span></div>
   </div>
 
 <?php
