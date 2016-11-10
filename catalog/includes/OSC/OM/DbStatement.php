@@ -318,63 +318,53 @@ class DbStatement extends \PDOStatement
                 unset($p[$this->page_set_keyword]);
             }
 
-            $parameters = http_build_query($p) . '&';
+            $parameters = !empty($p) ? http_build_query($p) . '&' : '';
+        }
+
+        $pages = [];
+
+        for ($i = 1; $i <= $number_of_pages; $i++) {
+            $pages[] = [
+                'id' => $i,
+                'text' => $i
+            ];
         }
 
         $output = '<ul style="margin-top: 0;" class="pagination">';
 
-// previous button - not displayed on first page
-        if ($this->page_set > 1) {
-            $output .= '<li><a href="' . OSCOM::link($PHP_SELF, $parameters . $this->page_set_keyword . '=' . ($this->page_set - 1)) . '" title=" ' . OSCOM::getDef('prevnext_title_previous_page') . ' ">&laquo;</a></li>';
+        if ($number_of_pages > 1) {
+            $output .= '<li>' . HTML::selectField('pageset' . $this->page_set_keyword, $pages, $this->page_set, 'style="vertical-align: top; display: inline-block; float: left; width: 80px;" data-pageseturl="' . HTML::output(OSCOM::link($PHP_SELF, $parameters . $this->page_set_keyword . '=PAGESETGOTO')) . '"') . '</li>';
         } else {
-            $output .= '<li class="disabled"><span>&laquo;</span></li>';
+            $output .= '<li class="disabled"><a class="text-center" style="width: 80px;">1</a></li>';
         }
 
-// check if number_of_pages > $max_page_links
-        $cur_window_num = 0;
-        $max_window_num = 0;
-
-        if ($this->page_set_total_rows > 0) {
-            $cur_window_num = (int)($this->page_set / $this->page_set_total_rows);
-
-            if ($this->page_set % $this->page_set_total_rows) {
-                $cur_window_num++;
-            }
-
-            $max_window_num = (int)($number_of_pages / $this->page_set_total_rows);
-
-            if ($number_of_pages % $this->page_set_total_rows) {
-                $max_window_num++;
-            }
-        }
-
-// previous window of pages
-        if ($cur_window_num > 1) {
-            $output .= '<li><a href="' . OSCOM::link($PHP_SELF, $parameters . $this->page_set_keyword . '=' . (($cur_window_num - 1) * $this->page_set_total_rows)) . '" title=" ' . OSCOM::getDef('prevnext_title_prev_set_of_no_page', ['page_set_total_rows' => $this->page_set_total_rows]) . ' ">...</a></li>';
-        }
-
-// page nn button
-        for ($jump_to_page = 1 + (($cur_window_num - 1) * $this->page_set_total_rows); ($jump_to_page <= ($cur_window_num * $this->page_set_total_rows)) && ($jump_to_page <= $number_of_pages); $jump_to_page++) {
-            if ($jump_to_page == $this->page_set) {
-                $output .= '<li class="active"><a href="' . OSCOM::link($PHP_SELF, $parameters . $this->page_set_keyword . '=' . $jump_to_page) . '" title=" ' . OSCOM::getDef('prevnext_title_page_no', ['jump_to_page' => $jump_to_page]) . ' ">' . $jump_to_page . '<span class="sr-only">(current)</span></a></li>';
-            } else {
-                $output .= '<li><a href="' . OSCOM::link($PHP_SELF, $parameters . $this->page_set_keyword . '=' . $jump_to_page) . '" title=" ' . OSCOM::getDef('prevnext_title_page_no', ['jump_to_page' => $jump_to_page]) . ' ">' . $jump_to_page . '</a></li>';
-            }
-        }
-
-// next window of pages
-        if ($cur_window_num < $max_window_num) {
-            $output .= '<a href="' . OSCOM::link($PHP_SELF, $parameters . $this->page_set_keyword . '=' . (($cur_window_num) * $this->page_set_total_rows + 1)) . '" class="pageResults" title=" ' . OSCOM::getDef('prevnext_title_prev_set_of_no_page', ['page_set_total_rows' => $this->page_set_total_rows]) . ' ">...</a>&nbsp;';
+// previous button
+        if ($this->page_set > 1) {
+            $output .= '<li><a href="' . OSCOM::link($PHP_SELF, $parameters . $this->page_set_keyword . '=' . ($this->page_set - 1)) . '" title="' . OSCOM::getDef('prevnext_title_previous_page') . '" class="text-center" style="width: 80px;"><span class="fa fa-fw fa-chevron-left"></span></a></li>';
+        } else {
+            $output .= '<li class="disabled"><a class="text-center" style="width: 80px;"><span class="fa fa-fw fa-chevron-left"></span></a></li>';
         }
 
 // next button
         if (($this->page_set < $number_of_pages) && ($number_of_pages != 1)) {
-            $output .= '<li><a href="' . OSCOM::link($PHP_SELF, $parameters . $this->page_set_keyword . '=' . ($this->page_set + 1)) . '" title=" ' . OSCOM::getDef('prevnext_title_next_page') . ' ">&raquo;</a></li>';
+            $output .= '<li><a href="' . OSCOM::link($PHP_SELF, $parameters . $this->page_set_keyword . '=' . ($this->page_set + 1)) . '" title="' . OSCOM::getDef('prevnext_title_next_page') . '" class="text-center" style="width: 80px;"><span class="fa fa-fw fa-chevron-right"></span></a></li>';
         } else {
-            $output .= '<li class="disabled"><span>&raquo;</span></li>';
+            $output .= '<li class="disabled"><a class="text-center" style="width: 80px;"><span class="fa fa-fw fa-chevron-right"></span></a></li>';
         }
 
         $output .= '</ul>';
+
+        if ($number_of_pages > 1) {
+          $output .= <<<EOD
+<script>
+$(function() {
+  $('select[name="pageset{$this->page_set_keyword}"]').on('change', function() {
+    window.location = $(this).data('pageseturl').replace('PAGESETGOTO', $(this).children(':selected').val());
+  });
+});
+</script>
+EOD;
+        }
 
         return $output;
     }
