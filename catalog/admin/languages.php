@@ -312,8 +312,8 @@
         $contents[] = array('align' => 'center', 'text' => HTML::button(OSCOM::getDef('image_edit'), 'fa fa-edit', OSCOM::link(FILENAME_LANGUAGES, 'page=' . $_GET['page'] . '&lID=' . $lInfo->languages_id . '&action=edit')) . HTML::button(OSCOM::getDef('image_delete'), 'fa fa-trash', OSCOM::link(FILENAME_LANGUAGES, 'page=' . $_GET['page'] . '&lID=' . $lInfo->languages_id . '&action=delete')) . HTML::button(OSCOM::getDef('image_details'), 'fa fa-info', OSCOM::link(FILENAME_DEFINE_LANGUAGE, 'lngdir=' . $lInfo->directory)));
         $contents[] = array('text' => '<br />' . OSCOM::getDef('text_info_language_name') . ' ' . $lInfo->name);
         $contents[] = array('text' => OSCOM::getDef('text_info_language_code') . ' ' . $lInfo->code);
-        $contents[] = array('text' => '<br />' . HTML::image(OSCOM::link('Shop/includes/languages/' . $lInfo->directory . '/images/' . $lInfo->image), $lInfo->name));
-        $contents[] = array('text' => '<br />' . OSCOM::getDef('text_info_language_directory') . '<br />' . OSCOM::getConfig('http_path', 'Shop') . 'includes/languages/<strong>' . $lInfo->directory . '</strong>');
+        $contents[] = array('text' => '<br />' . $OSCOM_Language->getImage($lInfo->code, 32, 24));
+        $contents[] = array('text' => '<br />' . OSCOM::getDef('text_info_language_directory') . '<br />includes/languages/<strong>' . $lInfo->directory . '</strong>');
         $contents[] = array('text' => '<br />' . OSCOM::getDef('text_info_language_sort_order') . ' ' . $lInfo->sort_order);
       }
       break;
