@@ -9,6 +9,7 @@
 namespace OSC\OM;
 
 use OSC\OM\Cache;
+use OSC\OM\HTML;
 use OSC\OM\OSCOM;
 use OSC\OM\Registry;
 
@@ -147,6 +148,19 @@ class Language
     public function exists($code)
     {
         return isset($this->languages[$code]);
+    }
+
+    public function getImage($language_code, $width = null, $height = null)
+    {
+        if (!isset($width) || !is_int($width)) {
+            $width = 16;
+        }
+
+        if (!isset($height) || !is_int($height)) {
+            $height = $width;
+        }
+
+        return HTML::image(OSCOM::link('Shop/public/third_party/flag-icon-css/flags/4x3/' . $this->get('image', $language_code) . '.svg', null, false), $this->get('name', $language_code), $width, $height);
     }
 
     public function getClientPreference()
