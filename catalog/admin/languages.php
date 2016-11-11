@@ -201,6 +201,47 @@
     }
   }
 
+  $icons = [];
+
+  foreach (glob(OSCOM::getConfig('dir_root', 'Shop') . 'public/third_party/flag-icon-css/flags/4x3/*.svg') as $file) {
+    $code = basename($file, '.svg');
+
+    $icons[] = [
+      'id' => $code,
+      'text' => $code
+    ];
+  }
+
+  $directories = [];
+
+  foreach (glob(OSCOM::getConfig('dir_root', 'Shop') . 'includes/languages/*', GLOB_ONLYDIR) as $dir) {
+    $code = basename($dir);
+
+    $directories[] = [
+      'id' => $code,
+      'text' => $code
+    ];
+  }
+
+  foreach (glob(OSCOM::getConfig('dir_root', 'Admin') . 'includes/languages/*', GLOB_ONLYDIR) as $dir) {
+    $code = basename($dir);
+
+    if (array_search($code, array_column($directories, 'id')) === false) {
+      $directories[] = [
+        'id' => $code,
+        'text' => $code
+      ];
+    }
+  }
+
+  uasort($directories, function ($a, $b) {
+    if ($a['id'] == $b['id']) {
+      return 0;
+    }
+
+    return ($a['id'] < $b['id']) ? -1 : 1;
+  });
+
   require($oscTemplate->getFile('template_top.php'));
 ?>
 
@@ -279,8 +320,8 @@
       $contents[] = array('text' => OSCOM::getDef('text_info_insert_intro'));
       $contents[] = array('text' => '<br />' . OSCOM::getDef('text_info_language_name') . '<br />' . HTML::inputField('name'));
       $contents[] = array('text' => '<br />' . OSCOM::getDef('text_info_language_code') . '<br />' . HTML::inputField('code'));
-      $contents[] = array('text' => '<br />' . OSCOM::getDef('text_info_language_image') . '<br />' . HTML::inputField('image', 'icon.gif'));
-      $contents[] = array('text' => '<br />' . OSCOM::getDef('text_info_language_directory') . '<br />' . HTML::inputField('directory'));
+      $contents[] = array('text' => '<br />' . OSCOM::getDef('text_info_language_image') . '<br />' . HTML::selectField('image', $icons));
+      $contents[] = array('text' => '<br />' . OSCOM::getDef('text_info_language_directory') . '<br />' . HTML::selectField('directory', $directories));
       $contents[] = array('text' => '<br />' . OSCOM::getDef('text_info_language_sort_order') . '<br />' . HTML::inputField('sort_order'));
       $contents[] = array('text' => '<br />' . HTML::checkboxField('default') . ' ' . OSCOM::getDef('text_set_default'));
       $contents[] = array('align' => 'center', 'text' => '<br />' . HTML::button(OSCOM::getDef('image_save'), 'fa fa-save') . HTML::button(OSCOM::getDef('image_cancel'), 'fa fa-close', OSCOM::link(FILENAME_LANGUAGES, 'page=' . $_GET['page'] . '&lID=' . $_GET['lID'])));
@@ -292,8 +333,8 @@
       $contents[] = array('text' => OSCOM::getDef('text_info_edit_intro'));
       $contents[] = array('text' => '<br />' . OSCOM::getDef('text_info_language_name') . '<br />' . HTML::inputField('name', $lInfo->name));
       $contents[] = array('text' => '<br />' . OSCOM::getDef('text_info_language_code') . '<br />' . HTML::inputField('code', $lInfo->code));
-      $contents[] = array('text' => '<br />' . OSCOM::getDef('text_info_language_image') . '<br />' . HTML::inputField('image', $lInfo->image));
-      $contents[] = array('text' => '<br />' . OSCOM::getDef('text_info_language_directory') . '<br />' . HTML::inputField('directory', $lInfo->directory));
+      $contents[] = array('text' => '<br />' . OSCOM::getDef('text_info_language_image') . '<br />' . HTML::selectField('image', $icons, $lInfo->image));
+      $contents[] = array('text' => '<br />' . OSCOM::getDef('text_info_language_directory') . '<br />' . HTML::selectField('directory', $directories, $lInfo->directory));
       $contents[] = array('text' => '<br />' . OSCOM::getDef('text_info_language_sort_order') . '<br />' . HTML::inputField('sort_order', $lInfo->sort_order));
       if (DEFAULT_LANGUAGE != $lInfo->code) $contents[] = array('text' => '<br />' . HTML::checkboxField('default') . ' ' . OSCOM::getDef('text_set_default'));
       $contents[] = array('align' => 'center', 'text' => '<br />' . HTML::button(OSCOM::getDef('image_save'), 'fa fa-save') . HTML::button(OSCOM::getDef('image_cancel'), 'fa fa-close', OSCOM::link(FILENAME_LANGUAGES, 'page=' . $_GET['page'] . '&lID=' . $lInfo->languages_id)));
