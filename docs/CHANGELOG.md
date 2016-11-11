@@ -1,10 +1,14 @@
 # osCommerce Online Merchant
 
-## xx Nov 2016 osCommerce Online Merchant v2.4.0beta
+## 11 Nov 2016 osCommerce Online Merchant v2.4.0beta
 
 * Merged Bootstrap Community updates.
 
 * Introduce OSCOM Framework and self-contained App infrastructure.
+
+* Introduce core online updates.
+
+* Move language definitions to ini style text files.
 
 * Increase minimum PHP requirement to v5.5.
 
