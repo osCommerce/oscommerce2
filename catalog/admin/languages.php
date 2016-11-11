@@ -223,6 +223,25 @@
     ];
   }
 
+  foreach (glob(OSCOM::getConfig('dir_root', 'Admin') . 'includes/languages/*', GLOB_ONLYDIR) as $dir) {
+    $code = basename($dir);
+
+    if (array_search($code, array_column($directories, 'id')) === false) {
+      $directories[] = [
+        'id' => $code,
+        'text' => $code
+      ];
+    }
+  }
+
+  uasort($directories, function ($a, $b) {
+    if ($a['id'] == $b['id']) {
+      return 0;
+    }
+
+    return ($a['id'] < $b['id']) ? -1 : 1;
+  });
+
   require($oscTemplate->getFile('template_top.php'));
 ?>
 
