@@ -135,7 +135,7 @@
   if (count($lang) > 1) {
 ?>
 
-        <li><a><i class="fa fa-globe"></i></a>
+        <li><a><i class="fa fa-language"></i></a>
           <ul class="dropdown-menu">
 
 <?php
