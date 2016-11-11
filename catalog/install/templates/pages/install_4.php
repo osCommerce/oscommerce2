@@ -638,29 +638,31 @@ $modules = [
     ]
 ];
 
-foreach ($modules as $m) {
-    $m_installed = [];
+if (!isset($_POST['DB_SKIP_IMPORT'])) {
+    foreach ($modules as $m) {
+        $m_installed = [];
 
-    foreach ($m['modules'] as $module) {
-        $file = $module['file'];
-        $class = isset($module['class']) ? $module['class'] : basename($file, '.php');
-        $code = isset($module['code']) ? $module['code'] : $file;
+        foreach ($m['modules'] as $module) {
+            $file = $module['file'];
+            $class = isset($module['class']) ? $module['class'] : basename($file, '.php');
+            $code = isset($module['code']) ? $module['code'] : $file;
 
-        include($m['dir'] . $file);
+            include($m['dir'] . $file);
 
-        $mo = new $class();
-        $mo->install();
+            $mo = new $class();
+            $mo->install();
 
-        $m_installed[] = $code;
+            $m_installed[] = $code;
 
-        if (isset($module['params'])) {
-            foreach ($module['params'] as $key => $value) {
-                $OSCOM_Db->save('configuration', ['configuration_value' => $value], ['configuration_key' => $key]);
+            if (isset($module['params'])) {
+                foreach ($module['params'] as $key => $value) {
+                    $OSCOM_Db->save('configuration', ['configuration_value' => $value], ['configuration_key' => $key]);
+                }
             }
         }
-    }
 
-    $OSCOM_Db->save('configuration', ['configuration_value' => implode(';', $m_installed)], ['configuration_key' => $m['key']]);
+        $OSCOM_Db->save('configuration', ['configuration_value' => implode(';', $m_installed)], ['configuration_key' => $m['key']]);
+    }
 }
 ?>
 
