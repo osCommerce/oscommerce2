@@ -234,6 +234,10 @@ $(function() {
       e.preventDefault();
 
       prepareDB();
+    } else {
+      if (doImport !== true) {
+        $('#installForm').append('<input type="hidden" name="DB_SKIP_IMPORT" value="true">');
+      }
     }
   });
 

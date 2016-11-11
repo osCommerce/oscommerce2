@@ -22,10 +22,10 @@
       $this->code = 'item';
       $this->title = OSCOM::getDef('module_shipping_item_text_title');
       $this->description = OSCOM::getDef('module_shipping_item_text_description');
-      $this->sort_order = MODULE_SHIPPING_ITEM_SORT_ORDER;
+      $this->sort_order = defined('MODULE_SHIPPING_ITEM_SORT_ORDER') ? (int)MODULE_SHIPPING_ITEM_SORT_ORDER : 0;
       $this->icon = '';
-      $this->tax_class = MODULE_SHIPPING_ITEM_TAX_CLASS;
-      $this->enabled = ((MODULE_SHIPPING_ITEM_STATUS == 'True') ? true : false);
+      $this->tax_class = defined('MODULE_SHIPPING_ITEM_TAX_CLASS') ? MODULE_SHIPPING_ITEM_TAX_CLASS : 0;
+      $this->enabled = (defined('MODULE_SHIPPING_ITEM_STATUS') && (MODULE_SHIPPING_ITEM_STATUS == 'True') ? true : false);
 
       if ( ($this->enabled == true) && ((int)MODULE_SHIPPING_ITEM_ZONE > 0) ) {
         $check_flag = false;
