@@ -175,7 +175,7 @@
 
         if (FileSystem::isWritable(OSCOM::BASE_DIR . 'Work/OnlineUpdates', true)) {
           if (!is_dir(OSCOM::BASE_DIR . 'Work/OnlineUpdates')) {
-            mkdir(OSCOM::BASE_DIR . 'Work/OnlineUdates', 0777, true);
+            mkdir(OSCOM::BASE_DIR . 'Work/OnlineUpdates', 0777, true);
           }
 
           $filepath = OSCOM::BASE_DIR . 'Work/OnlineUpdates/' . $_POST['version'] . '-update.zip';
