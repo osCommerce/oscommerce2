@@ -1,0 +1,7 @@
+module_header_tags_cookie_title = Cookie Compliance Message
+module_header_tags_cookie_description = Add a Cookie Compliance Message to your site
+
+module_header_tags_cookie_message_text = This website uses cookies to improve your experience. By continuing, you agree to the usage as per our
+module_header_tags_cookie_more_text = Cookie Policy
+
+module_header_tags_cookie_dismiss_text = X

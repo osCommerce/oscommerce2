@@ -1,5 +1,11 @@
 # osCommerce Online Merchant
 
+## 11 Nov 2016 osCommerce Online Merchant v2.4.1beta
+
+* Add the following modules:
+  - Header Tags
+    - Cookie Compliance Message
+
 ## 11 Nov 2016 osCommerce Online Merchant v2.4.0beta
 
 * Merged Bootstrap Community updates.
