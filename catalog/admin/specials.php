@@ -270,14 +270,23 @@ $('#expdate').datepicker({
 
         $contents[] = array('align' => 'center', 'text' => HTML::button(OSCOM::getDef('image_edit'), 'fa fa-edit', OSCOM::link(FILENAME_SPECIALS, 'page=' . $_GET['page'] . '&sID=' . $sInfo->specials_id . '&action=edit')) . HTML::button(OSCOM::getDef('image_delete'), 'fa fa-trash', OSCOM::link(FILENAME_SPECIALS, 'page=' . $_GET['page'] . '&sID=' . $sInfo->specials_id . '&action=delete')));
         $contents[] = array('text' => '<br />' . OSCOM::getDef('text_info_date_added') . ' ' . DateTime::toShort($sInfo->specials_date_added));
-        $contents[] = array('text' => '' . OSCOM::getDef('text_info_last_modified') . ' ' . DateTime::toShort($sInfo->specials_last_modified));
+
+        if (isset($sInfo->specials_last_modified)) {
+          $contents[] = array('text' => '' . OSCOM::getDef('text_info_last_modified') . ' ' . DateTime::toShort($sInfo->specials_last_modified));
+        }
+
         $contents[] = array('align' => 'center', 'text' => '<br />' . tep_info_image($sInfo->products_image, $sInfo->products_name, SMALL_IMAGE_WIDTH, SMALL_IMAGE_HEIGHT));
         $contents[] = array('text' => '<br />' . OSCOM::getDef('text_info_original_price') . ' ' . $currencies->format($sInfo->products_price));
         $contents[] = array('text' => '' . OSCOM::getDef('text_info_new_price') . ' ' . $currencies->format($sInfo->specials_new_products_price));
         $contents[] = array('text' => '' . OSCOM::getDef('text_info_percentage') . ' ' . number_format(100 - (($sInfo->specials_new_products_price / $sInfo->products_price) * 100)) . '%');
 
-        $contents[] = array('text' => '<br />' . OSCOM::getDef('text_info_expires_date') . ' <strong>' . DateTime::toShort($sInfo->expires_date) . '</strong>');
-        $contents[] = array('text' => '' . OSCOM::getDef('text_info_status_change') . ' ' . DateTime::toShort($sInfo->date_status_change));
+        if (isset($sInfo->expires_date)) {
+          $contents[] = array('text' => '<br />' . OSCOM::getDef('text_info_expires_date') . ' <strong>' . DateTime::toShort($sInfo->expires_date) . '</strong>');
+        }
+
+        if (isset($sInfo->date_status_change)) {
+          $contents[] = array('text' => '' . OSCOM::getDef('text_info_status_change') . ' ' . DateTime::toShort($sInfo->date_status_change));
+        }
       }
       break;
   }
