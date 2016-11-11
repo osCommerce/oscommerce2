@@ -4,10 +4,27 @@ use OSC\OM\Db;
 use OSC\OM\FileSystem;
 use OSC\OM\Hash;
 use OSC\OM\HTML;
+use OSC\OM\Language;
 use OSC\OM\OSCOM;
+use OSC\OM\Registry;
 
 $OSCOM_Db = Db::initialize($_POST['DB_SERVER'], $_POST['DB_SERVER_USERNAME'], $_POST['DB_SERVER_PASSWORD'], $_POST['DB_DATABASE']);
+
+Registry::set('Db', $OSCOM_Db);
+
 $OSCOM_Db->setTablePrefix($_POST['DB_TABLE_PREFIX']);
+
+$Qcfg = $OSCOM_Db->get('configuration', [
+    'configuration_key as k',
+    'configuration_value as v'
+]);
+
+while ($Qcfg->fetch()) {
+    define($Qcfg->value('k'), $Qcfg->value('v'));
+}
+
+$OSCOM_Language = new Language();
+Registry::set('Language', $OSCOM_Language);
 
 $OSCOM_Db->save('configuration', ['configuration_value' => $_POST['CFG_STORE_NAME']], ['configuration_key' => 'STORE_NAME']);
 $OSCOM_Db->save('configuration', ['configuration_value' => $_POST['CFG_STORE_OWNER_NAME']], ['configuration_key' => 'STORE_OWNER']);
@@ -145,6 +162,497 @@ ENDCFG;
 file_put_contents(OSCOM::BASE_DIR . 'Sites/Admin/site_conf.php', $file_contents);
 
 @chmod(OSCOM::BASE_DIR . 'Sites/Admin/site_conf.php', 0644);
+
+$modules = [
+    [
+        'dir' => $dir_fs_document_root . 'includes/modules/payment/',
+        'key' => 'MODULE_PAYMENT_INSTALLED',
+        'modules' => [
+            [
+                'file' => 'cod.php',
+                'params' => [
+                    'MODULE_PAYMENT_COD_SORT_ORDER' => 100
+                ]
+            ]
+        ]
+    ],
+    [
+        'dir' => $dir_fs_document_root . 'includes/modules/shipping/',
+        'key' => 'MODULE_SHIPPING_INSTALLED',
+        'modules' => [
+            [
+                'file' => 'flat.php',
+                'params' => [
+                    'MODULE_SHIPPING_FLAT_SORT_ORDER' => 100
+                ]
+            ]
+        ]
+    ],
+    [
+        'dir' => $dir_fs_document_root . 'includes/modules/order_total/',
+        'key' => 'MODULE_ORDER_TOTAL_INSTALLED',
+        'modules' => [
+            [
+                'file' => 'ot_subtotal.php',
+                'params' => [
+                    'MODULE_ORDER_TOTAL_SUBTOTAL_SORT_ORDER' => 100
+                ]
+            ],
+            [
+                'file' => 'ot_tax.php',
+                'params' => [
+                    'MODULE_ORDER_TOTAL_TAX_SORT_ORDER' => 300
+                ]
+            ],
+            [
+                'file' => 'ot_shipping.php',
+                'params' => [
+                    'MODULE_ORDER_TOTAL_SHIPPING_SORT_ORDER' => 200
+                ]
+            ],
+            [
+                'file' => 'ot_total.php',
+                'params' => [
+                    'MODULE_ORDER_TOTAL_TOTAL_SORT_ORDER' => 400
+                ]
+            ]
+        ]
+    ],
+    [
+        'dir' => $dir_fs_document_root . 'includes/modules/action_recorder/',
+        'key' => 'MODULE_ACTION_RECORDER_INSTALLED',
+        'modules' => [
+            [
+                'file' => 'ar_admin_login.php'
+            ],
+            [
+                'file' => 'ar_contact_us.php'
+            ],
+            [
+                'file' => 'ar_reset_password.php'
+            ],
+            [
+                'file' => 'ar_tell_a_friend.php'
+            ]
+        ]
+    ],
+    [
+        'dir' => $dir_fs_document_root . 'includes/modules/social_bookmarks/',
+        'key' => 'MODULE_SOCIAL_BOOKMARKS_INSTALLED',
+        'modules' => [
+            [
+                'file' => 'sb_email.php',
+                'params' => [
+                    'MODULE_SOCIAL_BOOKMARKS_EMAIL_SORT_ORDER' => 100
+                ]
+            ],
+            [
+                'file' => 'sb_facebook.php',
+                'params' => [
+                    'MODULE_SOCIAL_BOOKMARKS_FACEBOOK_SORT_ORDER' => 300
+                ]
+            ],
+            [
+                'file' => 'sb_google_plus_share.php',
+                'params' => [
+                    'MODULE_SOCIAL_BOOKMARKS_GOOGLE_PLUS_SHARE_SORT_ORDER' => 200
+                ]
+            ],
+            [
+                'file' => 'sb_pinterest.php',
+                'params' => [
+                    'MODULE_SOCIAL_BOOKMARKS_PINTEREST_SORT_ORDER' => 500
+                ]
+            ],
+            [
+                'file' => 'sb_twitter.php',
+                'params' => [
+                    'MODULE_SOCIAL_BOOKMARKS_TWITTER_SORT_ORDER' => 400
+                ]
+            ]
+        ]
+    ],
+    [
+        'dir' => $dir_fs_document_root . 'includes/modules/navbar_modules/',
+        'key' => 'MODULE_CONTENT_NAVBAR_INSTALLED',
+        'modules' => [
+            [
+                'file' => 'nb_hamburger_button.php'
+            ],
+            [
+                'file' => 'nb_brand.php'
+            ],
+            [
+                'file' => 'nb_shopping_cart.php'
+            ]
+        ]
+    ],
+    [
+        'dir' => $dir_fs_document_root . 'includes/modules/header_tags/',
+        'key' => 'MODULE_HEADER_TAGS_INSTALLED',
+        'modules' => [
+            [
+                'file' => 'ht_canonical.php',
+                'params' => [
+                    'MODULE_HEADER_TAGS_CANONICAL_SORT_ORDER' => 400
+                ]
+            ],
+            [
+                'file' => 'ht_manufacturer_title.php',
+                'params' => [
+                    'MODULE_HEADER_TAGS_MANUFACTURER_TITLE_SORT_ORDER' => 100
+                ]
+            ],
+            [
+                'file' => 'ht_category_title.php',
+                'params' => [
+                    'MODULE_HEADER_TAGS_CATEGORY_TITLE_SORT_ORDER' => 200
+                ]
+            ],
+            [
+                'file' => 'ht_product_title.php',
+                'params' => [
+                    'MODULE_HEADER_TAGS_PRODUCT_TITLE_SORT_ORDER' => 300
+                ]
+            ],
+            [
+                'file' => 'ht_robot_noindex.php',
+                'params' => [
+                    'MODULE_HEADER_TAGS_ROBOT_NOINDEX_SORT_ORDER' => 500
+                ]
+            ],
+            [
+                'file' => 'ht_datepicker_jquery.php',
+                'params' => [
+                    'MODULE_HEADER_TAGS_DATEPICKER_JQUERY_SORT_ORDER' => 600
+                ]
+            ],
+            [
+                'file' => 'ht_grid_list_view.php',
+                'params' => [
+                    'MODULE_HEADER_TAGS_GRID_LIST_VIEW_SORT_ORDER' => 700,
+                ]
+            ],
+            [
+                'file' => 'ht_table_click_jquery.php',
+                'params' => [
+                    'MODULE_HEADER_TAGS_TABLE_CLICK_JQUERY_SORT_ORDER' => 800
+                ]
+            ],
+            [
+                'file' => 'ht_product_colorbox.php',
+                'params' => [
+                    'MODULE_HEADER_TAGS_PRODUCT_COLORBOX_SORT_ORDER' => 900
+                ]
+            ],
+            [
+                'file' => 'ht_noscript.php',
+                'params' => [
+                    'MODULE_HEADER_TAGS_NOSCRIPT_SORT_ORDER' => 1000
+                ]
+            ]
+        ]
+    ],
+    [
+        'dir' => $admin_dir_fs_document_root . 'includes/modules/dashboard/',
+        'key' => 'MODULE_ADMIN_DASHBOARD_INSTALLED',
+        'modules' => [
+            [
+                'file' => 'd_total_revenue.php',
+                'params' => [
+                    'MODULE_ADMIN_DASHBOARD_TOTAL_REVENUE_SORT_ORDER' => 100
+                ]
+            ],
+            [
+                'file' => 'd_total_customers.php',
+                'params' => [
+                    'MODULE_ADMIN_DASHBOARD_TOTAL_CUSTOMERS_SORT_ORDER' => 200
+                ]
+            ],
+            [
+                'file' => 'd_orders.php',
+                'params' => [
+                    'MODULE_ADMIN_DASHBOARD_ORDERS_SORT_ORDER' => 300
+                ]
+            ],
+            [
+                'file' => 'd_customers.php',
+                'params' => [
+                    'MODULE_ADMIN_DASHBOARD_CUSTOMERS_SORT_ORDER' => 400
+                ]
+            ],
+            [
+                'file' => 'd_admin_logins.php',
+                'params' => [
+                    'MODULE_ADMIN_DASHBOARD_ADMIN_LOGINS_SORT_ORDER' => 500
+                ]
+            ],
+            [
+                'file' => 'd_security_checks.php',
+                'params' => [
+                    'MODULE_ADMIN_DASHBOARD_SECURITY_CHECKS_SORT_ORDER' => 600
+                ]
+            ],
+            [
+                'file' => 'd_latest_news.php',
+                'params' => [
+                    'MODULE_ADMIN_DASHBOARD_LATEST_NEWS_SORT_ORDER' => 700
+                ]
+            ],
+            [
+                'file' => 'd_latest_addons.php',
+                'params' => [
+                    'MODULE_ADMIN_DASHBOARD_LATEST_ADDONS_SORT_ORDER' => 800
+                ]
+            ],
+            [
+                'file' => 'd_partner_news.php',
+                'params' => [
+                    'MODULE_ADMIN_DASHBOARD_PARTNER_NEWS_SORT_ORDER' => 820
+                ]
+            ],
+            [
+                'file' => 'd_version_check.php',
+                'params' => [
+                    'MODULE_ADMIN_DASHBOARD_VERSION_CHECK_SORT_ORDER' => 900
+                ]
+            ],
+            [
+                'file' => 'd_reviews.php',
+                'params' => [
+                    'MODULE_ADMIN_DASHBOARD_REVIEWS_SORT_ORDER' => 1000
+                ]
+            ],
+        ]
+    ],
+    [
+        'dir' => $dir_fs_document_root . 'includes/modules/boxes/',
+        'key' => 'MODULE_BOXES_INSTALLED',
+        'modules' => [
+            [
+                'file' => 'bm_categories.php',
+                'params' => [
+                    'MODULE_BOXES_CATEGORIES_SORT_ORDER' => 1000
+                ]
+            ],
+            [
+                'file' => 'bm_manufacturers.php',
+                'params' => [
+                    'MODULE_BOXES_MANUFACTURERS_SORT_ORDER' => 1020
+                ]
+            ],
+            [
+                'file' => 'bm_whats_new.php',
+                'params' => [
+                    'MODULE_BOXES_WHATS_NEW_SORT_ORDER' => 1040
+                ]
+            ],
+            [
+                'file' => 'bm_card_acceptance.php',
+                'params' => [
+                    'MODULE_BOXES_CARD_ACCEPTANCE_SORT_ORDER' => 1060
+                ]
+            ],
+            [
+                'file' => 'bm_order_history.php',
+                'params' => [
+                    'MODULE_BOXES_ORDER_HISTORY_SORT_ORDER' => 5020
+                ]
+            ],
+            [
+                'file' => 'bm_best_sellers.php',
+                'params' => [
+                    'MODULE_BOXES_BEST_SELLERS_SORT_ORDER' => 5030
+                ]
+            ]
+        ]
+    ],
+    [
+        'dir' => $dir_fs_document_root . 'includes/modules/content/',
+        'key' => 'MODULE_CONTENT_INSTALLED',
+        'modules' => [
+            [
+                'file' => 'account/cm_account_set_password.php',
+                'code' => 'account/cm_account_set_password',
+                'params' => [
+                    'MODULE_CONTENT_ACCOUNT_SET_PASSWORD_SORT_ORDER' => 100
+                ]
+            ],
+            [
+                'file' => 'checkout_success/cm_cs_redirect_old_order.php',
+                'code' => 'checkout_success/cm_cs_redirect_old_order',
+                'params' => [
+                    'MODULE_CONTENT_CHECKOUT_SUCCESS_REDIRECT_OLD_ORDER_SORT_ORDER' => 500
+                ]
+            ],
+            [
+                'file' => 'checkout_success/cm_cs_thank_you.php',
+                'code' => 'checkout_success/cm_cs_thank_you',
+                'params' => [
+                    'MODULE_CONTENT_CHECKOUT_SUCCESS_THANK_YOU_SORT_ORDER' => 1000
+                ]
+            ],
+            [
+                'file' => 'checkout_success/cm_cs_product_notifications.php',
+                'code' => 'checkout_success/cm_cs_product_notifications',
+                'params' => [
+                    'MODULE_CONTENT_CHECKOUT_SUCCESS_PRODUCT_NOTIFICATIONS_SORT_ORDER' => 2000
+                ]
+            ],
+            [
+                'file' => 'checkout_success/cm_cs_downloads.php',
+                'code' => 'checkout_success/cm_cs_downloads',
+                'params' => [
+                    'MODULE_CONTENT_CHECKOUT_SUCCESS_DOWNLOADS_SORT_ORDER' => 3000
+                ]
+            ],
+            [
+                'file' => 'header/cm_header_logo.php',
+                'code' => 'header/cm_header_logo',
+                'params' => [
+                    'MODULE_CONTENT_HEADER_LOGO_SORT_ORDER' => 10
+                ]
+            ],
+            [
+                'file' => 'footer/cm_footer_information_links.php',
+                'code' => 'footer/cm_footer_information_links',
+                'params' => [
+                    'MODULE_CONTENT_FOOTER_INFORMATION_SORT_ORDER' => 0
+                ]
+            ],
+            [
+                'file' => 'footer_suffix/cm_footer_extra_copyright.php',
+                'code' => 'footer_suffix/cm_footer_extra_copyright',
+                'params' => [
+                    'MODULE_CONTENT_FOOTER_EXTRA_COPYRIGHT_SORT_ORDER' => 0
+                ]
+            ],
+            [
+                'file' => 'footer_suffix/cm_footer_extra_icons.php',
+                'code' => 'footer_suffix/cm_footer_extra_icons',
+                'params' => [
+                    'MODULE_CONTENT_FOOTER_EXTRA_ICONS_SORT_ORDER' => 0
+                ]
+            ],
+            [
+                'file' => 'header/cm_header_search.php',
+                'code' => 'header/cm_header_search',
+                'params' => [
+                    'MODULE_CONTENT_HEADER_SEARCH_SORT_ORDER' => 20
+                ]
+            ],
+            [
+                'file' => 'header/cm_header_messagestack.php',
+                'code' => 'header/cm_header_messagestack',
+                'params' => [
+                    'MODULE_CONTENT_HEADER_MESSAGESTACK_SORT_ORDER' => 30
+                ]
+            ],
+            [
+                'file' => 'header/cm_header_breadcrumb.php',
+                'code' => 'header/cm_header_breadcrumb',
+                'params' => [
+                    'MODULE_CONTENT_HEADER_BREADCRUMB_SORT_ORDER' => 40
+                ]
+            ],
+            [
+                'file' => 'index/cm_i_customer_greeting.php',
+                'code' => 'index/cm_i_customer_greeting',
+                'params' => [
+                    'MODULE_CONTENT_CUSTOMER_GREETING_SORT_ORDER' => 100
+                ]
+            ],
+            [
+                'file' => 'index/cm_i_text_main.php',
+                'code' => 'index/cm_i_text_main',
+                'params' => [
+                    'MODULE_CONTENT_TEXT_MAIN_SORT_ORDER' => 200
+                ]
+            ],
+            [
+                'file' => 'index/cm_i_new_products.php',
+                'code' => 'index/cm_i_new_products',
+                'params' => [
+                    'MODULE_CONTENT_NEW_PRODUCTS_SORT_ORDER' => 300
+                ]
+            ],
+            [
+                'file' => 'index/cm_i_upcoming_products.php',
+                'code' => 'index/cm_i_upcoming_products',
+                'params' => [
+                    'MODULE_CONTENT_UPCOMING_PRODUCTS_SORT_ORDER' => 400
+                ]
+            ],
+            [
+                'file' => 'index_nested/cm_in_category_description.php',
+                'code' => 'index_nested/cm_in_category_description',
+                'params' => [
+                    'MODULE_CONTENT_IN_CATEGORY_DESCRIPTION_SORT_ORDER' => 100
+                ]
+            ],
+            [
+                'file' => 'index_nested/cm_in_category_listing.php',
+                'code' => 'index_nested/cm_in_category_listing',
+                'params' => [
+                    'MODULE_CONTENT_IN_CATEGORY_LISTING_SORT_ORDER' => 200
+                ]
+            ],
+            [
+                'file' => 'index_nested/cm_in_new_products.php',
+                'code' => 'index_nested/cm_in_new_products',
+                'params' => [
+                    'MODULE_CONTENT_IN_NEW_PRODUCTS_SORT_ORDER' => 300
+                ]
+            ],
+            [
+                'file' => 'login/cm_login_form.php',
+                'code' => 'login/cm_login_form',
+                'params' => [
+                    'MODULE_CONTENT_LOGIN_FORM_SORT_ORDER' => 1000
+                ]
+            ],
+            [
+                'file' => 'login/cm_create_account_link.php',
+                'code' => 'login/cm_create_account_link',
+                'params' => [
+                    'MODULE_CONTENT_CREATE_ACCOUNT_LINK_SORT_ORDER' => 2000
+                ]
+            ],
+            [
+                'file' => 'navigation/cm_navbar.php',
+                'code' => 'navigation/cm_navbar',
+                'params' => [
+                    'MODULE_CONTENT_NAVBAR_SORT_ORDER' => 10
+                ]
+            ]
+        ]
+    ]
+];
+
+foreach ($modules as $m) {
+    $m_installed = [];
+
+    foreach ($m['modules'] as $module) {
+        $file = $module['file'];
+        $class = isset($module['class']) ? $module['class'] : basename($file, '.php');
+        $code = isset($module['code']) ? $module['code'] : $file;
+
+        include($m['dir'] . $file);
+
+        $mo = new $class();
+        $mo->install();
+
+        $m_installed[] = $code;
+
+        if (isset($module['params'])) {
+            foreach ($module['params'] as $key => $value) {
+                $OSCOM_Db->save('configuration', ['configuration_value' => $value], ['configuration_key' => $key]);
+            }
+        }
+    }
+
+    $OSCOM_Db->save('configuration', ['configuration_value' => implode(';', $m_installed)], ['configuration_key' => $m['key']]);
+}
 ?>
 
 <div class="row">
