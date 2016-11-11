@@ -283,6 +283,15 @@ $modules = [
                 'file' => 'nb_brand.php'
             ],
             [
+                'file' => 'nb_special_offers.php'
+            ],
+            [
+                'file' => 'nb_currencies.php'
+            ],
+            [
+                'file' => 'nb_account.php'
+            ],
+            [
                 'file' => 'nb_shopping_cart.php'
             ]
         ]
