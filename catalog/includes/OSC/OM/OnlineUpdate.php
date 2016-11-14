@@ -15,7 +15,7 @@ class OnlineUpdate
 {
     public static function log($message, $version)
     {
-        if (FileSystem::isWritable(OSCOM::BASE_DIR . 'Work/OnlineUpdates/' . $version . '-log.txt')) {
+        if (FileSystem::isWritable(OSCOM::BASE_DIR . 'Work/OnlineUpdates/' . $version . '-log.txt', true)) {
             $message = '[' . date('d-M-Y H:i:s') . '] ' . trim($message) . "\n";
 
             file_put_contents(OSCOM::BASE_DIR . 'Work/OnlineUpdates/' . $version . '-log.txt', $message, FILE_APPEND);
