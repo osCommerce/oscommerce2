@@ -34,6 +34,10 @@ if (!extension_loaded('pdo') || !extension_loaded('pdo_mysql')) {
     $warning_array[] = 'The PDO MySQL driver extension (pdo_mysql) is not installed or enabled in PHP. Please enable it in the PHP configuration to continue installation.';
 }
 
+if (!extension_loaded('curl')) {
+    $warning_array[] = 'The cURL extension (curl) is not installed or enabled in PHP. Please enable it in the PHP configuration to continue installation.';
+}
+
 $https_url = 'https://' . $_SERVER['HTTP_HOST'];
 
 if (isset($_SERVER['REQUEST_URI']) && !empty($_SERVER['REQUEST_URI'])) {
