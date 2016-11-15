@@ -26,12 +26,16 @@ foreach ($configfile_array as $key => $f) {
 
 $warning_array = [];
 
-if (!extension_loaded('pdo') || !extension_loaded('pdo_mysql')) {
-    $warning_array[] = 'The PDO MySQL driver extension is not installed. Please enable it in the PHP configuration to continue installation.';
-}
-
 if (PHP_VERSION < 5.5) {
     $warning_array[] = 'The minimum required PHP version is v5.5 - please ask your host or server administrator to upgrade the PHP version to continue installation.';
+}
+
+if (!extension_loaded('pdo') || !extension_loaded('pdo_mysql')) {
+    $warning_array[] = 'The PDO MySQL driver extension (pdo_mysql) is not installed or enabled in PHP. Please enable it in the PHP configuration to continue installation.';
+}
+
+if (!extension_loaded('curl')) {
+    $warning_array[] = 'The cURL extension (curl) is not installed or enabled in PHP. Please enable it in the PHP configuration to continue installation.';
 }
 
 $https_url = 'https://' . $_SERVER['HTTP_HOST'];
@@ -217,12 +221,16 @@ if (function_exists('ini_get')) {
             <td class="text-right"><?php echo extension_loaded('pdo') && extension_loaded('pdo_mysql') ? '<i class="fa fa-thumbs-up text-success"></i>' : '<i class="fa fa-exclamation-circle text-danger"></i>'; ?></td>
           </tr>
           <tr>
-            <td>GD</td>
-            <td class="text-right"><?php echo extension_loaded('gd') ? '<i class="fa fa-thumbs-up text-success"></i>' : '<i class="fa fa-exclamation-circle text-warning"></i>'; ?></td>
-          </tr>
-          <tr>
             <td>cURL</td>
             <td class="text-right"><?php echo extension_loaded('curl') ? '<i class="fa fa-thumbs-up text-success"></i>' : '<i class="fa fa-exclamation-circle text-warning"></i>'; ?></td>
+          </tr>
+          <tr>
+            <td>Zip</td>
+            <td class="text-right"><?php echo extension_loaded('zip') ? '<i class="fa fa-thumbs-up text-success"></i>' : '<i class="fa fa-exclamation-circle text-warning"></i>'; ?></td>
+          </tr>
+          <tr>
+            <td>GD</td>
+            <td class="text-right"><?php echo extension_loaded('gd') ? '<i class="fa fa-thumbs-up text-success"></i>' : '<i class="fa fa-exclamation-circle text-warning"></i>'; ?></td>
           </tr>
           <tr>
             <td>OpenSSL</td>

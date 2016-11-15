@@ -11,6 +11,8 @@ namespace OSC\Sites\Admin;
 use OSC\OM\Apps;
 use OSC\OM\Cookies;
 use OSC\OM\Db;
+use OSC\OM\ErrorHandler;
+use OSC\OM\FileSystem;
 use OSC\OM\Hooks;
 use OSC\OM\Language;
 use OSC\OM\MessageStack;
@@ -128,6 +130,10 @@ class Admin extends \OSC\OM\SitesAbstract
         $oscTemplate = new \oscTemplate();
 
         $cfgModules = new \cfg_modules();
+
+        if (!FileSystem::isWritable(ErrorHandler::getDirectory())) {
+            Registry::get('MessageStack')->add('The log directory is not writable. Please allow the web server to write to: ' . FileSystem::displayPath(ErrorHandler::getDirectory()));
+        }
     }
 
     public function setPage()
