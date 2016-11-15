@@ -7,6 +7,7 @@
   */
 
   use OSC\OM\FileSystem;
+  use OSC\OM\OSCOM;
   use OSC\OM\Registry;
 
   class upload {
