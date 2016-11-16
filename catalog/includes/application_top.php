@@ -95,8 +95,18 @@
       // customer wants to update the product quantity in their shopping cart
       case 'update_product' : for ($i=0, $n=sizeof($_POST['products_id']); $i<$n; $i++) {
                                 $attributes = isset($_POST['id'][$_POST['products_id'][$i]]) ? $_POST['id'][$_POST['products_id'][$i]] : '';
-                                $_SESSION['cart']->add_cart($_POST['products_id'][$i], $_POST['cart_quantity'][$i], $attributes, false);
-                                $messageStack->add_session('product_action', OSCOM::getDef('product_added', ['products_name' => tep_get_products_name((int)$_POST['products_id'][$i])]), 'success');
+
+                                $product_id = tep_get_uprid($_POST['products_id'][$i], $attributes);
+
+                                if ($_POST['cart_quantity'][$i] > 0) {
+                                  if ($_POST['cart_quantity'][$i] != $_SESSION['cart']->get_quantity(tep_get_uprid($_POST['products_id'][$i], $attributes))) {
+                                    $_SESSION['cart']->add_cart($_POST['products_id'][$i], $_POST['cart_quantity'][$i], $attributes, false);
+                                    $messageStack->add_session('product_action', OSCOM::getDef('product_updated', ['products_name' => tep_get_products_name((int)$_POST['products_id'][$i])]), 'success');
+                                  }
+                                } else {
+                                  $_SESSION['cart']->remove($product_id);
+                                  $messageStack->add_session('product_action', OSCOM::getDef('product_removed', ['products_name' =>  tep_get_products_name((int)$_POST['products_id'][$i])]), 'warning');
+                                }
                               }
                               OSCOM::redirect($goto, tep_get_all_get_params($parameters));
                               break;

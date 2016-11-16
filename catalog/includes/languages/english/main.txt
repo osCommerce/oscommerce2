@@ -146,5 +146,6 @@ table_heading_latest_added = Latest Products
 product_subscribed = {{products_name}} has been added to your Notification List
 product_unsubscribed = {{products_name}} has been removed from your Notification List
 product_added = {{products_name}} has been added to your Cart
+product_updated = {{products_name}} has been updated in your Cart
 product_removed = {{products_name}} has been removed from your Cart
 module_content_bootstrap_row_description =
