@@ -276,7 +276,7 @@ function check_form() {
 <?php if (ACCOUNT_GENDER == 'true') { ?>
   if (document.customers.customers_gender[0].checked || document.customers.customers_gender[1].checked) {
   } else {
-    error_message = error_message + <?= jscon_encode(OSCOM::getDef('js_gender') . "\n"); ?>;
+    error_message = error_message + <?= json_encode(OSCOM::getDef('js_gender') . "\n"); ?>;
     error = 1;
   }
 <?php } ?>
@@ -293,7 +293,7 @@ function check_form() {
 
 <?php if (ACCOUNT_DOB == 'true') { ?>
   if (customers_dob.length < <?php echo ENTRY_DOB_MIN_LENGTH; ?>) {
-    error_message = error_message + <?= json_encocde(OSCOM::getDef('js_dob') . "\n"); ?>;
+    error_message = error_message + <?= json_encode(OSCOM::getDef('js_dob') . "\n"); ?>;
     error = 1;
   }
 <?php } ?>
