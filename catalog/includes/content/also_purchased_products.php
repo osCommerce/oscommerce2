@@ -40,7 +40,7 @@
     <meta itemprop="itemListOrder" content="http://schema.org/ItemListUnordered" />
     <meta itemprop="numberOfItems" content="<?php echo count($orders); ?>" />
 
-    <h3 itemprop="name"><?php echo TEXT_ALSO_PURCHASED_PRODUCTS; ?></h3>
+    <h3 itemprop="name"><?= OSCOM::getDef('text_also_purchased_products'); ?></h3>
 
     <div class="row">
       <?php echo $also_pur_prods_content; ?>

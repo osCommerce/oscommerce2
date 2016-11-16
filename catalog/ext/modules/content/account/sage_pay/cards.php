@@ -48,20 +48,20 @@
       if ($Qtoken->fetch() !== false) {
         $sage_pay_direct->deleteCard($Qtoken->value('sagepay_token'), $Qtoken->valueInt('id'));
 
-        $messageStack->add_session('cards', MODULE_CONTENT_ACCOUNT_SAGE_PAY_CARDS_SUCCESS_DELETED, 'success');
+        $messageStack->add_session('cards', OSCOM::getDef('module_content_account_sage_pay_cards_success_deleted'), 'success');
       }
     }
 
     OSCOM::redirect('ext/modules/content/account/sage_pay/cards.php');
   }
 
-  $breadcrumb->add(MODULE_CONTENT_ACCOUNT_SAGE_PAY_CARDS_NAVBAR_TITLE_1, OSCOM::link('account.php'));
-  $breadcrumb->add(MODULE_CONTENT_ACCOUNT_SAGE_PAY_CARDS_NAVBAR_TITLE_2, OSCOM::link('ext/modules/content/account/sage_pay/cards.php'));
+  $breadcrumb->add(OSCOM::getDef('module_content_account_sage_pay_cards_navbar_title_1'), OSCOM::link('account.php'));
+  $breadcrumb->add(OSCOM::getDef('module_content_account_sage_pay_cards_navbar_title_2'), OSCOM::link('ext/modules/content/account/sage_pay/cards.php'));
 
   require($oscTemplate->getFile('template_top.php'));
 ?>
 
-<h1><?php echo MODULE_CONTENT_ACCOUNT_SAGE_PAY_CARDS_HEADING_TITLE; ?></h1>
+<h1><?= OSCOM::getDef('module_content_account_sage_pay_cards_heading_title'); ?></h1>
 
 <?php
   if ($messageStack->size('cards') > 0) {
@@ -70,9 +70,9 @@
 ?>
 
 <div class="contentContainer">
-  <?php echo MODULE_CONTENT_ACCOUNT_SAGE_PAY_CARDS_TEXT_DESCRIPTION; ?>
+  <?= OSCOM::getDef('module_content_account_sage_pay_cards_text_description'); ?>
 
-  <h2><?php echo MODULE_CONTENT_ACCOUNT_SAGE_PAY_CARDS_SAVED_CARDS_TITLE; ?></h2>
+  <h2><?= OSCOM::getDef('module_content_account_sage_pay_cards_saved_cards_title'); ?></h2>
 
   <div class="contentText">
 
@@ -94,7 +94,7 @@
 ?>
 
     <div style="background-color: #FEEFB3; border: 1px solid #9F6000; margin: 10px 0px; padding: 5px 10px; border-radius: 10px;">
-      <?php echo MODULE_CONTENT_ACCOUNT_SAGE_PAY_CARDS_TEXT_NO_CARDS; ?>
+      <?= OSCOM::getDef('module_content_account_sage_pay_cards_text_no_cards'); ?>
     </div>
 
 <?php

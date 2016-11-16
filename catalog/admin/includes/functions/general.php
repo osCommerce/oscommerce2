@@ -211,7 +211,7 @@
     if (tep_not_null($image) && is_file(OSCOM::getConfig('dir_root', 'Shop') . 'images/' . $image)) {
       $image = HTML::image(OSCOM::linkImage('Shop/' . $image), $alt, $width, $height);
     } else {
-      $image = TEXT_IMAGE_NONEXISTENT;
+      $image = OSCOM::getDef('text_image_nonexistent');
     }
 
     return $image;
