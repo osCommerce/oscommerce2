@@ -232,7 +232,7 @@ function updateForm() {
       $contents[] = array('text' => '<br />' . OSCOM::getDef('text_info_currency_thousands_point') . '<br />' . HTML::inputField('thousands_point'));
       $contents[] = array('text' => '<br />' . OSCOM::getDef('text_info_currency_decimal_places') . '<br />' . HTML::inputField('decimal_places'));
       $contents[] = array('text' => '<br />' . OSCOM::getDef('text_info_currency_value') . '<br />' . HTML::inputField('value'));
-      $contents[] = array('text' => '<br />' . HTML::checkboxField('default') . ' ' . OSCOM::getDef('text_info_set_as_default'));
+      $contents[] = array('text' => '<br />' . HTML::checkboxField('default') . ' ' . OSCOM::getDef('text_set_default'));
       $contents[] = array('align' => 'center', 'text' => '<br />' . HTML::button(OSCOM::getDef('image_save'), 'fa fa-save') . HTML::button(OSCOM::getDef('image_cancel'), 'fa fa-close', OSCOM::link(FILENAME_CURRENCIES, 'page=' . $_GET['page'] . '&cID=' . $_GET['cID'])));
       break;
     case 'edit':
@@ -248,7 +248,7 @@ function updateForm() {
       $contents[] = array('text' => '<br />' . OSCOM::getDef('text_info_currency_thousands_point') . '<br />' . HTML::inputField('thousands_point', $cInfo->thousands_point));
       $contents[] = array('text' => '<br />' . OSCOM::getDef('text_info_currency_decimal_places') . '<br />' . HTML::inputField('decimal_places', $cInfo->decimal_places));
       $contents[] = array('text' => '<br />' . OSCOM::getDef('text_info_currency_value') . '<br />' . HTML::inputField('value', $cInfo->value));
-      if (DEFAULT_CURRENCY != $cInfo->code) $contents[] = array('text' => '<br />' . HTML::checkboxField('default') . ' ' . OSCOM::getDef('text_info_set_as_default'));
+      if (DEFAULT_CURRENCY != $cInfo->code) $contents[] = array('text' => '<br />' . HTML::checkboxField('default') . ' ' . OSCOM::getDef('text_set_default'));
       $contents[] = array('align' => 'center', 'text' => '<br />' . HTML::button(OSCOM::getDef('image_save'), 'fa fa-save') . HTML::button(OSCOM::getDef('image_cancel'), 'fa fa-close', OSCOM::link(FILENAME_CURRENCIES, 'page=' . $_GET['page'] . '&cID=' . $cInfo->currencies_id)));
       break;
     case 'delete':
