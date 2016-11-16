@@ -147,7 +147,19 @@ class OSCOM
         $link = static::getConfig('http_server', $req_site) . static::getConfig('http_path', $req_site) . $page;
 
         if (!empty($parameters)) {
-            $link .= '?' . HTML::sanitize($parameters);
+            $p = HTML::sanitize($parameters);
+
+            $p = str_replace([
+                "\\", // apps
+                '{', // product attributes
+                '}' // product attributes
+            ], [
+                '%5C',
+                '%7B',
+                '%7D'
+            ], $p);
+
+            $link .= '?' . $p;
             $separator = '&';
         } else {
             $separator = '?';
