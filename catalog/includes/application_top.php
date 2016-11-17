@@ -62,12 +62,13 @@
     tep_whos_online_update_session_id($parameters['old_id'], session_id());
   });
 
-// if gzip_compression is enabled, start to buffer the output
+// configure gzip compression if it is enabled
   if ((GZIP_COMPRESSION == 'true') && extension_loaded('zlib') && !headers_sent()) {
     if ((int)ini_get('zlib.output_compression') < 1) {
-      ob_start('ob_gzhandler');
+      ini_set('zlib.output_handler', '');
+      ini_set('zlib.output_compression', 1);
     }
-  } elseif (function_exists('ini_set')) {
+
     ini_set('zlib.output_compression_level', GZIP_LEVEL);
   }
 

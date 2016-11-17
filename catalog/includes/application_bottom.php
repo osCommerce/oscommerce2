@@ -16,8 +16,4 @@
       echo '<span class="smallText">Parse Time: ' . $parse_time . 's</span>';
     }
   }
-
-  if ( (GZIP_COMPRESSION == 'true') && ($ext_zlib_loaded == true) && ($ini_zlib_output_compression < 1) ) {
-      tep_gzip_output(GZIP_LEVEL);
-  }
 ?>
