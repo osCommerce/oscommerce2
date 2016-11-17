@@ -647,10 +647,10 @@
     $zones = tep_get_country_zones($country_id);
 
     if (sizeof($zones) > 0) {
-      $zones_select = array(array('id' => '', 'text' => PLEASE_SELECT));
+      $zones_select = array(array('id' => '', 'text' => OSCOM::getDef('please_select')));
       $zones = array_merge($zones_select, $zones);
     } else {
-      $zones = array(array('id' => '', 'text' => TYPE_BELOW));
+      $zones = array(array('id' => '', 'text' => OSCOM::getDef('type_below')));
     }
 
     return $zones;
@@ -1442,14 +1442,14 @@
       ], 'zone_name');
 
       while ($Qstates->fetch()) {
-        if ($num_state == '1') $output_string .= '    ' . $form . '.' . $field . '.options[0] = new Option("' . PLEASE_SELECT . '", "");' . "\n";
+        if ($num_state == '1') $output_string .= '    ' . $form . '.' . $field . '.options[0] = new Option("' . OSCOM::getDef('please_select') . '", "");' . "\n";
         $output_string .= '    ' . $form . '.' . $field . '.options[' . $num_state . '] = new Option("' . $Qstates->value('zone_name') . '", "' . $Qstates->valueInt('zone_id') . '");' . "\n";
         $num_state++;
       }
       $num_country++;
     }
     $output_string .= '  } else {' . "\n" .
-                      '    ' . $form . '.' . $field . '.options[0] = new Option("' . TYPE_BELOW . '", "");' . "\n" .
+                      '    ' . $form . '.' . $field . '.options[0] = new Option("' . OSCOM::getDef('type_below') . '", "");' . "\n" .
                       '  }' . "\n";
 
     return $output_string;
