@@ -88,7 +88,6 @@ class Mail
 
     public function setBody($html)
     {
-        $html = str_replace(array("\n", "\r\n"), "<br>", $html);
         $plain = strip_tags($html);
 
         $this->setBodyHTML($html);
