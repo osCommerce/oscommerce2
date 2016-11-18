@@ -290,10 +290,11 @@
   }
 
 // lets start with the email confirmation
+  $invoice_url = OSCOM::link('account_history_info.php', 'order_id=' . $insert_id, false);
   $email_order = STORE_NAME . "\n" .
                  OSCOM::getDef('email_separator') . "\n" .
                  OSCOM::getDef('email_text_order_number') . ' ' . $insert_id . "\n" .
-                 OSCOM::getDef('email_text_invoice_url') . ' ' . OSCOM::link('account_history_info.php', 'order_id=' . $insert_id, false) . "\n" .
+                 OSCOM::getDef('email_text_invoice_url') . ' <a href="' . $invoice_url . '">' . $invoice_url . '</a>' . "\n" .
                  OSCOM::getDef('email_text_date_ordered') . ' ' . strftime(OSCOM::getDef('date_format_long')) . "\n\n";
   if ($order->info['comments']) {
     $email_order .= HTML::outputProtected($order->info['comments']) . "\n\n";
@@ -327,6 +328,7 @@
 
   $orderEmail = new Mail($order->customer['email_address'], $order->customer['firstname'] . ' ' . $order->customer['lastname'], STORE_OWNER_EMAIL_ADDRESS, STORE_OWNER, OSCOM::getDef('email_text_subject'));
   $orderEmail->setBody($email_order);
+  $orderEmail->setBodyHTML(nl2br($email_order, true));
   $orderEmail->send();
 
 // send emails to other people
