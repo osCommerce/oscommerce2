@@ -1014,11 +1014,75 @@
   }
 
   function tep_count_payment_modules() {
-    return tep_count_modules(MODULE_PAYMENT_INSTALLED);
+    $count = 0;
+
+    $modules_array = explode(';', MODULE_PAYMENT_INSTALLED);
+
+    for ($i=0, $n=sizeof($modules_array); $i<$n; $i++) {
+      $m = $modules_array[$i];
+
+      $OSCOM_PM = null;
+
+      if (strpos($m, '\\') !== false) {
+        list($vendor, $app, $module) = explode('\\', $m);
+
+        $module = $vendor . '\\' . $app . '\\' . $module;
+
+        $code = 'Payment_' . str_replace('\\', '_', $module);
+
+        if (Registry::exists($code)) {
+          $OSCOM_PM = Registry::get($code);
+        }
+      } else {
+        $module = substr($m, 0, strrpos($m, '.'));
+
+        if (is_object($GLOBALS[$module])) {
+          $OSCOM_PM = $GLOBALS[$module];
+        }
+      }
+
+      if (isset($OSCOM_PM) && $OSCOM_PM->enabled) {
+        $count++;
+      }
+    }
+
+    return $count;
   }
 
   function tep_count_shipping_modules() {
-    return tep_count_modules(MODULE_SHIPPING_INSTALLED);
+    $count = 0;
+
+    $modules_array = explode(';', MODULE_SHIPPING_INSTALLED);
+
+    for ($i=0, $n=sizeof($modules_array); $i<$n; $i++) {
+      $m = $modules_array[$i];
+
+      $OSCOM_SM = null;
+
+      if (strpos($m, '\\') !== false) {
+        list($vendor, $app, $module) = explode('\\', $m);
+
+        $module = $vendor . '\\' . $app . '\\' . $module;
+
+        $code = 'Shipping_' . str_replace('\\', '_', $module);
+
+        if (Registry::exists($code)) {
+          $OSCOM_SM = Registry::get($code);
+        }
+      } else {
+        $module = substr($m, 0, strrpos($m, '.'));
+
+        if (is_object($GLOBALS[$module])) {
+          $OSCOM_SM = $GLOBALS[$module];
+        }
+      }
+
+      if (isset($OSCOM_SM) && $OSCOM_SM->enabled) {
+        $count++;
+      }
+    }
+
+    return $count;
   }
 
   function tep_array_to_string($array, $exclude = '', $equals = '=', $separator = '&') {

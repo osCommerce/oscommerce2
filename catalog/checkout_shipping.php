@@ -8,6 +8,7 @@
 
   use OSC\OM\HTML;
   use OSC\OM\OSCOM;
+  use OSC\OM\Registry;
 
   require('includes/application_top.php');
 
@@ -106,20 +107,41 @@
       if ( (isset($_POST['shipping'])) && (strpos($_POST['shipping'], '_')) ) {
         $_SESSION['shipping'] = $_POST['shipping'];
 
-        list($module, $method) = explode('_', $_SESSION['shipping']);
-        if ( is_object($GLOBALS[$module]) || ($_SESSION['shipping'] == 'free_free') ) {
+        $OSCOM_SM = null;
+
+        if (strpos($_SESSION['shipping'], '\\') !== false) {
+          list($vendor, $app, $module) = explode('\\', $_SESSION['shipping']);
+          list($module, $method) = explode('_', $module);
+
+          $module = $vendor . '\\' . $app . '\\' . $module;
+
+          $code = 'Shipping_' . str_replace('\\', '_', $module);
+
+          if (Registry::exists($code)) {
+            $OSCOM_SM = Registry::get($code);
+          }
+        } else {
+          list($module, $method) = explode('_', $_SESSION['shipping']);
+
+          if (is_object($GLOBALS[$module])) {
+            $OSCOM_SM = $GLOBALS[$module];
+          }
+        }
+
+        if ( isset($OSCOM_SM) || ($_SESSION['shipping'] == 'free_free') ) {
           if ($_SESSION['shipping'] == 'free_free') {
             $quote[0]['methods'][0]['title'] = OSCOM::getDef('free_shipping_title');
             $quote[0]['methods'][0]['cost'] = '0';
           } else {
             $quote = $shipping_modules->quote($method, $module);
           }
+
           if (isset($quote['error'])) {
             unset($_SESSION['shipping']);
           } else {
             if ( (isset($quote[0]['methods'][0]['title'])) && (isset($quote[0]['methods'][0]['cost'])) ) {
               $_SESSION['shipping'] = array('id' => $_SESSION['shipping'],
-                                            'title' => (($free_shipping == true) ?  $quote[0]['methods'][0]['title'] : $quote[0]['module'] . ' (' . $quote[0]['methods'][0]['title'] . ')'),
+                                            'title' => (($free_shipping == true) ?  $quote[0]['methods'][0]['title'] : $quote[0]['module'] . (isset($quote[0]['methods'][0]['title']) && !empty($quote[0]['methods'][0]['title']) ? ' (' . $quote[0]['methods'][0]['title'] . ')' : '')),
                                             'cost' => $quote[0]['methods'][0]['cost']);
 
               OSCOM::redirect('checkout_payment.php');
