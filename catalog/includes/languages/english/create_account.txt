@@ -2,28 +2,33 @@ navbar_title = Create an Account
 heading_title = My Account Information
 text_origin_login = <font color="#FF0000"><small><strong>NOTE:</strong></small></font> If you already have an account with us, please login at the <a href="{{login_link}}"><u>login page</u></a>.
 email_subject = Welcome to {{store_name}}
-email_greet_mr_html = Dear Mr. {{lastname}},
-email_greet_ms_html = Dear Ms. {{lastname}},
-email_greet_none_html = Dear {{firstname}}
-email_welcome_html = We welcome you to <strong>{{store_name}}</strong>.
+email_greet_mr_html = <h1>Dear Mr. {{lastname}},</h1>
+email_greet_ms_html = <h1>Dear Ms. {{lastname}},</h1>
+email_greet_none_html = <h1>Dear {{firstname}}</h1>
+email_welcome_html = <p>We welcome you to <strong>{{store_name}}</strong>.</p>
 
-email_text_html = You can now take part in the <strong>various services</strong> we have to offer you. Some of these services include:
+email_text_html = <p>You can now take part in the <strong>various services</strong> we have to offer you. Some of these services include:
 <ol>
 <li><strong>Permanent Cart</strong> - Any products added to your online cart remain there until you remove them, or check them out.</li>
 <li><strong>Address Book</strong> - We can now deliver your products to another address other than yours! This is perfect to send birthday gifts direct to the birthday-person themselves.</li>
 <li><strong>Order History</strong> - View your history of purchases that you have made with us.</li>
 <li><strong>Products Reviews</strong> - Share your opinions on products with our other customers.</li>
 </ol>
-
-email_contact_html = For help with any of our online services, please email the store-owner: {{store_email_address}}
-email_warning_html = <strong>Note:</strong> This email address was given to us by one of our customers. If you did not signup to be a member, please send an email to {{store_email_address}}
+</p>
+email_contact_html = <p>For help with any of our online services, please email the store-owner: <a href="mailto:{{store_email_address}}" target="_top">{{store_email_address}}</a></p>
+email_warning_html = <p><strong>Note:</strong> This email address was given to us by one of our customers. If you did not signup to be a member, please send an email to {{store_email_address}}</p>
 
 email_greet_mr_plain = Dear Mr. {{lastname}},
-email_greet_ms_plain = Dear Ms. {{lastname}},
-email_greet_none_plain = Dear {{firstname}}
-email_welcome_plain = We welcome you to {{store_name}}.
 
-email_text_plain = You can now take part in the various services we have to offer you. Some of these services include:
+email_greet_ms_plain = Dear Ms. {{lastname}},
+
+email_greet_none_plain = Dear {{firstname}}
+
+email_welcome_plain =
+  We welcome you to {{store_name}}.
+
+email_text_plain =
+You can now take part in the various services we have to offer you. Some of these services include:
 
   Permanent Cart - Any products added to your online cart remain there until you remove them, or check them out.
   Address Book - We can now deliver your products to another address other than yours! This is perfect to send birthday gifts direct to the birthday-person themselves.
@@ -31,6 +36,7 @@ email_text_plain = You can now take part in the various services we have to offe
   Products Reviews - Share your opinions on products with our other customers.
 
 email_contact_plain = For help with any of our online services, please email the store-owner: {{store_email_address}}
+
 email_warning_plain = Note: This email address was given to us by one of our customers. If you did not signup to be a member, please send an email to {{store_email_address}}
 
 category_company = Company Details
