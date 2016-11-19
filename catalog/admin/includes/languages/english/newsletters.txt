@@ -18,3 +18,5 @@ error_newsletter_module = Error: Newsletter module required
 error_remove_unlocked_newsletter = Error: Please lock the newsletter before deleting it.
 error_edit_unlocked_newsletter = Error: Please lock the newsletter before editing it.
 error_send_unlocked_newsletter = Error: Please lock the newsletter before sending it.
+
+error_newsletter_module_not_exists = Error: Module does not exist
