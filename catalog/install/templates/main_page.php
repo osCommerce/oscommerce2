@@ -18,7 +18,7 @@
 
 <link rel="stylesheet" href="templates/main_page/stylesheet.css">
 
-<link href="../ext/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
+<link href="../ext/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
 </head>
 
 <body>

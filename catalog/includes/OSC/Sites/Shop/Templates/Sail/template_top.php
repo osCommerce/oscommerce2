@@ -23,7 +23,7 @@
 
 <link href="ext/bootstrap/css/bootstrap.min.css" rel="stylesheet">
 <!-- font awesome -->
-<link href="ext/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
+<link href="ext/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
 
 <link href="<?= $oscTemplate->getPublicFile('css/custom.css'); ?>" rel="stylesheet">
 <link href="<?= $oscTemplate->getPublicFile('css/user.css'); ?>" rel="stylesheet">
