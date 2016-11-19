@@ -58,7 +58,7 @@
     $customerEmail = new Mail();
     $customerEmail->setFrom($from);
     $customerEmail->setSubject($subject);
-    $customerEmail->setBody($message);
+    $customerEmail->setBody(nl2br($message, true));
 
     while ($Qmail->fetch()) {
       $customerEmail->clearTo();
