@@ -270,7 +270,9 @@ function updateForm() {
         $contents[] = array('text' => '<br />' . OSCOM::getDef('text_info_currency_decimal_point') . ' ' . $cInfo->decimal_point);
         $contents[] = array('text' => OSCOM::getDef('text_info_currency_thousands_point') . ' ' . $cInfo->thousands_point);
         $contents[] = array('text' => OSCOM::getDef('text_info_currency_decimal_places') . ' ' . $cInfo->decimal_places);
-        $contents[] = array('text' => '<br />' . OSCOM::getDef('text_info_currency_last_updated') . ' ' . DateTime::toShort($cInfo->last_updated));
+        if (isset($cInfo->last_updated)) {
+          $contents[] = array('text' => '<br />' . OSCOM::getDef('text_info_currency_last_updated') . ' ' . DateTime::toShort($cInfo->last_updated));
+        }
         $contents[] = array('text' => OSCOM::getDef('text_info_currency_value') . ' ' . number_format($cInfo->value, 8));
         $contents[] = array('text' => '<br />' . OSCOM::getDef('text_info_currency_example') . '<br />' . $currencies->format('30', false, DEFAULT_CURRENCY) . ' = ' . $currencies->format('30', true, $cInfo->code));
       }
