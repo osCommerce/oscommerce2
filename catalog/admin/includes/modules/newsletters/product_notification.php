@@ -299,7 +299,7 @@ function selectAll(FormName, SelectBox) {
       $notificationEmail = new Mail();
       $notificationEmail->setFrom(STORE_OWNER_EMAIL_ADDRESS, STORE_OWNER);
       $notificationEmail->setSubject($this->title);
-      $notificationEmail->setBody($this->content);
+      $notificationEmail->setBody(nl2br($this->content, true));
 
       foreach ( $audience as $key => $value ) {
         $notificationEmail->clearTo();

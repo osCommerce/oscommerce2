@@ -62,7 +62,7 @@
       $newsletterEmail = new Mail();
       $newsletterEmail->setFrom(STORE_OWNER_EMAIL_ADDRESS, STORE_OWNER);
       $newsletterEmail->setSubject($this->title);
-      $newsletterEmail->setBody($this->content);
+      $newsletterEmail->setBody(nl2br($this->content, true));
 
       $Qmail = $OSCOM_Db->get('customers', [
         'customers_firstname',
