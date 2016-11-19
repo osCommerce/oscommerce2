@@ -56,9 +56,12 @@
 
         if (count($best) >= MIN_DISPLAY_BESTSELLERS) {
           $bestsellers_list = '';
+          $position = 1;
 
           foreach ($best as $b) {
-            $bestsellers_list .= '<li><a href="' . OSCOM::link('product_info.php', 'products_id=' . $b['products_id']) . '"><span itemprop="itemListElement">' . $b['products_name'] . '</span></a></li>';
+            $bestsellers_list .= '<li><a href="' . OSCOM::link('product_info.php', 'products_id=' . $b['products_id']) . '">' . $position . '. <span itemprop="itemListElement">' . $b['products_name'] . '</span></a></li>';
+            
+            $position++;
           }
 
           $num_best_sellers = count($best);
