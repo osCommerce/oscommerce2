@@ -65,7 +65,7 @@
       case 'update_order':
         $oID = HTML::sanitize($_GET['oID']);
         $status = HTML::sanitize($_POST['status']);
-        $comments = HTML::sanitize($_POST['comments']);
+        $comments = $_POST['comments'];
 
         $order_updated = false;
 

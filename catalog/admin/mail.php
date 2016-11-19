@@ -53,7 +53,7 @@
 
     $from = HTML::sanitize($_POST['from']);
     $subject = HTML::sanitize($_POST['subject']);
-    $message = HTML::sanitize($_POST['message']);
+    $message = $_POST['message'];
 
     $customerEmail = new Mail();
     $customerEmail->setFrom($from);

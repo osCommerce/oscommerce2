@@ -34,7 +34,7 @@
         if (isset($_POST['newsletter_id'])) $newsletter_id = HTML::sanitize($_POST['newsletter_id']);
         $newsletter_module = HTML::sanitize($_POST['module']);
         $title = HTML::sanitize($_POST['title']);
-        $content = HTML::sanitize($_POST['content']);
+        $content = $_POST['content'];
 
         $newsletter_error = false;
         if (empty($title)) {
