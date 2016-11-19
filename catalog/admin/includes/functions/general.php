@@ -93,7 +93,7 @@
     if ( (sizeof($category_tree_array) < 1) && ($exclude != '0') ) $category_tree_array[] = array('id' => '0', 'text' => OSCOM::getDef('text_top'));
 
     if ($include_itself) {
-      $Qcategory = $OSCOM_Db->get('categories_description', 'cd.categories_name', ['cd.language_id' => $OSCOM_Language->getId(), 'cd.categories_id' => (int)$parent_id]);
+      $Qcategory = $OSCOM_Db->get('categories_description', 'categories_name', ['language_id' => $OSCOM_Language->getId(), 'categories_id' => (int)$parent_id]);
 
       $category_tree_array[] = [
         'id' => $parent_id,
