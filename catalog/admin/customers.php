@@ -184,7 +184,7 @@
 
           $OSCOM_Db->save('customers_info', ['customers_info_date_account_last_modified' => 'now()'], ['customers_info_id' => (int)$customers_id]);
 
-          if ($entry_zone_id > 0) $entry_state = '';
+          if (isset($entry_zone_id) && $entry_zone_id > 0) $entry_state = '';
 
           $sql_data_array = array('entry_firstname' => $customers_firstname,
                                   'entry_lastname' => $customers_lastname,
@@ -197,7 +197,7 @@
           if (ACCOUNT_SUBURB == 'true') $sql_data_array['entry_suburb'] = $entry_suburb;
 
           if (ACCOUNT_STATE == 'true') {
-            if ($entry_zone_id > 0) {
+            if (isset($entry_zone_id) && $entry_zone_id > 0) {
               $sql_data_array['entry_zone_id'] = $entry_zone_id;
               $sql_data_array['entry_state'] = '';
             } else {
@@ -771,8 +771,12 @@ function check_form() {
 
         $contents[] = array('align' => 'center', 'text' => HTML::button(OSCOM::getDef('image_edit'), 'fa fa-edit', OSCOM::link(FILENAME_CUSTOMERS, tep_get_all_get_params(array('cID', 'action')) . 'cID=' . $cInfo->customers_id . '&action=edit')) . HTML::button(OSCOM::getDef('image_delete'), 'fa fa-trash', OSCOM::link(FILENAME_CUSTOMERS, tep_get_all_get_params(array('cID', 'action')) . 'cID=' . $cInfo->customers_id . '&action=confirm')) . HTML::button(OSCOM::getDef('image_orders'), 'fa fa-shopping-cart', OSCOM::link(FILENAME_ORDERS, 'cID=' . $cInfo->customers_id)) . HTML::button(OSCOM::getDef('image_email'), 'fa fa-envelope', OSCOM::link(FILENAME_MAIL, 'customer=' . $cInfo->customers_email_address)));
         $contents[] = array('text' => '<br />' . OSCOM::getDef('text_date_account_created') . ' ' . DateTime::toShort($cInfo->date_account_created));
-        $contents[] = array('text' => '<br />' . OSCOM::getDef('text_date_account_last_modified') . ' ' . DateTime::toShort($cInfo->date_account_last_modified));
-        $contents[] = array('text' => '<br />' . OSCOM::getDef('text_info_date_last_logon') . ' '  . DateTime::toShort($cInfo->date_last_logon));
+        if (isset($cInfo->date_account_last_modified)) {
+          $contents[] = array('text' => '<br />' . OSCOM::getDef('text_date_account_last_modified') . ' ' . DateTime::toShort($cInfo->date_account_last_modified));
+        }
+        if (isset($cInfo->date_last_logon)) {
+          $contents[] = array('text' => '<br />' . OSCOM::getDef('text_info_date_last_logon') . ' '  . DateTime::toShort($cInfo->date_last_logon));
+        }
         $contents[] = array('text' => '<br />' . OSCOM::getDef('text_info_number_of_logons') . ' ' . $cInfo->number_of_logons);
         $contents[] = array('text' => '<br />' . OSCOM::getDef('text_info_country') . ' ' . $cInfo->countries_name);
         $contents[] = array('text' => '<br />' . OSCOM::getDef('text_info_number_of_reviews') . ' ' . $cInfo->number_of_reviews);
