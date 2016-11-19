@@ -275,7 +275,12 @@ class HTML
                 $field .= ' ' . $v['params'];
             }
 
-            $field .= '>' . static::outputProtected($v['text']) . '</option>';
+            $field .= '>' . static::output($v['text'], [
+                '"' => '&quot;',
+                '\'' => '&#039;',
+                '<' => '&lt;',
+                '>' => '&gt;'
+            ]) . '</option>';
 
             if (($group !== false) && (($group != $v['group']) || ($ci->hasNext() === false))) {
                 $group = false;
