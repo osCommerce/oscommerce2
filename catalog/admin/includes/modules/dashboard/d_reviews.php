@@ -1,14 +1,10 @@
 <?php
-/*
-  $Id$
-
-  osCommerce, Open Source E-Commerce Solutions
-  http://www.oscommerce.com
-
-  Copyright (c) 2010 osCommerce
-
-  Released under the GNU General Public License
-*/
+/**
+  * osCommerce Online Merchant
+  *
+  * @copyright (c) 2016 osCommerce; https://www.oscommerce.com
+  * @license MIT; https://www.oscommerce.com/license/mit.txt
+  */
 
   use OSC\OM\DateTime;
   use OSC\OM\HTML;
@@ -23,8 +19,8 @@
     var $enabled = false;
 
     function d_reviews() {
-      $this->title = MODULE_ADMIN_DASHBOARD_REVIEWS_TITLE;
-      $this->description = MODULE_ADMIN_DASHBOARD_REVIEWS_DESCRIPTION;
+      $this->title = OSCOM::getDef('module_admin_dashboard_reviews_title');
+      $this->description = OSCOM::getDef('module_admin_dashboard_reviews_description');
 
       if ( defined('MODULE_ADMIN_DASHBOARD_REVIEWS_STATUS') ) {
         $this->sort_order = MODULE_ADMIN_DASHBOARD_REVIEWS_SORT_ORDER;
@@ -39,11 +35,11 @@
       $output = '<table class="table table-hover">
                    <thead>
                      <tr class="info">
-                       <th>' . MODULE_ADMIN_DASHBOARD_REVIEWS_TITLE . '</th>
-                       <th>' . MODULE_ADMIN_DASHBOARD_REVIEWS_DATE . '</th>
-                       <th>' . MODULE_ADMIN_DASHBOARD_REVIEWS_REVIEWER . '</th>
-                       <th class="text-right">' . MODULE_ADMIN_DASHBOARD_REVIEWS_RATING . '</th>
-                       <th class="text-right">' . MODULE_ADMIN_DASHBOARD_REVIEWS_REVIEW_STATUS . '</th>
+                       <th>' . OSCOM::getDef('module_admin_dashboard_reviews_title') . '</th>
+                       <th>' . OSCOM::getDef('module_admin_dashboard_reviews_date') . '</th>
+                       <th>' . OSCOM::getDef('module_admin_dashboard_reviews_reviewer') . '</th>
+                       <th class="text-right">' . OSCOM::getDef('module_admin_dashboard_reviews_rating') . '</th>
+                       <th class="text-right">' . OSCOM::getDef('module_admin_dashboard_reviews_review_status') . '</th>
                      </tr>
                    </thead>
                    <tbody>';

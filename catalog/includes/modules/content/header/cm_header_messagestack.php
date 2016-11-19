@@ -1,15 +1,12 @@
 <?php
-/*
-  $Id$
+/**
+  * osCommerce Online Merchant
+  *
+  * @copyright (c) 2016 osCommerce; https://www.oscommerce.com
+  * @license MIT; https://www.oscommerce.com/license/mit.txt
+  */
 
-  osCommerce, Open Source E-Commerce Solutions
-  http://www.oscommerce.com
-
-  Copyright (c) 2015 osCommerce
-
-  Released under the GNU General Public License
-*/
-
+  use OSC\OM\OSCOM;
   use OSC\OM\Registry;
 
   class cm_header_messagestack {
@@ -24,8 +21,8 @@
       $this->code = get_class($this);
       $this->group = basename(dirname(__FILE__));
 
-      $this->title = MODULE_CONTENT_HEADER_MESSAGESTACK_TITLE;
-      $this->description = MODULE_CONTENT_HEADER_MESSAGESTACK_DESCRIPTION;
+      $this->title = OSCOM::getDef('module_content_header_messagestack_title');
+      $this->description = OSCOM::getDef('module_content_header_messagestack_description');
 
       if ( defined('MODULE_CONTENT_HEADER_MESSAGESTACK_STATUS') ) {
         $this->sort_order = MODULE_CONTENT_HEADER_MESSAGESTACK_SORT_ORDER;

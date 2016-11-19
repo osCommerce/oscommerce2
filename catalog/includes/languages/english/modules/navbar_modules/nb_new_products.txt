@@ -1,0 +1,3 @@
+module_navbar_new_products_title = New Products
+module_navbar_new_products_description = Show New Products Link in Navbar.
+module_navbar_new_products_public_text = <li><a href="{{new_products_url}}"><i class="fa fa-certificate"></i><span class="hidden-sm"> New Products</span></a></li>

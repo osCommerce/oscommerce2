@@ -1,16 +1,13 @@
 <?php
-/*
-  $Id$
-
-  osCommerce, Open Source E-Commerce Solutions
-  http://www.oscommerce.com
-
-  Copyright (c) 2015 osCommerce
-
-  Released under the GNU General Public License
-*/
+/**
+  * osCommerce Online Merchant
+  *
+  * @copyright (c) 2016 osCommerce; https://www.oscommerce.com
+  * @license MIT; https://www.oscommerce.com/license/mit.txt
+  */
 
   use OSC\OM\HTTP;
+  use OSC\OM\OSCOM;	
   use OSC\OM\Registry;
 
   class ar_reset_password {
@@ -23,8 +20,8 @@
     var $identifier;
 
     function __construct() {
-      $this->title = MODULE_ACTION_RECORDER_RESET_PASSWORD_TITLE;
-      $this->description = MODULE_ACTION_RECORDER_RESET_PASSWORD_DESCRIPTION;
+      $this->title = OSCOM::getDef('module_action_recorder_reset_password_title');
+      $this->description = OSCOM::getDef('module_action_recorder_reset_password_description');
 
       if ($this->check()) {
         $this->minutes = (int)MODULE_ACTION_RECORDER_RESET_PASSWORD_MINUTES;

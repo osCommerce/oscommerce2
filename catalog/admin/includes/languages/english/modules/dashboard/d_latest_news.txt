@@ -1,0 +1,9 @@
+module_admin_dashboard_latest_news_title = Latest News
+module_admin_dashboard_latest_news_description = Show the latest osCommerce News
+module_admin_dashboard_latest_news_date = Date
+module_admin_dashboard_latest_news_feed_error = Could not connect to the osCommerce website to fetch the news feed. The next attempt will be performed within 6 hours.
+module_admin_dashboard_latest_news_icon_news = Read the latest osCommerce News
+module_admin_dashboard_latest_news_icon_newsletter = Sign-Up for the osCommerce Newsletter
+module_admin_dashboard_latest_news_icon_google_plus = Circle osCommerce on Google+
+module_admin_dashboard_latest_news_icon_facebook = Become an osCommerce Fan on Facebook
+module_admin_dashboard_latest_news_icon_twitter = Follow osCommerce on Twitter

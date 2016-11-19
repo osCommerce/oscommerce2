@@ -1,0 +1,5 @@
+module_boxes_manufacturer_info_title = Manufacturer Info
+module_boxes_manufacturer_info_description = Show manufacturer information on the product information page
+module_boxes_manufacturer_info_box_title = Manufacturer Info
+module_boxes_manufacturer_info_box_homepage ={{manufacturers_name}} Homepage
+module_boxes_manufacturer_info_box_other_products = Other products

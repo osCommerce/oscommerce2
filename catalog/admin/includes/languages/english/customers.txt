@@ -1,0 +1,17 @@
+heading_title = Customers
+heading_title_search = Search:
+table_heading_firstname = First Name
+table_heading_lastname = Last Name
+table_heading_account_created = Account Created
+table_heading_action = Action
+text_date_account_created = Account Created:
+text_date_account_last_modified = Last Modified:
+text_info_date_last_logon = Last Logon:
+text_info_number_of_logons = Number of Logons:
+text_info_country = Country:
+text_info_number_of_reviews = Number of Reviews:
+text_delete_intro = Are you sure you want to delete this customer?
+text_delete_reviews = Delete {{number_of_reviews}} review(s)
+text_info_heading_delete_customer = Delete Customer
+type_below = Type below
+please_select = Select One

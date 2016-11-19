@@ -1,0 +1,3 @@
+module_content_footer_extra_copyright_title = Copyright Details
+module_content_footer_extra_copyright_description = Adds a Copyright Block to the Extra Footer Area of your site
+footer_text_body = <p>Copyright &copy; {{year}} <a href="{{store_url}}">{{store_name}}</a></p>

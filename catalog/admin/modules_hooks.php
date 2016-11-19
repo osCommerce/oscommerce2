@@ -1,14 +1,10 @@
 <?php
-/*
-  $Id$
-
-  osCommerce, Open Source E-Commerce Solutions
-  http://www.oscommerce.com
-
-  Copyright (c) 2014 osCommerce
-
-  Released under the GNU General Public License
-*/
+/**
+  * osCommerce Online Merchant
+  *
+  * @copyright (c) 2016 osCommerce; https://www.oscommerce.com
+  * @license MIT; https://www.oscommerce.com/license/mit.txt
+  */
 
   use OSC\OM\Apps;
   use OSC\OM\OSCOM;
@@ -91,7 +87,7 @@
 
 <table border="0" width="100%" cellspacing="0" cellpadding="2">
   <tr>
-    <td class="pageHeading"><?php echo HEADING_TITLE; ?></td>
+    <td class="pageHeading"><?php echo OSCOM::getDef('heading_title'); ?></td>
   </tr>
 </table>
 

@@ -1,14 +1,10 @@
 <?php
-/*
-  $Id$
-
-  osCommerce, Open Source E-Commerce Solutions
-  http://www.oscommerce.com
-
-  Copyright (c) 2016 osCommerce
-
-  Released under the GNU General Public License
-*/
+/**
+  * osCommerce Online Merchant
+  *
+  * @copyright (c) 2016 osCommerce; https://www.oscommerce.com
+  * @license MIT; https://www.oscommerce.com/license/mit.txt
+  */
 
   use OSC\OM\HTML;
   use OSC\OM\OSCOM;
@@ -26,9 +22,9 @@
       $this->code = get_class($this);
       $this->group = basename(dirname(__FILE__));
 
-      $this->title = MODULE_CONTENT_CUSTOMER_GREETING_TITLE;
-      $this->description = MODULE_CONTENT_CUSTOMER_GREETING_DESCRIPTION;
-      $this->description .= '<div class="secWarning">' . MODULE_CONTENT_BOOTSTRAP_ROW_DESCRIPTION . '</div>';
+      $this->title = OSCOM::getDef('module_content_customer_greeting_title');
+      $this->description = OSCOM::getDef('module_content_customer_greeting_description');
+      $this->description .= '<div class="secWarning">' . OSCOM::getDef('module_content_bootstrap_row_description') . '</div>';
 
       if ( defined('MODULE_CONTENT_CUSTOMER_GREETING_STATUS') ) {
         $this->sort_order = MODULE_CONTENT_CUSTOMER_GREETING_SORT_ORDER;
@@ -42,9 +38,9 @@
       $content_width = MODULE_CONTENT_CUSTOMER_GREETING_CONTENT_WIDTH;
 
       if (isset($_SESSION['customer_id'])) {
-        $customer_greeting = sprintf(MODULE_CONTENT_CUSTOMER_GREETING_PERSONAL, HTML::outputProtected($_SESSION['customer_first_name']), OSCOM::link('products_new.php'));
+        $customer_greeting = OSCOM::getDef('module_content_customer_greeting_personal', ['customer_first_name' => HTML::outputProtected($_SESSION['customer_first_name']), 'products_new_link' => OSCOM::link('products_new.php')]);
       } else {
-        $customer_greeting = sprintf(MODULE_CONTENT_CUSTOMER_GREETING_GUEST, OSCOM::link('login.php'), OSCOM::link('create_account.php'));
+        $customer_greeting = OSCOM::getDef('module_content_customer_greeting_guest', ['guest_login_link' => OSCOM::link('login.php'), 'guest_create_account_link' =>  OSCOM::link('create_account.php')]);
       }
 
       ob_start();

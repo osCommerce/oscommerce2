@@ -1,15 +1,12 @@
 <?php
-/*
-  $Id$
+/**
+  * osCommerce Online Merchant
+  *
+  * @copyright (c) 2016 osCommerce; https://www.oscommerce.com
+  * @license MIT; https://www.oscommerce.com/license/mit.txt
+  */
 
-  osCommerce, Open Source E-Commerce Solutions
-  http://www.oscommerce.com
-
-  Copyright (c) 2015 osCommerce
-
-  Released under the GNU General Public License
-*/
-
+  use OSC\OM\Apps;
   use OSC\OM\Registry;
 
   class order_total {
@@ -25,11 +22,17 @@
         $this->modules = explode(';', MODULE_ORDER_TOTAL_INSTALLED);
 
         foreach($this->modules as $value) {
-          $this->lang->loadDefinitions('modules/order_total/' . pathinfo($value, PATHINFO_FILENAME));
-          include('includes/modules/order_total/' . $value);
+          if (strpos($value, '\\') !== false) {
+            $class = Apps::getModuleClass($value, 'OrderTotal');
 
-          $class = substr($value, 0, strrpos($value, '.'));
-          $GLOBALS[$class] = new $class;
+            Registry::set('OrderTotal_' . str_replace('\\', '_', $value), new $class);
+          } else {
+            $this->lang->loadDefinitions('modules/order_total/' . pathinfo($value, PATHINFO_FILENAME));
+            include('includes/modules/order_total/' . $value);
+
+            $class = substr($value, 0, strrpos($value, '.'));
+            $GLOBALS[$class] = new $class;
+          }
         }
       }
     }
@@ -38,18 +41,27 @@
       $order_total_array = array();
       if (is_array($this->modules)) {
         foreach($this->modules as $value) {
-          $class = substr($value, 0, strrpos($value, '.'));
-          if ($GLOBALS[$class]->enabled) {
-            $GLOBALS[$class]->output = array();
-            $GLOBALS[$class]->process();
+          if (strpos($value, '\\') !== false) {
+            $OSCOM_OTM = Registry::get('OrderTotal_' . str_replace('\\', '_', $value));
+          } else {
+            $class = substr($value, 0, strrpos($value, '.'));
 
-            for ($i=0, $n=sizeof($GLOBALS[$class]->output); $i<$n; $i++) {
-              if (tep_not_null($GLOBALS[$class]->output[$i]['title']) && tep_not_null($GLOBALS[$class]->output[$i]['text'])) {
-                $order_total_array[] = array('code' => $GLOBALS[$class]->code,
-                                             'title' => $GLOBALS[$class]->output[$i]['title'],
-                                             'text' => $GLOBALS[$class]->output[$i]['text'],
-                                             'value' => $GLOBALS[$class]->output[$i]['value'],
-                                             'sort_order' => $GLOBALS[$class]->sort_order);
+            $OSCOM_OTM = $GLOBALS[$class];
+          }
+
+          if ($OSCOM_OTM->enabled) {
+            $OSCOM_OTM->output = array();
+            $OSCOM_OTM->process();
+
+            for ($i=0, $n=sizeof($OSCOM_OTM->output); $i<$n; $i++) {
+              if (tep_not_null($OSCOM_OTM->output[$i]['title']) && tep_not_null($OSCOM_OTM->output[$i]['text'])) {
+                $order_total_array[] = [
+                  'code' => $OSCOM_OTM->code,
+                  'title' => $OSCOM_OTM->output[$i]['title'],
+                  'text' => $OSCOM_OTM->output[$i]['text'],
+                  'value' => $OSCOM_OTM->output[$i]['value'],
+                  'sort_order' => $OSCOM_OTM->sort_order
+                ];
               }
             }
           }
@@ -63,13 +75,20 @@
       $output_string = '';
       if (is_array($this->modules)) {
         foreach($this->modules as $value) {
-          $class = substr($value, 0, strrpos($value, '.'));
-          if ($GLOBALS[$class]->enabled) {
-            $size = sizeof($GLOBALS[$class]->output);
+          if (strpos($value, '\\') !== false) {
+            $OSCOM_OTM = Registry::get('OrderTotal_' . str_replace('\\', '_', $value));
+          } else {
+            $class = substr($value, 0, strrpos($value, '.'));
+
+            $OSCOM_OTM = $GLOBALS[$class];
+          }
+
+          if ($OSCOM_OTM->enabled) {
+            $size = sizeof($OSCOM_OTM->output);
             for ($i=0; $i<$size; $i++) {
               $output_string .= '              <tr>' . "\n" .
-                                '                <td align="right" class="main">' . $GLOBALS[$class]->output[$i]['title'] . '</td>' . "\n" .
-                                '                <td align="right" class="main">' . $GLOBALS[$class]->output[$i]['text'] . '</td>' . "\n" .
+                                '                <td align="right" class="main">' . $OSCOM_OTM->output[$i]['title'] . '</td>' . "\n" .
+                                '                <td align="right" class="main">' . $OSCOM_OTM->output[$i]['text'] . '</td>' . "\n" .
                                 '              </tr>';
             }
           }

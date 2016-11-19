@@ -1,14 +1,10 @@
 <?php
-/*
-  $Id$
-
-  osCommerce, Open Source E-Commerce Solutions
-  http://www.oscommerce.com
-
-  Copyright (c) 2015 osCommerce
-
-  Released under the GNU General Public License
-*/
+/**
+  * osCommerce Online Merchant
+  *
+  * @copyright (c) 2016 osCommerce; https://www.oscommerce.com
+  * @license MIT; https://www.oscommerce.com/license/mit.txt
+  */
 
   use OSC\OM\OSCOM;
   use OSC\OM\Registry;
@@ -25,8 +21,8 @@
       $this->code = get_class($this);
       $this->group = basename(dirname(__FILE__));
 
-      $this->title = MODULE_CONTENT_CHECKOUT_SUCCESS_REDIRECT_OLD_ORDER_TITLE;
-      $this->description = MODULE_CONTENT_CHECKOUT_SUCCESS_REDIRECT_OLD_ORDER_DESCRIPTION;
+      $this->title = OSCOM::getDef('module_content_checkout_success_redirect_old_order_title');
+      $this->description = OSCOM::getDef('module_content_checkout_success_redirect_old_order_description');
 
       if ( defined('MODULE_CONTENT_CHECKOUT_SUCCESS_REDIRECT_OLD_ORDER_STATUS') ) {
         $this->sort_order = MODULE_CONTENT_CHECKOUT_SUCCESS_REDIRECT_OLD_ORDER_SORT_ORDER;

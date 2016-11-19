@@ -1,14 +1,10 @@
 <?php
-/*
-  $Id$
-
-  osCommerce, Open Source E-Commerce Solutions
-  http://www.oscommerce.com
-
-  Copyright (c) 2013 osCommerce
-
-  Released under the GNU General Public License
-*/
+/**
+  * osCommerce Online Merchant
+  *
+  * @copyright (c) 2016 osCommerce; https://www.oscommerce.com
+  * @license MIT; https://www.oscommerce.com/license/mit.txt
+  */
 
   use OSC\OM\OSCOM;
   use OSC\OM\Registry;
@@ -24,7 +20,7 @@
 
       $this->lang->loadDefinitions('modules/security_check/extended/mysql_utf8');
 
-      $this->title = MODULE_SECURITY_CHECK_EXTENDED_MYSQL_UTF8_TITLE;
+      $this->title = OSCOM::getDef('module_security_check_extended_mysql_utf8_title');
     }
 
     function pass() {
@@ -44,7 +40,7 @@
     }
 
     function getMessage() {
-      return '<a href="' . OSCOM::link('database_tables.php') . '">' . MODULE_SECURITY_CHECK_EXTENDED_MYSQL_UTF8_ERROR . '</a>';
+      return '<a href="' . OSCOM::link('database_tables.php') . '">' . OSCOM::getDef('module_security_check_extended_mysql_utf8_error') . '</a>';
     }
   }
 ?>

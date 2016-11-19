@@ -1,0 +1,2 @@
+module_header_tags_robot_noindex_title = Robot NoIndex
+module_header_tags_robot_noindex_description = Add robot noindex tags to specified pages

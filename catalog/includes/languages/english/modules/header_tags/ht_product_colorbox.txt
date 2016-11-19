@@ -1,0 +1,3 @@
+module_header_tags_product_colorbox_title = Colorbox Script
+module_header_tags_product_colorbox_description = Add Colorbox Script to specified pages
+module_header_tags_product_colorbox_thumbnail_layout = <em>{{product_colorbox_layout}}</em> - maximum of {{sum_product_colorbox_layout}} thumbnails per product.

@@ -1,14 +1,10 @@
 <?php
-/*
-  $Id$
-
-  osCommerce, Open Source E-Commerce Solutions
-  http://www.oscommerce.com
-
-  Copyright (c) 2013 osCommerce
-
-  Released under the GNU General Public License
-*/
+/**
+  * osCommerce Online Merchant
+  *
+  * @copyright (c) 2016 osCommerce; https://www.oscommerce.com
+  * @license MIT; https://www.oscommerce.com/license/mit.txt
+  */
 
   use OSC\OM\HTML;
   use OSC\OM\OSCOM;
@@ -66,14 +62,14 @@
 
 <div style="float: right;"><?php echo HTML::button('Reload', 'fa fa-refresh', OSCOM::link('security_checks.php')); ?></div>
 
-<h1 class="pageHeading"><?php echo HEADING_TITLE; ?></h1>
+<h1 class="pageHeading"><?php echo OSCOM::getDef('heading_title'); ?></h1>
 
 <table border="0" width="100%" cellspacing="0" cellpadding="2">
   <tr class="dataTableHeadingRow">
     <td class="dataTableHeadingContent" width="20">&nbsp;</td>
-    <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_TITLE; ?></td>
-    <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_MODULE; ?></td>
-    <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_INFO; ?></td>
+    <td class="dataTableHeadingContent"><?php echo OSCOM::getDef('table_heading_title'); ?></td>
+    <td class="dataTableHeadingContent"><?php echo OSCOM::getDef('table_heading_module'); ?></td>
+    <td class="dataTableHeadingContent"><?php echo OSCOM::getDef('table_heading_info'); ?></td>
     <td class="dataTableHeadingContent" width="20" align="right">&nbsp;</td>
   </tr>
 

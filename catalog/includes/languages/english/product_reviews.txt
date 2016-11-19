@@ -1,0 +1,3 @@
+navbar_title = Reviews
+text_click_to_enlarge = Click to enlarge
+text_of_5_stars = %s of 5 Stars!

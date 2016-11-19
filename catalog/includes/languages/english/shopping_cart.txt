@@ -1,0 +1,8 @@
+navbar_title = Cart Contents
+heading_title = What's In My Cart?
+text_cart_empty = Your Shopping Cart is empty!
+sub_title_sub_total = Sub-Total:
+sub_title_total = Total:
+out_of_stock_cant_checkout = Products marked with {{out_of_stock_label}} dont exist in desired quantity in our stock.<br />Please alter the quantity of products marked with ({{out_of_stock_label}}), Thank you
+out_of_stock_can_checkout = Products marked with {{out_of_stock_label}} dont exist in desired quantity in our stock.<br />You can buy them anyway and check the quantity we have in stock for immediate deliver in the checkout process.
+text_alternative_checkout_methods = - OR -

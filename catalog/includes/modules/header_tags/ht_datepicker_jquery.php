@@ -1,14 +1,10 @@
 <?php
-/*
-  $Id$
-
-  osCommerce, Open Source E-Commerce Solutions
-  http://www.oscommerce.com
-
-  Copyright (c) 2015 osCommerce
-
-  Released under the GNU General Public License
-*/
+/**
+  * osCommerce Online Merchant
+  *
+  * @copyright (c) 2016 osCommerce; https://www.oscommerce.com
+  * @license MIT; https://www.oscommerce.com/license/mit.txt
+  */
 
   use OSC\OM\HTML;
   use OSC\OM\OSCOM;
@@ -23,8 +19,8 @@
     var $enabled = false;
 
     function __construct() {
-      $this->title = MODULE_HEADER_TAGS_DATEPICKER_JQUERY_TITLE;
-      $this->description = MODULE_HEADER_TAGS_DATEPICKER_JQUERY_DESCRIPTION;
+      $this->title = OSCOM::getDef('module_header_tags_datepicker_jquery_title');
+      $this->description = OSCOM::getDef('module_header_tags_datepicker_jquery_description');
 
       if ( defined('MODULE_HEADER_TAGS_DATEPICKER_JQUERY_STATUS') ) {
         $this->sort_order = MODULE_HEADER_TAGS_DATEPICKER_JQUERY_SORT_ORDER;
@@ -49,10 +45,10 @@
         if (in_array(basename($PHP_SELF), $pages_array)) {
           $oscTemplate->addBlock('<script src="ext/datepicker/js/bootstrap-datepicker.js"></script>' . "\n", $this->group);
           $oscTemplate->addBlock('<link rel="stylesheet" href="ext/datepicker/css/datepicker.css" />' . "\n", 'header_tags');
-          $oscTemplate->addBlock('<script>$(\'input[data-provide="datepicker"]\').datepicker({format: \'' . JS_DATE_FORMAT . '\',viewMode: 2});</script>', $this->group);
+          $oscTemplate->addBlock('<script>$(\'input[data-provide="datepicker"]\').datepicker({format: \'' . OSCOM::getDef('js_date_format') . '\',viewMode: 2});</script>', $this->group);
           // advanced search
-          $oscTemplate->addBlock('<script>var nowTemp = new Date(); var now = new Date(nowTemp.getFullYear(), nowTemp.getMonth(), nowTemp.getDate(), 0, 0, 0, 0); $(\'#dfrom\').datepicker({format: \'' . JS_DATE_FORMAT . '\',onRender: function(date) {return date.valueOf() > now.valueOf() ? \'disabled\' : \'\';}}); </script>', $this->group);
-          $oscTemplate->addBlock('<script>$(\'#dto\').datepicker({format: \'' . JS_DATE_FORMAT . '\',onRender: function(date) {return date.valueOf() > now.valueOf() ? \'disabled\' : \'\';}});</script>', $this->group);
+          $oscTemplate->addBlock('<script>var nowTemp = new Date(); var now = new Date(nowTemp.getFullYear(), nowTemp.getMonth(), nowTemp.getDate(), 0, 0, 0, 0); $(\'#dfrom\').datepicker({format: \'' . OSCOM::getDef('js_date_format') . '\',onRender: function(date) {return date.valueOf() > now.valueOf() ? \'disabled\' : \'\';}}); </script>', $this->group);
+          $oscTemplate->addBlock('<script>$(\'#dto\').datepicker({format: \'' . OSCOM::getDef('js_date_format') . '\',onRender: function(date) {return date.valueOf() > now.valueOf() ? \'disabled\' : \'\';}});</script>', $this->group);
         }
       }
     }

@@ -1,14 +1,10 @@
 <?php
-/*
-  $Id$
-
-  osCommerce, Open Source E-Commerce Solutions
-  http://www.oscommerce.com
-
-  Copyright (c) 2014 osCommerce
-
-  Released under the GNU General Public License
-*/
+/**
+  * osCommerce Online Merchant
+  *
+  * @copyright (c) 2016 osCommerce; https://www.oscommerce.com
+  * @license MIT; https://www.oscommerce.com/license/mit.txt
+  */
 
   use OSC\OM\Cache;
   use OSC\OM\HTML;
@@ -94,7 +90,7 @@
     $OSCOM_Language = Registry::get('Language');
 
     if (!is_array($category_tree_array)) $category_tree_array = array();
-    if ( (sizeof($category_tree_array) < 1) && ($exclude != '0') ) $category_tree_array[] = array('id' => '0', 'text' => TEXT_TOP);
+    if ( (sizeof($category_tree_array) < 1) && ($exclude != '0') ) $category_tree_array[] = array('id' => '0', 'text' => OSCOM::getDef('text_top'));
 
     if ($include_itself) {
       $Qcategory = $OSCOM_Db->get('categories_description', 'cd.categories_name', ['cd.language_id' => $OSCOM_Language->getId(), 'cd.categories_id' => (int)$parent_id]);
@@ -215,7 +211,7 @@
     if (tep_not_null($image) && is_file(OSCOM::getConfig('dir_root', 'Shop') . 'images/' . $image)) {
       $image = HTML::image(OSCOM::linkImage('Shop/' . $image), $alt, $width, $height);
     } else {
-      $image = TEXT_IMAGE_NONEXISTENT;
+      $image = OSCOM::getDef('text_image_nonexistent');
     }
 
     return $image;
@@ -651,10 +647,10 @@
     $zones = tep_get_country_zones($country_id);
 
     if (sizeof($zones) > 0) {
-      $zones_select = array(array('id' => '', 'text' => PLEASE_SELECT));
+      $zones_select = array(array('id' => '', 'text' => OSCOM::getDef('please_select')));
       $zones = array_merge($zones_select, $zones);
     } else {
-      $zones = array(array('id' => '', 'text' => TYPE_BELOW));
+      $zones = array(array('id' => '', 'text' => OSCOM::getDef('type_below')));
     }
 
     return $zones;
@@ -693,7 +689,7 @@
     $tax_class_array = [
       [
         'id' => '0',
-        'text' => TEXT_NONE
+        'text' => OSCOM::getDef('text_none')
       ]
     ];
 
@@ -932,7 +928,7 @@
         if ($Qcategories->valueInt('categories_id') === 0) {
           $categories_array[$index][] = [
             'id' => '0',
-            'text' => TEXT_TOP
+            'text' => OSCOM::getDef('text_top')
           ];
         } else {
           $Qcategory = $OSCOM_Db->get([
@@ -1002,7 +998,7 @@
     }
     $calculated_category_path_string = substr($calculated_category_path_string, 0, -6);
 
-    if (strlen($calculated_category_path_string) < 1) $calculated_category_path_string = TEXT_TOP;
+    if (strlen($calculated_category_path_string) < 1) $calculated_category_path_string = OSCOM::getDef('text_top');
 
     return $calculated_category_path_string;
   }
@@ -1018,7 +1014,7 @@
     }
     $calculated_category_path_string = substr($calculated_category_path_string, 0, -6);
 
-    if (strlen($calculated_category_path_string) < 1) $calculated_category_path_string = TEXT_TOP;
+    if (strlen($calculated_category_path_string) < 1) $calculated_category_path_string = OSCOM::getDef('text_top');
 
     return $calculated_category_path_string;
   }
@@ -1222,7 +1218,7 @@
 
   function tep_get_tax_class_title($tax_class_id) {
     if ($tax_class_id == '0') {
-      return TEXT_NONE;
+      return OSCOM::getDef('text_none');
     } else {
       $Qclass = Registry::get('Db')->get('tax_class', 'tax_class_title', ['tax_class_id' => (int)$tax_class_id]);
 
@@ -1318,7 +1314,7 @@
 
   function tep_get_zone_class_title($zone_class_id) {
     if ($zone_class_id == '0') {
-      return TEXT_NONE;
+      return OSCOM::getDef('text_none');
     } else {
       $Qclass = Registry::get('Db')->get('geo_zones', [
         'geo_zone_name'
@@ -1336,7 +1332,7 @@
     $zone_class_array = [
       [
         'id' => '0',
-        'text' => TEXT_NONE
+        'text' => OSCOM::getDef('text_none')
       ]
     ];
 
@@ -1364,7 +1360,7 @@
     $statuses_array = [
       [
         'id' => '0',
-        'text' => TEXT_DEFAULT
+        'text' => OSCOM::getDef('text_default')
       ]
     ];
 
@@ -1389,7 +1385,7 @@
     $OSCOM_Db = Registry::get('Db');
     $OSCOM_Language = Registry::get('Language');
 
-    if ($order_status_id < 1) return TEXT_DEFAULT;
+    if ($order_status_id < 1) return OSCOM::getDef('text_default');
 
     if (empty($language_id) || !is_numeric($language_id)) $language_id = $OSCOM_Language->getId();
 
@@ -1446,14 +1442,14 @@
       ], 'zone_name');
 
       while ($Qstates->fetch()) {
-        if ($num_state == '1') $output_string .= '    ' . $form . '.' . $field . '.options[0] = new Option("' . PLEASE_SELECT . '", "");' . "\n";
+        if ($num_state == '1') $output_string .= '    ' . $form . '.' . $field . '.options[0] = new Option("' . OSCOM::getDef('please_select') . '", "");' . "\n";
         $output_string .= '    ' . $form . '.' . $field . '.options[' . $num_state . '] = new Option("' . $Qstates->value('zone_name') . '", "' . $Qstates->valueInt('zone_id') . '");' . "\n";
         $num_state++;
       }
       $num_country++;
     }
     $output_string .= '  } else {' . "\n" .
-                      '    ' . $form . '.' . $field . '.options[0] = new Option("' . TYPE_BELOW . '", "");' . "\n" .
+                      '    ' . $form . '.' . $field . '.options[0] = new Option("' . OSCOM::getDef('type_below') . '", "");' . "\n" .
                       '  }' . "\n";
 
     return $output_string;

@@ -1,14 +1,10 @@
 <?php
-/*
-  $Id$
-
-  osCommerce, Open Source E-Commerce Solutions
-  http://www.oscommerce.com
-
-  Copyright (c) 2015 osCommerce
-
-  Released under the GNU General Public License
-*/
+/**
+  * osCommerce Online Merchant
+  *
+  * @copyright (c) 2016 osCommerce; https://www.oscommerce.com
+  * @license MIT; https://www.oscommerce.com/license/mit.txt
+  */
 
   use OSC\OM\DateTime;
   use OSC\OM\HTML;
@@ -21,13 +17,13 @@
   $error = false;
 
   if ( (isset($_GET['keywords']) && empty($_GET['keywords'])) &&
-       (isset($_GET['dfrom']) && (empty($_GET['dfrom']) || ($_GET['dfrom'] == DOB_FORMAT_STRING))) &&
-       (isset($_GET['dto']) && (empty($_GET['dto']) || ($_GET['dto'] == DOB_FORMAT_STRING))) &&
+       (isset($_GET['dfrom']) && (empty($_GET['dfrom']) || ($_GET['dfrom'] == OSCOM::getDef('dob_format_string')))) &&
+       (isset($_GET['dto']) && (empty($_GET['dto']) || ($_GET['dto'] == OSCOM::getDef('dob_format_string')))) &&
        (isset($_GET['pfrom']) && !is_numeric($_GET['pfrom'])) &&
        (isset($_GET['pto']) && !is_numeric($_GET['pto'])) ) {
     $error = true;
 
-    $messageStack->add_session('search', ERROR_AT_LEAST_ONE_INPUT);
+    $messageStack->add_session('search', OSCOM::getDef('error_at_least_one_input'));
   } else {
     $dfrom = '';
     $dto = '';
@@ -36,11 +32,11 @@
     $keywords = '';
 
     if (isset($_GET['dfrom'])) {
-      $dfrom = (($_GET['dfrom'] == DOB_FORMAT_STRING) ? '' : $_GET['dfrom']);
+      $dfrom = (($_GET['dfrom'] == OSCOM::getDef('dob_format_string')) ? '' : $_GET['dfrom']);
     }
 
     if (isset($_GET['dto'])) {
-      $dto = (($_GET['dto'] == DOB_FORMAT_STRING) ? '' : $_GET['dto']);
+      $dto = (($_GET['dto'] == OSCOM::getDef('dob_format_string')) ? '' : $_GET['dto']);
     }
 
     if (isset($_GET['pfrom'])) {
@@ -63,7 +59,7 @@
         $error = true;
         $date_check_error = true;
 
-        $messageStack->add_session('search', ERROR_INVALID_FROM_DATE);
+        $messageStack->add_session('search', OSCOM::getDef('error_invalid_from_date'));
       }
     }
 
@@ -74,7 +70,7 @@
         $error = true;
         $date_check_error = true;
 
-        $messageStack->add_session('search', ERROR_INVALID_TO_DATE);
+        $messageStack->add_session('search', OSCOM::getDef('error_invalid_to_date'));
       }
     }
 
@@ -82,7 +78,7 @@
       if ($dfromDateTime->get() > $dtoDateTime->get()) {
         $error = true;
 
-        $messageStack->add_session('search', ERROR_TO_DATE_LESS_THAN_FROM_DATE);
+        $messageStack->add_session('search', OSCOM::getDef('error_to_date_less_than_from_date'));
       }
     }
 
@@ -92,7 +88,7 @@
         $error = true;
         $price_check_error = true;
 
-        $messageStack->add_session('search', ERROR_PRICE_FROM_MUST_BE_NUM);
+        $messageStack->add_session('search', OSCOM::getDef('error_price_from_must_be_num'));
       }
     }
 
@@ -101,7 +97,7 @@
         $error = true;
         $price_check_error = true;
 
-        $messageStack->add_session('search', ERROR_PRICE_TO_MUST_BE_NUM);
+        $messageStack->add_session('search', OSCOM::getDef('error_price_to_must_be_num'));
       }
     }
 
@@ -109,7 +105,7 @@
       if ($pfrom >= $pto) {
         $error = true;
 
-        $messageStack->add_session('search', ERROR_PRICE_TO_LESS_THAN_PRICE_FROM);
+        $messageStack->add_session('search', OSCOM::getDef('error_price_to_less_than_price_from'));
       }
     }
 
@@ -119,7 +115,7 @@
       if (empty($search_keywords)) {
         $error = true;
 
-        $messageStack->add_session('search', ERROR_INVALID_KEYWORDS);
+        $messageStack->add_session('search', OSCOM::getDef('error_invalid_keywords'));
       }
     }
   }
@@ -127,21 +123,21 @@
   if ((!isset($dfromDateTime) || !$dfromDateTime->isValid()) && (!isset($dtoDateTime) || !$dtoDateTime->isValid()) && empty($pfrom) && empty($pto) && empty($keywords)) {
     $error = true;
 
-    $messageStack->add_session('search', ERROR_AT_LEAST_ONE_INPUT);
+    $messageStack->add_session('search', OSCOM::getDef('error_at_least_one_input'));
   }
 
   if ($error == true) {
     OSCOM::redirect('advanced_search.php', tep_get_all_get_params(), true, false);
   }
 
-  $breadcrumb->add(NAVBAR_TITLE_1, OSCOM::link('advanced_search.php'));
-  $breadcrumb->add(NAVBAR_TITLE_2, OSCOM::link('advanced_search_result.php', tep_get_all_get_params(), true, false));
+  $breadcrumb->add(OSCOM::getDef('navbar_title_1'), OSCOM::link('advanced_search.php'));
+  $breadcrumb->add(OSCOM::getDef('navbar_title_2'), OSCOM::link('advanced_search_result.php', tep_get_all_get_params(), true, false));
 
   require($oscTemplate->getFile('template_top.php'));
 ?>
 
 <div class="page-header">
-  <h1><?php echo HEADING_TITLE_2; ?></h1>
+  <h1><?php echo OSCOM::getDef('heading_title_2'); ?></h1>
 </div>
 
 <div class="contentContainer">
@@ -393,7 +389,7 @@
   <br />
 
   <div class="buttonSet">
-    <?php echo HTML::button(IMAGE_BUTTON_BACK, 'fa fa-angle-left', OSCOM::link('advanced_search.php', tep_get_all_get_params(array('sort', 'page')), true, false)); ?>
+    <?php echo HTML::button(OSCOM::getDef('image_button_back'), 'fa fa-angle-left', OSCOM::link('advanced_search.php', tep_get_all_get_params(array('sort', 'page')), true, false)); ?>
   </div>
 </div>
 

@@ -1,14 +1,10 @@
 <?php
-/*
-  $Id$
-
-  osCommerce, Open Source E-Commerce Solutions
-  http://www.oscommerce.com
-
-  Copyright (c) 2013 osCommerce
-
-  Released under the GNU General Public License
-*/
+/**
+  * osCommerce Online Merchant
+  *
+  * @copyright (c) 2016 osCommerce; https://www.oscommerce.com
+  * @license MIT; https://www.oscommerce.com/license/mit.txt
+  */
 
   use OSC\OM\Cache;
   use OSC\OM\FileSystem;
@@ -24,8 +20,8 @@
     var $enabled = false;
 
     function d_partner_news() {
-      $this->title = MODULE_ADMIN_DASHBOARD_PARTNER_NEWS_TITLE;
-      $this->description = MODULE_ADMIN_DASHBOARD_PARTNER_NEWS_DESCRIPTION;
+      $this->title = OSCOM::getDef('module_admin_dashboard_partner_news_title');
+      $this->description = OSCOM::getDef('module_admin_dashboard_partner_news_description');
 
       if ( defined('MODULE_ADMIN_DASHBOARD_PARTNER_NEWS_STATUS') ) {
         $this->sort_order = MODULE_ADMIN_DASHBOARD_PARTNER_NEWS_SORT_ORDER;
@@ -33,7 +29,7 @@
       }
 
       if ( !function_exists('json_decode') ) {
-        $this->description .= '<p style="color: #ff0000; font-weight: bold;">' . MODULE_ADMIN_DASHBOARD_PARTNER_NEWS_ERROR_JSON_DECODE . '</p>';
+        $this->description .= '<p style="color: #ff0000; font-weight: bold;">' . OSCOM::getDef('module_admin_dashboard_partner_news_error_json_decode') . '</p>';
 
         $this->enabled = false;
       }
@@ -48,7 +44,7 @@
         $output = '<table class="table table-hover">
                     <thead>
                       <tr class="info">
-                        <th>' . MODULE_ADMIN_DASHBOARD_PARTNER_NEWS_TITLE . '</th>
+                        <th>' . OSCOM::getDef('module_admin_dashboard_partner_news_title') . '</th>
                       </tr>
                     </thead>
                     <tbody>';
@@ -60,7 +56,7 @@
         }
 
         $output .= '    <tr>
-                          <td class="text-right"><a href="https://www.oscommerce.com/Services" target="_blank">' . MODULE_ADMIN_DASHBOARD_PARTNER_NEWS_MORE_TITLE . '</a></td>
+                          <td class="text-right"><a href="https://www.oscommerce.com/Services" target="_blank">' . OSCOM::getDef('module_admin_dashboard_partner_news_more_title') . '</a></td>
                         </tr>
                       </tbody>
                     </table>';

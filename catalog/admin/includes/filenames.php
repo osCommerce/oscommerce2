@@ -1,21 +1,9 @@
 <?php
-/*
-  $Id$
-
-  osCommerce, Open Source E-Commerce Solutions
-  http://www.oscommerce.com
-
-  Copyright (c) 2007 osCommerce
-
-  Released under the GNU General Public License
-*/
-
 // define the filenames used in the project
   define('FILENAME_ACTION_RECORDER', 'action_recorder.php');
   define('FILENAME_ADMINISTRATORS', 'administrators.php');
   define('FILENAME_BACKUP', 'backup.php');
   define('FILENAME_BANNER_MANAGER', 'banner_manager.php');
-  define('FILENAME_BANNER_STATISTICS', 'banner_statistics.php');
   define('FILENAME_CACHE', 'cache.php');
   define('FILENAME_CATALOG_ACCOUNT_HISTORY_INFO', 'account_history_info.php');
   define('FILENAME_CATEGORIES', 'categories.php');

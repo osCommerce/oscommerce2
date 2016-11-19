@@ -1,0 +1,8 @@
+module_navbar_shopping_cart_title = Shopping Cart
+module_navbar_shopping_cart_description = Show Shopping Cart in Navbar
+module_navbar_shopping_cart_contents = <i class="fa fa-shopping-cart"></i> {{count_contents}} item(s) <span class="caret"></span>
+module_navbar_shopping_cart_no_contents = <i class="fa fa-shopping-cart"></i> 0 items
+module_navbar_shopping_cart_has_contents = {{count_contents}} item(s), {{show_total}}
+module_navbar_shopping_cart_view_cart = View Cart
+module_navbar_shopping_cart_checkout = <i class="fa fa-angle-right"></i> Checkout
+module_navbar_shopping_cart_product = <a href="{{product_url}}">{{product_quantity}} x {{product_name}}</a>

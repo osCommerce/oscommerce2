@@ -3,12 +3,13 @@
   * osCommerce Online Merchant
   *
   * @copyright (c) 2016 osCommerce; https://www.oscommerce.com
-  * @license GPL; https://www.oscommerce.com/gpllicense.txt
+  * @license MIT; https://www.oscommerce.com/license/mit.txt
   */
 
 namespace OSC\OM;
 
 use OSC\OM\Cache;
+use OSC\OM\HTML;
 use OSC\OM\OSCOM;
 use OSC\OM\Registry;
 
@@ -149,6 +150,19 @@ class Language
         return isset($this->languages[$code]);
     }
 
+    public function getImage($language_code, $width = null, $height = null)
+    {
+        if (!isset($width) || !is_int($width)) {
+            $width = 16;
+        }
+
+        if (!isset($height) || !is_int($height)) {
+            $height = 12;
+        }
+
+        return HTML::image(OSCOM::link('Shop/public/third_party/flag-icon-css/flags/4x3/' . $this->get('image', $language_code) . '.svg', null, false), $this->get('name', $language_code), $width, $height);
+    }
+
     public function getClientPreference()
     {
         if (isset($_SERVER['HTTP_ACCEPT_LANGUAGE']) && !empty($_SERVER['HTTP_ACCEPT_LANGUAGE'])) {
@@ -172,15 +186,24 @@ class Language
             $def = $this->definitions[$scope][$key];
 
             if (is_array($values) && !empty($values)) {
-                $def = preg_replace_callback('/\{\{([A-Za-z0-9-_]+)\}\}/', function($matches) use ($values) {
-                    return isset($values[$matches[1]]) ? $values[$matches[1]] : $matches[1];
-                }, $def);
+                $def = $this->parseDefinition($def, $values);
             }
 
             return $def;
         }
 
         return $key;
+    }
+
+    public static function parseDefinition($string, $values)
+    {
+        if (is_array($values) && !empty($values)) {
+            $string = preg_replace_callback('/\{\{([A-Za-z0-9-_]+)\}\}/', function($matches) use ($values) {
+                return isset($values[$matches[1]]) ? $values[$matches[1]] : $matches[1];
+            }, $string);
+        }
+
+        return $string;
     }
 
     public function definitionsExist($group, $language_code = null)
@@ -296,27 +319,23 @@ class Language
 
     public function getDefinitionsFromFile($filename)
     {
-        if (!is_file($filename)) {
-            trigger_error('OSC\OM\Language::getDefinitionsFromFile() - Filename does not exist: ' . $filename);
-
-            return false;
-        }
-
         $defs = [];
 
-        foreach (file($filename) as $line) {
-            $line = trim($line);
+        if (is_file($filename)) {
+            foreach (file($filename) as $line) {
+                $line = trim($line);
 
-            if (!empty($line) && (substr($line, 0, 1) != '#')) {
-                $delimiter = strpos($line, '=');
+                if (!empty($line) && (substr($line, 0, 1) != '#')) {
+                    $delimiter = strpos($line, '=');
 
-                if (($delimiter !== false) && (preg_match('/^[A-Za-z0-9_-]/', substr($line, 0, $delimiter)) === 1) && (substr_count(substr($line, 0, $delimiter), ' ') === 1)) {
-                    $key = trim(substr($line, 0, $delimiter));
-                    $value = trim(substr($line, $delimiter + 1));
+                    if (($delimiter !== false) && (preg_match('/^[A-Za-z0-9_-]/', substr($line, 0, $delimiter)) === 1) && (substr_count(substr($line, 0, $delimiter), ' ') === 1)) {
+                        $key = trim(substr($line, 0, $delimiter));
+                        $value = trim(substr($line, $delimiter + 1));
 
-                    $defs[$key] = $value;
-                } elseif (isset($key)) {
-                    $defs[$key] .= "\n" . $line;
+                        $defs[$key] = $value;
+                    } elseif (isset($key)) {
+                        $defs[$key] .= "\n" . $line;
+                    }
                 }
             }
         }

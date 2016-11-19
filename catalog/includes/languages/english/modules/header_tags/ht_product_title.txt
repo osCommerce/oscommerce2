@@ -1,0 +1,3 @@
+module_header_tags_product_title_title = Product Title
+module_header_tags_product_title_description = Add the title of the current product to the page title
+module_header_tags_product_seo_separator =  | 

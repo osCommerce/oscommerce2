@@ -1,14 +1,10 @@
 <?php
-/*
-  $Id$
-
-  osCommerce, Open Source E-Commerce Solutions
-  http://www.oscommerce.com
-
-  Copyright (c) 2010 osCommerce
-
-  Released under the GNU General Public License
-*/
+/**
+  * osCommerce Online Merchant
+  *
+  * @copyright (c) 2016 osCommerce; https://www.oscommerce.com
+  * @license MIT; https://www.oscommerce.com/license/mit.txt
+  */
 
   use OSC\OM\OSCOM;
 
@@ -25,7 +21,7 @@
       $this->directory = OSCOM::getConfig('dir_root', $this->site) . 'includes/modules/dashboard/';
       $this->language_directory = OSCOM::getConfig('dir_root', $this->site) . 'includes/languages/';
 
-      $this->title = MODULE_CFG_MODULE_DASHBOARD_TITLE;
+      $this->title = OSCOM::getDef('module_cfg_module_dashboard_title');
     }
   }
 ?>

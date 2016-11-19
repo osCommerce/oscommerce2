@@ -1,0 +1,2 @@
+module_header_tags_canonical_title = Canonical Header Links
+module_header_tags_canonical_description = Add header canonical links to category and product pages

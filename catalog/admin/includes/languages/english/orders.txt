@@ -1,0 +1,69 @@
+heading_title = Orders
+heading_title_search = Order ID:
+heading_title_status = Status:
+table_heading_comments = Comments
+table_heading_customers = Customers
+table_heading_order_total = Order Total
+table_heading_date_purchased = Date Purchased
+table_heading_status = Status
+table_heading_action = Action
+table_heading_quantity = Qty.
+table_heading_products_model = Model
+table_heading_products = Products
+table_heading_tax = Tax
+table_heading_total = Total
+table_heading_price_excluding_tax = Price (ex)
+table_heading_price_including_tax = Price (inc)
+table_heading_total_excluding_tax = Total (ex)
+table_heading_total_including_tax = Total (inc)
+table_heading_customer_notified = Customer Notified
+table_heading_date_added = Date Added
+entry_customer = Customer:
+entry_sold_to = SOLD TO:
+entry_delivery_to = Delivery To:
+entry_ship_to = SHIP TO:
+entry_shipping_address = Shipping Address:
+entry_billing_address = Billing Address:
+entry_payment_method = Payment Method:
+entry_credit_card_type = Credit Card Type:
+entry_credit_card_owner = Credit Card Owner:
+entry_credit_card_number = Credit Card Number:
+entry_credit_card_expires = Credit Card Expires:
+entry_sub_total = Sub-Total:
+entry_tax = Tax:
+entry_shipping = Shipping:
+entry_total = Total:
+entry_date_purchased = Date Purchased:
+entry_status = Status:
+entry_date_last_updated = Date Last Updated:
+entry_add_comment = Add Comment:
+entry_notify_customer = Notify Customer:
+entry_notify_comments = Append Comments:
+entry_printable = Print Invoice
+text_info_heading_delete_order = Delete Order
+text_info_delete_intro = Are you sure you want to delete this order?
+text_info_restock_product_quantity = Restock product quantity
+text_date_order_created = Date Created:
+text_date_order_last_modified = Last Modified:
+text_info_payment_method = Payment Method:
+text_all_orders = All Orders
+text_no_order_history = No Order History Available
+email_separator = ------------------------------------------------------
+email_text_subject = Order Update
+email_text_order_number = Order Number:
+email_text_invoice_url = Detailed Invoice:
+email_text_date_ordered = Date Ordered:
+
+email_text_status_update = Your order has been updated to the following status.
+
+New status: {{status}}
+
+Please reply to this email if you have any questions.
+
+email_text_comments_update = The comments for your order are
+
+{{comments}}
+
+error_order_does_not_exist = Error: Order #{{order_id}} does not exist.
+success_order_updated = Success: Order has been successfully updated.
+warning_order_not_updated = Warning: Nothing to change. The order was not updated.

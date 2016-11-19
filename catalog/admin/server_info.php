@@ -1,14 +1,10 @@
 <?php
-/*
-  $Id$
-
-  osCommerce, Open Source E-Commerce Solutions
-  http://www.oscommerce.com
-
-  Copyright (c) 2010 osCommerce
-
-  Released under the GNU General Public License
-*/
+/**
+  * osCommerce Online Merchant
+  *
+  * @copyright (c) 2016 osCommerce; https://www.oscommerce.com
+  * @license MIT; https://www.oscommerce.com/license/mit.txt
+  */
 
 use OSC\OM\HTML;
 use OSC\OM\HTTP;
@@ -64,7 +60,7 @@ if (!isset($_GET['action'])) {
 ?>
 
 <div class="pull-right">
-  <?= HTML::button(IMAGE_EXPORT, 'fa fa-upload', OSCOM::link('server_info.php', 'action=export'), null, 'btn-info'); ?>
+  <?= HTML::button(OSCOM::getDef('image_export'), 'fa fa-upload', OSCOM::link('server_info.php', 'action=export'), null, 'btn-info'); ?>
   <?= HTML::button(OSCOM::getDef('button_php_info'), 'fa fa-info-circle', OSCOM::link('server_info.php', 'action=getPhpInfo'), ['newwindow' => true], 'btn-info'); ?>
 </div>
 
@@ -82,7 +78,7 @@ if ($action == 'export') {
   <?=
     OSCOM::getDef('text_export_intro', [
         'button_submit_to_oscommerce' => OSCOM::getDef('button_submit_to_oscommerce'),
-        'button_save' => IMAGE_SAVE
+        'button_save' => OSCOM::getDef('image_save')
     ]);
   ?>
 </p>
@@ -92,7 +88,7 @@ if ($action == 'export') {
 </p>
 
 <p>
-  <?= HTML::button(OSCOM::getDef('button_submit_to_oscommerce'), 'fa fa-upload', OSCOM::link('server_info.php', 'action=submit'), null, 'btn-info') . '&nbsp;' . HTML::button(IMAGE_SAVE, 'fa fa-save', OSCOM::link('server_info.php', 'action=save'), null, 'btn-info'); ?>
+  <?= HTML::button(OSCOM::getDef('button_submit_to_oscommerce'), 'fa fa-upload', OSCOM::link('server_info.php', 'action=submit'), null, 'btn-info') . '&nbsp;' . HTML::button(OSCOM::getDef('image_save'), 'fa fa-save', OSCOM::link('server_info.php', 'action=save'), null, 'btn-info'); ?>
 </p>
 
 <?php

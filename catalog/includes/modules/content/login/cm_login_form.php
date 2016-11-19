@@ -1,17 +1,14 @@
 <?php
-/*
-  $Id$
-
-  osCommerce, Open Source E-Commerce Solutions
-  http://www.oscommerce.com
-
-  Copyright (c) 2015 osCommerce
-
-  Released under the GNU General Public License
-*/
+/**
+  * osCommerce Online Merchant
+  *
+  * @copyright (c) 2016 osCommerce; https://www.oscommerce.com
+  * @license MIT; https://www.oscommerce.com/license/mit.txt
+  */
 
   use OSC\OM\Hash;
   use OSC\OM\HTML;
+  use OSC\OM\OSCOM;
   use OSC\OM\Registry;
 
   class cm_login_form {
@@ -26,8 +23,8 @@
       $this->code = get_class($this);
       $this->group = basename(dirname(__FILE__));
 
-      $this->title = MODULE_CONTENT_LOGIN_FORM_TITLE;
-      $this->description = MODULE_CONTENT_LOGIN_FORM_DESCRIPTION;
+      $this->title = OSCOM::getDef('module_content_login_form_title');
+      $this->description = OSCOM::getDef('module_content_login_form_description');
 
       if ( defined('MODULE_CONTENT_LOGIN_FORM_STATUS') ) {
         $this->sort_order = MODULE_CONTENT_LOGIN_FORM_SORT_ORDER;
@@ -68,7 +65,7 @@
       }
 
       if ($error == true) {
-        $messageStack->add('login', MODULE_CONTENT_LOGIN_TEXT_LOGIN_ERROR);
+        $messageStack->add('login', OSCOM::getDef('module_content_login_text_login_error'));
       }
 
       ob_start();

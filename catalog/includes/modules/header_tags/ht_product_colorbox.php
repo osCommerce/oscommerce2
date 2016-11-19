@@ -1,14 +1,10 @@
 <?php
-/*
-  $Id$
-
-  osCommerce, Open Source E-Commerce Solutions
-  http://www.oscommerce.com
-
-  Copyright (c) 2015 osCommerce
-
-  Released under the GNU General Public License
-*/
+/**
+  * osCommerce Online Merchant
+  *
+  * @copyright (c) 2016 osCommerce; https://www.oscommerce.com
+  * @license MIT; https://www.oscommerce.com/license/mit.txt
+  */
 
   use OSC\OM\HTML;
   use OSC\OM\OSCOM;
@@ -23,8 +19,8 @@
     var $enabled = false;
 
     function __construct() {
-      $this->title = MODULE_HEADER_TAGS_PRODUCT_COLORBOX_TITLE;
-      $this->description = MODULE_HEADER_TAGS_PRODUCT_COLORBOX_DESCRIPTION;
+      $this->title = OSCOM::getDef('module_header_tags_product_colorbox_title');
+      $this->description = OSCOM::getDef('module_header_tags_product_colorbox_description');
 
       if ( defined('MODULE_HEADER_TAGS_PRODUCT_COLORBOX_STATUS') ) {
         $this->sort_order = MODULE_HEADER_TAGS_PRODUCT_COLORBOX_SORT_ORDER;
@@ -129,10 +125,10 @@
   }
 
   function ht_product_colorbox_thumbnail_number() {
-    return sprintf(MODULE_HEADER_TAGS_PRODUCT_COLORBOX_THUMBNAIL_LAYOUT, MODULE_HEADER_TAGS_PRODUCT_COLORBOX_LAYOUT, array_sum(str_split(MODULE_HEADER_TAGS_PRODUCT_COLORBOX_LAYOUT)));
+    return OSCOM::getDef('module_header_tags_product_colorbox_thumbnail_layout', ['product_colorbox_layout' => MODULE_HEADER_TAGS_PRODUCT_COLORBOX_LAYOUT, 'sum_product_colorbox_layout' => array_sum(str_split(MODULE_HEADER_TAGS_PRODUCT_COLORBOX_LAYOUT))]);
   }
 
-  function ht_product_colorbox_edit_pages($values, $key) {
+  function ht_product_colorbox_edit_pages($values, $key) { 
     global $PHP_SELF;
 
     $file_extension = substr($PHP_SELF, strrpos($PHP_SELF, '.'));

@@ -1,17 +1,14 @@
 <?php
-/*
-  $Id$
-
-  osCommerce, Open Source E-Commerce Solutions
-  http://www.oscommerce.com
-
-  Copyright (c) 2015 osCommerce
-
-  Released under the GNU General Public License
-*/
+/**
+  * osCommerce Online Merchant
+  *
+  * @copyright (c) 2016 osCommerce; https://www.oscommerce.com
+  * @license MIT; https://www.oscommerce.com/license/mit.txt
+  */
 
   use OSC\OM\HTML;
   use OSC\OM\OSCOM;
+  use OSC\OM\Registry;
 
   require('includes/application_top.php');
 
@@ -110,20 +107,41 @@
       if ( (isset($_POST['shipping'])) && (strpos($_POST['shipping'], '_')) ) {
         $_SESSION['shipping'] = $_POST['shipping'];
 
-        list($module, $method) = explode('_', $_SESSION['shipping']);
-        if ( is_object($GLOBALS[$module]) || ($_SESSION['shipping'] == 'free_free') ) {
+        $OSCOM_SM = null;
+
+        if (strpos($_SESSION['shipping'], '\\') !== false) {
+          list($vendor, $app, $module) = explode('\\', $_SESSION['shipping']);
+          list($module, $method) = explode('_', $module);
+
+          $module = $vendor . '\\' . $app . '\\' . $module;
+
+          $code = 'Shipping_' . str_replace('\\', '_', $module);
+
+          if (Registry::exists($code)) {
+            $OSCOM_SM = Registry::get($code);
+          }
+        } else {
+          list($module, $method) = explode('_', $_SESSION['shipping']);
+
+          if (is_object($GLOBALS[$module])) {
+            $OSCOM_SM = $GLOBALS[$module];
+          }
+        }
+
+        if ( isset($OSCOM_SM) || ($_SESSION['shipping'] == 'free_free') ) {
           if ($_SESSION['shipping'] == 'free_free') {
-            $quote[0]['methods'][0]['title'] = FREE_SHIPPING_TITLE;
+            $quote[0]['methods'][0]['title'] = OSCOM::getDef('free_shipping_title');
             $quote[0]['methods'][0]['cost'] = '0';
           } else {
             $quote = $shipping_modules->quote($method, $module);
           }
+
           if (isset($quote['error'])) {
             unset($_SESSION['shipping']);
           } else {
             if ( (isset($quote[0]['methods'][0]['title'])) && (isset($quote[0]['methods'][0]['cost'])) ) {
               $_SESSION['shipping'] = array('id' => $_SESSION['shipping'],
-                                            'title' => (($free_shipping == true) ?  $quote[0]['methods'][0]['title'] : $quote[0]['module'] . ' (' . $quote[0]['methods'][0]['title'] . ')'),
+                                            'title' => (($free_shipping == true) ?  $quote[0]['methods'][0]['title'] : $quote[0]['module'] . (isset($quote[0]['methods'][0]['title']) && !empty($quote[0]['methods'][0]['title']) ? ' (' . $quote[0]['methods'][0]['title'] . ')' : '')),
                                             'cost' => $quote[0]['methods'][0]['cost']);
 
               OSCOM::redirect('checkout_payment.php');
@@ -156,40 +174,40 @@
   $OSCOM_Language->loadDefinitions('checkout_shipping');
 
   if ( defined('SHIPPING_ALLOW_UNDEFINED_ZONES') && (SHIPPING_ALLOW_UNDEFINED_ZONES == 'False') && (!isset($_SESSION['shipping']) || ($_SESSION['shipping'] === false)) ) {
-    $messageStack->add_session('checkout_address', ERROR_NO_SHIPPING_AVAILABLE_TO_SHIPPING_ADDRESS);
+    $messageStack->add_session('checkout_address', OSCOM::getDef('error_no_shipping_available_to_shipping_address'));
 
     OSCOM::redirect('checkout_shipping_address.php');
   }
 
-  $breadcrumb->add(NAVBAR_TITLE_1, OSCOM::link('checkout_shipping.php'));
-  $breadcrumb->add(NAVBAR_TITLE_2, OSCOM::link('checkout_shipping.php'));
+  $breadcrumb->add(OSCOM::getDef('navbar_title_1'), OSCOM::link('checkout_shipping.php'));
+  $breadcrumb->add(OSCOM::getDef('navbar_title_2'), OSCOM::link('checkout_shipping.php'));
 
   require($oscTemplate->getFile('template_top.php'));
 ?>
 
 <div class="page-header">
-  <h1><?php echo HEADING_TITLE; ?></h1>
+  <h1><?php echo OSCOM::getDef('heading_title'); ?></h1>
 </div>
 
 <?php echo HTML::form('checkout_address', OSCOM::link('checkout_shipping.php'), 'post', 'class="form-horizontal"', ['tokenize' => true, 'action' => 'process']); ?>
 
 <div class="contentContainer">
-  <h2><?php echo TABLE_HEADING_SHIPPING_ADDRESS; ?></h2>
+  <h2><?php echo OSCOM::getDef('table_heading_shipping_address'); ?></h2>
 
   <div class="contentText row">
     <div class="col-sm-8">
       <div class="alert alert-warning">
-        <?php echo TEXT_CHOOSE_SHIPPING_DESTINATION; ?>
+        <?php echo OSCOM::getDef('text_choose_shipping_destination'); ?>
         <div class="clearfix"></div>
         <div class="pull-right">
-          <?php echo HTML::button(IMAGE_BUTTON_CHANGE_ADDRESS, 'fa fa-home', OSCOM::link('checkout_shipping_address.php')); ?>
+          <?php echo HTML::button(OSCOM::getDef('image_button_change_address'), 'fa fa-home', OSCOM::link('checkout_shipping_address.php')); ?>
         </div>
         <div class="clearfix"></div>
       </div>
     </div>
     <div class="col-sm-4">
       <div class="panel panel-primary">
-        <div class="panel-heading"><?php echo TITLE_SHIPPING_ADDRESS; ?></div>
+        <div class="panel-heading"><?php echo OSCOM::getDef('title_shipping_address'); ?></div>
         <div class="panel-body">
           <?php echo tep_address_label($_SESSION['customer_id'], $_SESSION['sendto'], true, ' ', '<br />'); ?>
         </div>
@@ -203,7 +221,7 @@
   if (tep_count_shipping_modules() > 0) {
 ?>
 
-  <h2><?php echo TABLE_HEADING_SHIPPING_METHOD; ?></h2>
+  <h2><?php echo OSCOM::getDef('table_heading_shipping_method'); ?></h2>
 
 <?php
     if (sizeof($quotes) > 1 && sizeof($quotes[0]) > 1) {
@@ -213,10 +231,10 @@
     <div class="alert alert-warning">
       <div class="row">
         <div class="col-xs-8">
-          <?php echo TEXT_CHOOSE_SHIPPING_METHOD; ?>
+          <?php echo OSCOM::getDef('text_choose_shipping_method'); ?>
         </div>
         <div class="col-xs-4 text-right">
-          <?php echo '<strong>' . TITLE_PLEASE_SELECT . '</strong>'; ?>
+          <?php echo '<strong>' . OSCOM::getDef('title_please_select') . '</strong>'; ?>
         </div>
       </div>
     </div>
@@ -227,7 +245,7 @@
 ?>
 
   <div class="contentText">
-    <div class="alert alert-info"><?php echo TEXT_ENTER_SHIPPING_INFORMATION; ?></div>
+    <div class="alert alert-info"><?php echo OSCOM::getDef('text_enter_shipping_information'); ?></div>
   </div>
 
 <?php
@@ -244,9 +262,9 @@
 
     <div class="contentText">
       <div class="panel panel-success">
-        <div class="panel-heading"><strong><?php echo FREE_SHIPPING_TITLE; ?></strong>&nbsp;<?php echo $quotes[$i]['icon']; ?></div>
+        <div class="panel-heading"><strong><?= OSCOM::getDef('free_shipping_title'); ?></strong>&nbsp;<?php echo $quotes[$i]['icon']; ?></div>
         <div class="panel-body">
-          <?php echo sprintf(FREE_SHIPPING_DESCRIPTION, $currencies->format(MODULE_ORDER_TOTAL_SHIPPING_FREE_SHIPPING_OVER)) . HTML::hiddenField('shipping', 'free_free'); ?>
+          <?php echo OSCOM::getDef('free_shipping_description', ['amount' => $currencies->format(MODULE_ORDER_TOTAL_SHIPPING_FREE_SHIPPING_OVER)]) . HTML::hiddenField('shipping', 'free_free'); ?>
         </div>
       </div>
     </div>
@@ -323,17 +341,17 @@
 
   <div class="contentText">
     <div class="form-group">
-      <label for="inputComments" class="control-label col-sm-4"><?php echo TABLE_HEADING_COMMENTS; ?></label>
+      <label for="inputComments" class="control-label col-sm-4"><?php echo OSCOM::getDef('table_heading_comments'); ?></label>
       <div class="col-sm-8">
         <?php
-        echo HTML::textareaField('comments', 60, 5, (isset($_SESSION['comments']) ? $_SESSION['comments'] : ''), 'id="inputComments" placeholder="' . TABLE_HEADING_COMMENTS . '"');
+        echo HTML::textareaField('comments', 60, 5, (isset($_SESSION['comments']) ? $_SESSION['comments'] : ''), 'id="inputComments" placeholder="' . OSCOM::getDef('table_heading_comments') . '"');
         ?>
       </div>
     </div>
   </div>
 
   <div class="buttonSet">
-    <div class="text-right"><?php echo HTML::button(IMAGE_BUTTON_CONTINUE, 'fa fa-angle-right', null, null, 'btn-success'); ?></div>
+    <div class="text-right"><?php echo HTML::button(OSCOM::getDef('image_button_continue'), 'fa fa-angle-right', null, null, 'btn-success'); ?></div>
   </div>
 
   <div class="clearfix"></div>
@@ -343,15 +361,15 @@
       <div class="stepwizard-row">
         <div class="stepwizard-step">
           <button type="button" class="btn btn-primary btn-circle">1</button>
-          <p><?php echo CHECKOUT_BAR_DELIVERY; ?></p>
+          <p><?php echo OSCOM::getDef('checkout_bar_delivery'); ?></p>
         </div>
         <div class="stepwizard-step">
           <button type="button" class="btn btn-default btn-circle" disabled="disabled">2</button>
-          <p><?php echo CHECKOUT_BAR_PAYMENT; ?></p>
+          <p><?php echo OSCOM::getDef('checkout_bar_payment'); ?></p>
         </div>
         <div class="stepwizard-step">
           <button type="button" class="btn btn-default btn-circle" disabled="disabled">3</button>
-          <p><?php echo CHECKOUT_BAR_CONFIRMATION; ?></p>
+          <p><?php echo OSCOM::getDef('checkout_bar_confirmation'); ?></p>
         </div>
       </div>
     </div>

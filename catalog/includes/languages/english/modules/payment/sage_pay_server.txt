@@ -1,0 +1,15 @@
+module_payment_sage_pay_server_text_title = Sage Pay Server
+module_payment_sage_pay_server_text_public_title = Credit Card or Bank Card (Processed by Sage Pay)
+module_payment_sage_pay_server_text_description = <img src="images/icon_info.gif" border="0" />&nbsp;<a href="http://library.oscommerce.com/Package&en&sage_pay&oscom23&server" target="_blank" style="text-decoration: underline; font-weight: bold;">View Online Documentation</a><br /><br /><img src="images/icon_popup.gif" border="0">&nbsp;<a href="https://support.sagepay.com/apply/default.aspx?PartnerID=E194E079-84A9-493C-AB9A-91CB362D3238&PromotionCode=osc3MF" target="_blank" style="text-decoration: underline; font-weight: bold;">Visit Sage Pay Website</a>&nbsp;<a href="javascript:toggleDivBlock('sagePayInfo');">(info)</a><span id="sagePayInfo" style="display: none;"><br /><i>Using the above link to signup at Sage Pay grants osCommerce a small financial bonus for referring a customer.</i></span>
+module_payment_sage_pay_server_error_admin_curl = This module requires cURL to be enabled in PHP and will not load until it has been enabled on this webserver.
+module_payment_sage_pay_server_error_admin_configuration = This module will not load until the Vendor Login Name parameter has been configured. Please edit and configure the settings of this module.
+module_payment_sage_pay_server_error_title = There has been an error processing your credit card
+module_payment_sage_pay_server_error_general = Please try again and if problems persist, please try another payment method.
+module_payment_sage_pay_server_dialog_connection_link_title = Test API Server Connection
+module_payment_sage_pay_server_dialog_connection_title = API Server Connection Test
+module_payment_sage_pay_server_dialog_connection_general_text = Testing connection to server..
+module_payment_sage_pay_server_dialog_connection_button_close = Close
+module_payment_sage_pay_server_dialog_connection_time = Connection Time:
+module_payment_sage_pay_server_dialog_connection_success = Success!
+module_payment_sage_pay_server_dialog_connection_failed = Failed! Please review the Verify SSL Certificate settings and try again.
+module_payment_sage_pay_server_dialog_connection_error = An error occurred. Please refresh the page, review your settings, and try again.

@@ -1,0 +1,25 @@
+navbar_title = Create an Account
+heading_title = My Account Information
+text_origin_login = <font color="#FF0000"><small><strong>NOTE:</strong></small></font> If you already have an account with us, please login at the <a href="{{login_link}}"><u>login page</u></a>.
+email_subject = Welcome to {{store_name}}
+email_greet_mr = Dear Mr. {{lastname}},
+email_greet_ms = Dear Ms. {{lastname}},
+email_greet_none = Dear {{firstname}}
+email_welcome = We welcome you to <strong>{{store_name}}</strong>.
+
+email_text = You can now take part in the <strong>various services</strong> we have to offer you. Some of these services include:
+
+<li><strong>Permanent Cart</strong> - Any products added to your online cart remain there until you remove them, or check them out.
+<li><strong>Address Book</strong> - We can now deliver your products to another address other than yours! This is perfect to send birthday gifts direct to the birthday-person themselves.
+<li><strong>Order History</strong> - View your history of purchases that you have made with us.
+<li><strong>Products Reviews</strong> - Share your opinions on products with our other customers.
+
+email_contact = For help with any of our online services, please email the store-owner: {{store_email_address}}
+email_warning = <strong>Note:</strong> This email address was given to us by one of our customers. If you did not signup to be a member, please send an email to {{store_email_address}}
+
+category_company = Company Details
+category_personal = Your Personal Details
+category_address = Your Address
+category_contact = Your Contact Information
+category_options = Options
+category_password = Your Password

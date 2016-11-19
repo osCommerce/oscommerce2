@@ -1,0 +1,2 @@
+module_header_tags_manufacturers_seo_title = Manufacturer SEO
+module_header_tags_manufacturers_seo_description = Add the SEO elements you defined for the manufacturer, to the underlying code of the manufacturer page (aka Meta Description and Meta Keywords).  Good for SEO.

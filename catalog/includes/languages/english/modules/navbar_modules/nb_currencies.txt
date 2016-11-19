@@ -1,0 +1,3 @@
+module_navbar_currencies_title = Currencies
+module_navbar_currencies_description = Show Currencies in Navbar. <div class="secWarning">If you have just one Currency in your shop, there is no point installing this module.</div>
+module_navbar_currencies_selected_currency = {{currency}} <span class="caret"></span>

@@ -1,14 +1,10 @@
 <?php
-/*
-  $Id$
-
-  osCommerce, Open Source E-Commerce Solutions
-  http://www.oscommerce.com
-
-  Copyright (c) 2013 osCommerce
-
-  Released under the GNU General Public License
-*/
+/**
+  * osCommerce Online Merchant
+  *
+  * @copyright (c) 2016 osCommerce; https://www.oscommerce.com
+  * @license MIT; https://www.oscommerce.com/license/mit.txt
+  */
 
   use OSC\OM\Cache;
   use OSC\OM\OSCOM;
@@ -25,7 +21,7 @@
 
       $this->lang->loadDefinitions('modules/security_check/extended/version_check');
 
-      $this->title = MODULE_SECURITY_CHECK_EXTENDED_VERSION_CHECK_TITLE;
+      $this->title = OSCOM::getDef('module_security_check_extended_version_check_title');
     }
 
     function pass() {
@@ -35,7 +31,7 @@
     }
 
     function getMessage() {
-      return '<a href="' . OSCOM::link('online_update.php') . '">' . MODULE_SECURITY_CHECK_EXTENDED_VERSION_CHECK_ERROR . '</a>';
+      return '<a href="' . OSCOM::link('online_update.php') . '">' . OSCOM::getDef('module_security_check_extended_version_check_error') . '</a>';
     }
   }
 ?>

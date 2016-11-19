@@ -1,15 +1,12 @@
 <?php
-/*
-  $Id$
+/**
+  * osCommerce Online Merchant
+  *
+  * @copyright (c) 2016 osCommerce; https://www.oscommerce.com
+  * @license MIT; https://www.oscommerce.com/license/mit.txt
+  */
 
-  osCommerce, Open Source E-Commerce Solutions
-  http://www.oscommerce.com
-
-  Copyright (c) 2015 osCommerce
-
-  Released under the GNU General Public License
-*/
-
+  use OSC\OM\OSCOM;
   use OSC\OM\Registry;
 
   class ot_total {
@@ -17,8 +14,8 @@
 
     function __construct() {
       $this->code = 'ot_total';
-      $this->title = MODULE_ORDER_TOTAL_TOTAL_TITLE;
-      $this->description = MODULE_ORDER_TOTAL_TOTAL_DESCRIPTION;
+      $this->title = OSCOM::getDef('module_order_total_total_title');
+      $this->description = OSCOM::getDef('module_order_total_total_description');
       $this->enabled = defined('MODULE_ORDER_TOTAL_TOTAL_STATUS') && (MODULE_ORDER_TOTAL_TOTAL_STATUS == 'true') ? true : false;
       $this->sort_order = defined('MODULE_ORDER_TOTAL_TOTAL_SORT_ORDER') && ((int)MODULE_ORDER_TOTAL_TOTAL_SORT_ORDER > 0) ? (int)MODULE_ORDER_TOTAL_TOTAL_SORT_ORDER : 0;
 

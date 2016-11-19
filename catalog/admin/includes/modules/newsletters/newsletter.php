@@ -1,14 +1,10 @@
 <?php
-/*
-  $Id$
-
-  osCommerce, Open Source E-Commerce Solutions
-  http://www.oscommerce.com
-
-  Copyright (c) 2002 osCommerce
-
-  Released under the GNU General Public License
-*/
+/**
+  * osCommerce Online Merchant
+  *
+  * @copyright (c) 2016 osCommerce; https://www.oscommerce.com
+  * @license MIT; https://www.oscommerce.com/license/mit.txt
+  */
 
   use OSC\OM\HTML;
   use OSC\OM\Mail;
@@ -35,7 +31,7 @@
 
       $confirm_string = '<table border="0" cellspacing="0" cellpadding="2">' . "\n" .
                         '  <tr>' . "\n" .
-                        '    <td class="main"><font color="#ff0000"><strong>' . sprintf(TEXT_COUNT_CUSTOMERS, $Qmail->valueInt('count')) . '</strong></font></td>' . "\n" .
+                        '    <td class="main"><font color="#ff0000"><strong>' . OSCOM::getDef('text_count_customers', ['count' => $Qmail->valueInt('count')]) . '</strong></font></td>' . "\n" .
                         '  </tr>' . "\n" .
                         '  <tr>' . "\n" .
                         '    <td>&nbsp;</td>' . "\n" .
@@ -53,7 +49,7 @@
                         '    <td>&nbsp;</td>' . "\n" .
                         '  </tr>' . "\n" .
                         '  <tr>' . "\n" .
-                        '    <td class="smallText" align="right">' . HTML::button(IMAGE_SEND, 'fa fa-envelope', OSCOM::link(FILENAME_NEWSLETTERS, 'page=' . $_GET['page'] . '&nID=' . $_GET['nID'] . '&action=confirm_send')) . HTML::button(IMAGE_CANCEL, 'fa fa-close', OSCOM::link(FILENAME_NEWSLETTERS, 'page=' . $_GET['page'] . '&nID=' . $_GET['nID'])) . '</td>' . "\n" .
+                        '    <td class="smallText" align="right">' . HTML::button(OSCOM::getDef('image_send'), 'fa fa-envelope', OSCOM::link(FILENAME_NEWSLETTERS, 'page=' . $_GET['page'] . '&nID=' . $_GET['nID'] . '&action=confirm_send')) . HTML::button(OSCOM::getDef('image_cancel'), 'fa fa-close', OSCOM::link(FILENAME_NEWSLETTERS, 'page=' . $_GET['page'] . '&nID=' . $_GET['nID'])) . '</td>' . "\n" .
                         '  </tr>' . "\n" .
                         '</table>';
 

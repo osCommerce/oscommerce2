@@ -1,14 +1,10 @@
 <?php
-/*
-  $Id$
-
-  osCommerce, Open Source E-Commerce Solutions
-  http://www.oscommerce.com
-
-  Copyright (c) 2015 osCommerce
-
-  Released under the GNU General Public License
-*/
+/**
+  * osCommerce Online Merchant
+  *
+  * @copyright (c) 2016 osCommerce; https://www.oscommerce.com
+  * @license MIT; https://www.oscommerce.com/license/mit.txt
+  */
 
   use OSC\OM\HTML;
   use OSC\OM\OSCOM;
@@ -44,7 +40,7 @@
     <meta itemprop="itemListOrder" content="http://schema.org/ItemListUnordered" />
     <meta itemprop="numberOfItems" content="<?php echo count($orders); ?>" />
 
-    <h3 itemprop="name"><?php echo TEXT_ALSO_PURCHASED_PRODUCTS; ?></h3>
+    <h3 itemprop="name"><?= OSCOM::getDef('text_also_purchased_products'); ?></h3>
 
     <div class="row">
       <?php echo $also_pur_prods_content; ?>

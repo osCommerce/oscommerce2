@@ -1,14 +1,10 @@
 <?php
-/*
-  $Id$
-
-  osCommerce, Open Source E-Commerce Solutions
-  http://www.oscommerce.com
-
-  Copyright (c) 2010 osCommerce
-
-  Released under the GNU General Public License
-*/
+/**
+  * osCommerce Online Merchant
+  *
+  * @copyright (c) 2016 osCommerce; https://www.oscommerce.com
+  * @license MIT; https://www.oscommerce.com/license/mit.txt
+  */
 
   use OSC\OM\FileSystem;
   use OSC\OM\OSCOM;
@@ -32,9 +28,13 @@
     function getMessage() {
       if (OSCOM::getConfig('store_sessions') == '') {
         if (!is_dir(session_save_path())) {
-          return WARNING_SESSION_DIRECTORY_NON_EXISTENT;
+          return OSCOM::getDef('warning_session_directory_non_existent', [
+            'session_path' => session_save_path()
+          ]);
         } elseif (!FileSystem::isWritable(session_save_path())) {
-          return WARNING_SESSION_DIRECTORY_NOT_WRITEABLE;
+          return OSCOM::getDef('warning_session_directory_not_writeable', [
+            'session_path' => session_save_path()
+          ]);
         }
       }
     }

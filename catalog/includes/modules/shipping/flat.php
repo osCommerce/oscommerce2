@@ -1,16 +1,13 @@
 <?php
-/*
-  $Id$
-
-  osCommerce, Open Source E-Commerce Solutions
-  http://www.oscommerce.com
-
-  Copyright (c) 2015 osCommerce
-
-  Released under the GNU General Public License
-*/
+/**
+  * osCommerce Online Merchant
+  *
+  * @copyright (c) 2016 osCommerce; https://www.oscommerce.com
+  * @license MIT; https://www.oscommerce.com/license/mit.txt
+  */
 
   use OSC\OM\HTML;
+  use OSC\OM\OSCOM;
   use OSC\OM\Registry;
 
   class flat {
@@ -23,12 +20,12 @@
       $OSCOM_Db = Registry::get('Db');
 
       $this->code = 'flat';
-      $this->title = MODULE_SHIPPING_FLAT_TEXT_TITLE;
-      $this->description = MODULE_SHIPPING_FLAT_TEXT_DESCRIPTION;
-      $this->sort_order = MODULE_SHIPPING_FLAT_SORT_ORDER;
+      $this->title = OSCOM::getDef('module_shipping_flat_text_title');
+      $this->description = OSCOM::getDef('module_shipping_flat_text_description');
+      $this->sort_order = defined('MODULE_SHIPPING_FLAT_SORT_ORDER') ? (int)MODULE_SHIPPING_FLAT_SORT_ORDER : 0;
       $this->icon = '';
-      $this->tax_class = MODULE_SHIPPING_FLAT_TAX_CLASS;
-      $this->enabled = ((MODULE_SHIPPING_FLAT_STATUS == 'True') ? true : false);
+      $this->tax_class = defined('MODULE_SHIPPING_FLAT_TAX_CLASS') ? MODULE_SHIPPING_FLAT_TAX_CLASS : 0;
+      $this->enabled = (defined('MODULE_SHIPPING_FLAT_STATUS') && (MODULE_SHIPPING_FLAT_STATUS == 'True') ? true : false);
 
       if ( ($this->enabled == true) && ((int)MODULE_SHIPPING_FLAT_ZONE > 0) ) {
         $check_flag = false;
@@ -54,9 +51,9 @@
       global $order;
 
       $this->quotes = array('id' => $this->code,
-                            'module' => MODULE_SHIPPING_FLAT_TEXT_TITLE,
+                            'module' => OSCOM::getDef('module_shipping_flat_text_title'),
                             'methods' => array(array('id' => $this->code,
-                                                     'title' => MODULE_SHIPPING_FLAT_TEXT_WAY,
+                                                     'title' => OSCOM::getDef('module_shipping_flat_text_way'),
                                                      'cost' => MODULE_SHIPPING_FLAT_COST)));
 
       if ($this->tax_class > 0) {

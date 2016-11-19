@@ -1,0 +1,16 @@
+table_heading_comments = Comments
+table_heading_products_model = Model
+table_heading_products = Products
+table_heading_tax = Tax
+table_heading_total = Total
+table_heading_price_excluding_tax = Price (ex)
+table_heading_price_including_tax = Price (inc)
+table_heading_total_excluding_tax = Total (ex)
+table_heading_total_including_tax = Total (inc)
+entry_sold_to = SOLD TO:
+entry_ship_to = SHIP TO:
+entry_payment_method = Payment Method:
+entry_sub_total = Sub-Total:
+entry_tax = Tax:
+entry_shipping = Shipping:
+entry_total = Total:

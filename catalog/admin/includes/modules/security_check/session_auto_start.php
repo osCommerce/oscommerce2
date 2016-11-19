@@ -1,14 +1,10 @@
 <?php
-/*
-  $Id$
-
-  osCommerce, Open Source E-Commerce Solutions
-  http://www.oscommerce.com
-
-  Copyright (c) 2010 osCommerce
-
-  Released under the GNU General Public License
-*/
+/**
+  * osCommerce Online Merchant
+  *
+  * @copyright (c) 2016 osCommerce; https://www.oscommerce.com
+  * @license MIT; https://www.oscommerce.com/license/mit.txt
+  */
 
   use OSC\OM\OSCOM;
   use OSC\OM\Registry;
@@ -29,7 +25,7 @@
     }
 
     function getMessage() {
-      return WARNING_SESSION_AUTO_START;
+      return OSCOM::getDef('warning_session_auto_start');
     }
   }
 ?>

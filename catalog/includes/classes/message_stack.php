@@ -1,21 +1,10 @@
 <?php
-/*
-  $Id$
-
-  osCommerce, Open Source E-Commerce Solutions
-  http://www.oscommerce.com
-
-  Copyright (c) 2015 osCommerce
-
-  Released under the GNU General Public License
-
-  Example usage:
-
-  $messageStack = new messageStack();
-  $messageStack->add('general', 'Error: Error 1', 'error');
-  $messageStack->add('general', 'Error: Error 2', 'warning');
-  if ($messageStack->size('general') > 0) echo $messageStack->output('general');
-*/
+/**
+  * osCommerce Online Merchant
+  *
+  * @copyright (c) 2016 osCommerce; https://www.oscommerce.com
+  * @license MIT; https://www.oscommerce.com/license/mit.txt
+  */
 
   class messageStack extends alertBlock {
 

@@ -1,0 +1,5 @@
+module_boxes_product_notifications_title = Product Notifications
+module_boxes_product_notifications_description = Show product notifications on the product information page
+module_boxes_product_notifications_box_title = Notifications
+module_boxes_product_notifications_box_notify = Notify me of updates to <strong>{{products_name}}</strong>
+module_boxes_product_notifications_box_notify_remove = Do not notify me of updates to <strong>{{products_name}}</strong>

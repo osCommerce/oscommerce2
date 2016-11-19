@@ -1,16 +1,13 @@
 <?php
-/*
-  $Id$
-
-  osCommerce, Open Source E-Commerce Solutions
-  http://www.oscommerce.com
-
-  Copyright (c) 2015 osCommerce
-
-  Released under the GNU General Public License
-*/
+/**
+  * osCommerce Online Merchant
+  *
+  * @copyright (c) 2016 osCommerce; https://www.oscommerce.com
+  * @license MIT; https://www.oscommerce.com/license/mit.txt
+  */
 
   use OSC\OM\Apps;
+  use OSC\OM\OSCOM;
   use OSC\OM\Registry;
 
   class payment {
@@ -124,7 +121,7 @@
         $js = '<script><!-- ' . "\n" .
               'function check_form() {' . "\n" .
               '  var error = 0;' . "\n" .
-              '  var error_message = "' . JS_ERROR . '";' . "\n" .
+              '  var error_message = ' . json_encode(OSCOM::getDef('js_error') . "\n\n") . ';' . "\n" .
               '  var payment_value = null;' . "\n" .
               '  if (document.checkout_payment.payment.length) {' . "\n" .
               '    for (var i=0; i<document.checkout_payment.payment.length; i++) {' . "\n" .
@@ -154,7 +151,7 @@
         }
 
         $js .= "\n" . '  if (payment_value == null) {' . "\n" .
-               '    error_message = error_message + "' . JS_ERROR_NO_PAYMENT_MODULE_SELECTED . '";' . "\n" .
+               '    error_message = error_message + ' . json_encode(OSCOM::getDef('js_error_no_payment_module_selected') . "\n") . ';' . "\n" .
                '    error = 1;' . "\n" .
                '  }' . "\n\n" .
                '  if (error == 1) {' . "\n" .

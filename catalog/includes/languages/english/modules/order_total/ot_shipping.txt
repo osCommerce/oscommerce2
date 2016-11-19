@@ -1,0 +1,4 @@
+module_order_total_shipping_title = Shipping
+module_order_total_shipping_description = Order Shipping Cost
+free_shipping_title = Free Shipping
+free_shipping_description = Free shipping for orders over {{amount}}

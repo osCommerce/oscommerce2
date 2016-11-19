@@ -1,0 +1,9 @@
+heading_title = Contact Us
+navbar_title = Contact Us
+text_success = Your enquiry has been successfully sent to the Store Owner.
+email_subject = Enquiry from {{store_name}}
+entry_name = Full Name
+entry_email = E-Mail Address
+entry_enquiry = Enquiry
+entry_enquiry_text =
+error_action_recorder = Error: An enquiry has already been sent. Please try again in {{module_action_recorder_contact_us_email_minutes}} minutes.

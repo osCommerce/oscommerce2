@@ -1,14 +1,10 @@
 <?php
-/*
-  $Id$
-
-  osCommerce, Open Source E-Commerce Solutions
-  http://www.oscommerce.com
-
-  Copyright (c) 2015 osCommerce
-
-  Released under the GNU General Public License
-*/
+/**
+  * osCommerce Online Merchant
+  *
+  * @copyright (c) 2016 osCommerce; https://www.oscommerce.com
+  * @license MIT; https://www.oscommerce.com/license/mit.txt
+  */
 
   use OSC\OM\HTML;
   use OSC\OM\OSCOM;
@@ -23,8 +19,8 @@
     var $enabled = false;
 
     function __construct() {
-      $this->title = MODULE_BOXES_MANUFACTURER_INFO_TITLE;
-      $this->description = MODULE_BOXES_MANUFACTURER_INFO_DESCRIPTION;
+      $this->title = OSCOM::getDef('module_boxes_manufacturer_info_title');
+      $this->description = OSCOM::getDef('module_boxes_manufacturer_info_description');
 
       if ( defined('MODULE_BOXES_MANUFACTURER_INFO_STATUS') ) {
         $this->sort_order = MODULE_BOXES_MANUFACTURER_INFO_SORT_ORDER;
@@ -54,7 +50,7 @@
           }
 
           if (!empty($Qmanufacturer->value('manufacturers_url'))) {
-            $manufacturer_info_string .= '<div class="text-center"><a href="' . OSCOM::link('redirect.php', 'action=manufacturer&manufacturers_id=' . $Qmanufacturer->valueInt('manufacturers_id')) . '" target="_blank">' . sprintf(MODULE_BOXES_MANUFACTURER_INFO_BOX_HOMEPAGE, $Qmanufacturer->value('manufacturers_name')) . '</a></div>';
+            $manufacturer_info_string .= '<div class="text-center"><a href="' . OSCOM::link('redirect.php', 'action=manufacturer&manufacturers_id=' . $Qmanufacturer->valueInt('manufacturers_id')) . '" target="_blank">' . OSCOM::getDef('module_boxes_manufacturer_info_box_homepage', ['manufacturers_name' => $Qmanufacturer->value('manufacturers_name')]) . '</a></div>';
           }
 
           ob_start();

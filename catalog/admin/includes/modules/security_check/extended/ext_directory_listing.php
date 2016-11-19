@@ -1,14 +1,10 @@
 <?php
-/*
-  $Id$
-
-  osCommerce, Open Source E-Commerce Solutions
-  http://www.oscommerce.com
-
-  Copyright (c) 2014 osCommerce
-
-  Released under the GNU General Public License
-*/
+/**
+  * osCommerce Online Merchant
+  *
+  * @copyright (c) 2016 osCommerce; https://www.oscommerce.com
+  * @license MIT; https://www.oscommerce.com/license/mit.txt
+  */
 
   use OSC\OM\OSCOM;
   use OSC\OM\Registry;
@@ -24,7 +20,7 @@
 
       $this->lang->loadDefinitions('modules/security_check/extended/ext_directory_listing');
 
-      $this->title = MODULE_SECURITY_CHECK_EXTENDED_EXT_DIRECTORY_LISTING_TITLE;
+      $this->title = OSCOM::getDef('module_security_check_extended_ext_directory_listing_title');
     }
 
     function pass() {
@@ -34,7 +30,10 @@
     }
 
     function getMessage() {
-      return MODULE_SECURITY_CHECK_EXTENDED_EXT_DIRECTORY_LISTING_HTTP_200;
+      return OSCOM::getDef('module_security_check_extended_ext_directory_listing_http_200', [
+        'ext_url' => OSCOM::link('Shop/ext/'),
+        'ext_path' => OSCOM::getConfig('http_path', 'Shop') . 'ext/'
+      ]);
     }
 
     function getHttpRequest($url) {

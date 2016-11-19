@@ -1,0 +1,2 @@
+module_header_tags_grid_list_view_title = Grid List Javascript (jQuery)
+module_header_tags_grid_list_view_description = Add Grid List javascript to specified pages, which invokes a Grid/List view for product lists

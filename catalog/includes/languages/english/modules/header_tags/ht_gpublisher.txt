@@ -1,0 +1,2 @@
+module_header_tags_gpublisher_title = Google+ Direct Connect Module
+module_header_tags_gpublisher_description = Add the G+ Direct Connect Link to your store.<br><div class="secWarning">See <a href="https://developers.google.com/+/web/badge/#direct-connect">#direct-connect</a> for more details.</div>

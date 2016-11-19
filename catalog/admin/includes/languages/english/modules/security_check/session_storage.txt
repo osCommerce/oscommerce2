@@ -1,0 +1,2 @@
+warning_session_directory_non_existent = The sessions directory does not exist: {{session_path}}. Sessions will not work until this directory is created.
+warning_session_directory_not_writeable = I am not able to write to the sessions directory: {{session_path}}. Sessions will not work until the right user permissions are set.

@@ -1,0 +1,11 @@
+navbar_title_1 = My Account
+navbar_title_2 = Product Notifications
+heading_title = Product Notifications
+my_notifications_title = My Product Notifications
+my_notifications_description = The product notification list allows you to stay up to date on products you find of interest.<br /><br />To be up to date on all product changes, select <strong>Global Product Notifications</strong>.
+global_notifications_title = Global Product Notifications
+global_notifications_description = Receive notifications on all available products.
+notifications_title = Product Notifications
+notifications_description = To remove a product notification, clear the products checkbox and click on Continue.
+notifications_non_existing = There are currently no products marked to be notified on.<br /><br />To add products to your product notification list, click on the notification link available on the detailed product information page.
+success_notifications_updated = Your product notifications have been successfully updated.

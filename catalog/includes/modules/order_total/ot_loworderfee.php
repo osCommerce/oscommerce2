@@ -1,15 +1,12 @@
 <?php
-/*
-  $Id$
+/**
+  * osCommerce Online Merchant
+  *
+  * @copyright (c) 2016 osCommerce; https://www.oscommerce.com
+  * @license MIT; https://www.oscommerce.com/license/mit.txt
+  */
 
-  osCommerce, Open Source E-Commerce Solutions
-  http://www.oscommerce.com
-
-  Copyright (c) 2015 osCommerce
-
-  Released under the GNU General Public License
-*/
-
+  use OSC\OM\OSCOM;
   use OSC\OM\Registry;
 
   class ot_loworderfee {
@@ -17,8 +14,8 @@
 
     function __construct() {
       $this->code = 'ot_loworderfee';
-      $this->title = MODULE_ORDER_TOTAL_LOWORDERFEE_TITLE;
-      $this->description = MODULE_ORDER_TOTAL_LOWORDERFEE_DESCRIPTION;
+      $this->title = OSCOM::getDef('module_order_total_loworderfee_title');
+      $this->description = OSCOM::getDef('module_order_total_loworderfee_description');
       $this->enabled = defined('MODULE_ORDER_TOTAL_LOWORDERFEE_STATUS') && (MODULE_ORDER_TOTAL_LOWORDERFEE_STATUS == 'true') ? true : false;
       $this->sort_order = defined('MODULE_ORDER_TOTAL_LOWORDERFEE_SORT_ORDER') && ((int)MODULE_ORDER_TOTAL_LOWORDERFEE_SORT_ORDER > 0) ? (int)MODULE_ORDER_TOTAL_LOWORDERFEE_SORT_ORDER : 0;
 

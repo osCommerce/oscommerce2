@@ -1,0 +1,12 @@
+heading_title = Welcome to {{store_name}}
+table_heading_new_products = New Products For %s
+text_no_products = There are no products available in this category.
+text_number_of_products = Number of Products:
+text_show = <strong>Show:</strong>
+text_buy = Buy 1 '
+text_now = ' now
+text_all_categories = All Categories
+text_all_manufacturers = All Manufacturers
+meta_seo_title = Index Page Title
+meta_seo_description = This is the description of your site to be used in the META Description Element
+meta_seo_keywords = these, are, the, comma, separated, keywords, used in the META keywords Element

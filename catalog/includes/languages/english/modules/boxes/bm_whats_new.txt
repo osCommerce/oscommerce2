@@ -1,0 +1,3 @@
+module_boxes_whats_new_title = What's New
+module_boxes_whats_new_description = Show the newest products
+module_boxes_whats_new_box_title = What's New?

@@ -1,16 +1,13 @@
 <?php
-/*
-  $Id$
-
-  osCommerce, Open Source E-Commerce Solutions
-  http://www.oscommerce.com
-
-  Copyright (c) 2015 osCommerce
-
-  Released under the GNU General Public License
-*/
+/**
+  * osCommerce Online Merchant
+  *
+  * @copyright (c) 2016 osCommerce; https://www.oscommerce.com
+  * @license MIT; https://www.oscommerce.com/license/mit.txt
+  */
 
   use OSC\OM\HTTP;
+  use OSC\OM\OSCOM;	
   use OSC\OM\Registry;
 
   class ar_tell_a_friend {
@@ -22,8 +19,8 @@
     var $identifier;
 
     function __construct() {
-      $this->title = MODULE_ACTION_RECORDER_TELL_A_FRIEND_TITLE;
-      $this->description = MODULE_ACTION_RECORDER_TELL_A_FRIEND_DESCRIPTION;
+      $this->title = OSCOM::getDef('module_action_recorder_tell_a_friend_title');
+      $this->description = OSCOM::getDef('module_action_recorder_tell_a_friend_description');
 
       if ($this->check()) {
         $this->minutes = (int)MODULE_ACTION_RECORDER_TELL_A_FRIEND_EMAIL_MINUTES;

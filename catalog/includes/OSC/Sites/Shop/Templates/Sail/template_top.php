@@ -1,15 +1,4 @@
 <?php
-/*
-  $Id$
-
-  osCommerce, Open Source E-Commerce Solutions
-  http://www.oscommerce.com
-
-  Copyright (c) 2015 osCommerce
-
-  Released under the GNU General Public License
-*/
-
   use OSC\OM\HTML;
   use OSC\OM\OSCOM;
 
@@ -24,9 +13,9 @@
   }
 ?>
 <!DOCTYPE html>
-<html <?php echo HTML_PARAMS; ?>>
+<html <?php echo OSCOM::getDef('html_params'); ?>>
 <head>
-<meta charset="<?php echo CHARSET; ?>">
+<meta charset="<?php echo OSCOM::getDef('charset'); ?>">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <title><?php echo HTML::outputProtected($oscTemplate->getTitle()); ?></title>

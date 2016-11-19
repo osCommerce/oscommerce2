@@ -1,0 +1,2 @@
+module_security_check_extended_admin_backup_directory_listing_title = admin/includes/backups/ Directory Listing
+module_security_check_extended_admin_backup_directory_listing_http_200 = The <a href="{{backups_url}}" target="_blank">{{backups_path}}</a> directory is publicly accessible and/or browsable - please disable directory listing for this directory in your web server configuration.

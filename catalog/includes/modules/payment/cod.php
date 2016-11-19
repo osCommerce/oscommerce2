@@ -1,15 +1,12 @@
 <?php
-/*
-  $Id$
+/**
+  * osCommerce Online Merchant
+  *
+  * @copyright (c) 2016 osCommerce; https://www.oscommerce.com
+  * @license MIT; https://www.oscommerce.com/license/mit.txt
+  */
 
-  osCommerce, Open Source E-Commerce Solutions
-  http://www.oscommerce.com
-
-  Copyright (c) 2015 osCommerce
-
-  Released under the GNU General Public License
-*/
-
+  use OSC\OM\OSCOM;
   use OSC\OM\Registry;
 
   class cod {
@@ -19,8 +16,8 @@
       global $order;
 
       $this->code = 'cod';
-      $this->title = MODULE_PAYMENT_COD_TEXT_TITLE;
-      $this->description = MODULE_PAYMENT_COD_TEXT_DESCRIPTION;
+      $this->title = OSCOM::getDef('module_payment_cod_text_title');
+      $this->description = OSCOM::getDef('module_payment_cod_text_description');
       $this->sort_order = defined('MODULE_PAYMENT_COD_SORT_ORDER') ? MODULE_PAYMENT_COD_SORT_ORDER : 0;
       $this->enabled = defined('MODULE_PAYMENT_COD_STATUS') && (MODULE_PAYMENT_COD_STATUS == 'True') ? true : false;
       $this->order_status = defined('MODULE_PAYMENT_COD_ORDER_STATUS_ID') && ((int)MODULE_PAYMENT_COD_ORDER_STATUS_ID > 0) ? (int)MODULE_PAYMENT_COD_ORDER_STATUS_ID : 0;

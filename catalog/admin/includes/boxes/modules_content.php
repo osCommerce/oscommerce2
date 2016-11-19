@@ -1,21 +1,17 @@
 <?php
-/*
-  $Id$
-
-  osCommerce, Open Source E-Commerce Solutions
-  http://www.oscommerce.com
-
-  Copyright (c) 2014 osCommerce
-
-  Released under the GNU General Public License
-*/
+/**
+  * osCommerce Online Merchant
+  *
+  * @copyright (c) 2016 osCommerce; https://www.oscommerce.com
+  * @license MIT; https://www.oscommerce.com/license/mit.txt
+  */
 
   use OSC\OM\OSCOM;
 
   foreach ( $cl_box_groups as &$group ) {
-    if ( $group['heading'] == BOX_HEADING_MODULES ) {
+    if ( $group['heading'] == OSCOM::getDef('box_heading_modules') ) {
       $group['apps'][] = array('code' => 'modules_content.php',
-                               'title' => MODULES_ADMIN_MENU_MODULES_CONTENT,
+                               'title' => OSCOM::getDef('modules_admin_menu_modules_content'),
                                'link' => OSCOM::link('modules_content.php'));
 
       break;

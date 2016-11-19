@@ -1,0 +1,13 @@
+navbar_title_1 = Checkout
+navbar_title_2 = Change Billing Address
+heading_title = Payment Information
+table_heading_payment_address = Billing Address
+text_selected_payment_destination = This is the currently selected billing address where the invoice to this order will be delivered to.
+title_payment_address = Billing Address:
+table_heading_address_book_entries = Address Book Entries
+text_select_other_payment_destination = Please select the preferred billing address if the invoice to this order is to be delivered elsewhere.
+title_please_select = Please Select
+table_heading_new_payment_address = New Billing Address
+text_create_new_payment_address = Please use the following form to create a new billing address to use for this order.
+title_continue_checkout_procedure = Continue Checkout Procedure
+text_continue_checkout_procedure = to select the preferred payment method.

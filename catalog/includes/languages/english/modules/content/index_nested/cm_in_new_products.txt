@@ -1,0 +1,7 @@
+module_content_in_new_products_title = New Products
+module_content_in_new_products_description = Shows the "New Products" module on your Categories page.
+  
+module_content_in_new_products_heading = New Products For {{current_month}}
+  
+module_content_in_new_products_button_view = View
+module_content_in_new_products_button_buy = Buy

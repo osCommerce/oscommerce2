@@ -1,14 +1,10 @@
 <?php
-/*
-  $Id$
-
-  osCommerce, Open Source E-Commerce Solutions
-  http://www.oscommerce.com
-
-  Copyright (c) 2016 osCommerce
-
-  Released under the GNU General Public License
-*/
+/**
+  * osCommerce Online Merchant
+  *
+  * @copyright (c) 2016 osCommerce; https://www.oscommerce.com
+  * @license MIT; https://www.oscommerce.com/license/mit.txt
+  */
 
   use OSC\OM\OSCOM;
 
@@ -24,6 +20,6 @@
     function __construct() {
       $this->directory = OSCOM::getConfig('dir_root', $this->site) . 'includes/modules/navbar_modules/';
       $this->language_directory = OSCOM::getConfig('dir_root', $this->site) . 'includes/languages/';
-      $this->title = MODULE_CFG_MODULE_CONTENT_NAVBAR_TITLE;
+      $this->title = OSCOM::getDef('module_cfg_module_content_navbar_title');
     }
   }

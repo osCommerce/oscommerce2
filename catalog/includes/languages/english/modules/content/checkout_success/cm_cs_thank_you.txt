@@ -1,0 +1,6 @@
+module_content_checkout_success_thank_you_title = Thank You
+module_content_checkout_success_thank_you_description = Show thank you block on the checkout success page.
+module_content_checkout_success_text_success = Your order has been successfully processed! Your products will arrive at their destination within 2-5 working days.
+module_content_checkout_success_text_see_orders = You can view the status of your order any time in your account <a class="btn btn-success" role="button" href="{{account_history_link}}">View Orders</a> page.
+module_content_checkout_success_text_contact_store_owner = Please forward any questions you may have to us on our <a class="btn btn-info" role="button" href="{{contact_us_link}}">Contact Us</a> page.
+module_content_checkout_success_text_thanks_for_shopping = <strong>Thanks for shopping with us</strong>

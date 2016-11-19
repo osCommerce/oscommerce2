@@ -1,0 +1,29 @@
+navbar_title = Tell A Friend
+heading_title = Tell A Friend About '{{products_name}}'
+form_title_customer_details = Your Details
+form_title_friend_details = Your Friends Details
+form_title_friend_message = Your Message
+form_field_customer_name = Your Name
+form_field_customer_email = Your E-Mail Address
+form_field_friend_name = Your Friends Name
+form_field_friend_email = Your Friends E-Mail Address
+text_email_successful_sent = Your email about <strong>{{email_products_name}}</strong> has been successfully sent to <strong>{{to_name}}</strong>.
+text_email_subject = Your friend {{from_name}} has recommended this great product from {{store_name}}
+
+text_email_intro = Hi {{to_name}}!
+
+Your friend, {{from_name}}, thought that you would be interested in {{products_name}} from {{store_name}}.
+
+text_email_link = To view the product click on the link below or copy and paste the link into your web browser:
+
+{{email_product_link}}
+
+text_email_signature = Regards,
+
+{{email_store_name_link}}
+
+error_to_name = Error: Your friends name must not be empty.
+error_to_address = Error: Your friends e-mail address must be a valid e-mail address.
+error_from_name = Error: Your name must not be empty.
+error_from_address = Error: Your e-mail address must be a valid e-mail address.
+error_action_recorder = Error: An e-mail has already been sent. Please try again in {{module_action_recorder_tell_a_friend_email_minutes}} minutes.

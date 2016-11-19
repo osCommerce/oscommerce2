@@ -1,0 +1,3 @@
+module_navbar_home_title = Home
+module_navbar_home_description = Show Home Link in Navbar. <div class="secWarning">If you wish to have a Home button permanently displayed (even when the rest of the Menu is collapsed, eg in XS viewport) you could use the Brand module instead.</div>
+module_navbar_home_public_text = <li><a href="{{store_url}}"><i class="fa fa-home"></i><span class="hidden-sm"> Home</span></a></li>

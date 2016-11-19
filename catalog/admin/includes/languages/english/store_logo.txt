@@ -1,0 +1,5 @@
+heading_title = Store Logo
+text_logo_image = New Logo:
+text_format_and_location = The store logo must be in .png or .jpg or .gif format and will be saved into:
+success_logo_updated = Success: The store logo has successfully been updated!
+error_images_directory_not_writeable = Error: The images directory cannot be uploaded to. (<a href="{{sec_dir_permissions_link}}">click here to review the directory permissions</a>)

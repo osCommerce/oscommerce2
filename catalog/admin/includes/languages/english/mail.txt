@@ -1,0 +1,10 @@
+heading_title = Send Email To Customers
+text_customer = Customer:
+text_subject = Subject:
+text_from = From:
+text_message = Message:
+text_select_customer = Select Customer
+text_all_customers = All Customers
+text_newsletter_customers = To All Newsletter Subscribers
+notice_email_sent_to = Notice: Email sent to: {{mail_sent_to}}
+error_no_customer_selected = Error: No customer has been selected.

@@ -1,0 +1,13 @@
+navbar_title_1 = My Account
+navbar_title_2 = History
+heading_title = My Order History
+text_order_number = Order Number:
+text_order_status = Order Status:
+text_order_date = Order Date:
+text_order_shipped_to = Shipped To:
+text_order_billed_to = Billed To:
+text_order_products = Products:
+text_order_cost = Order Cost:
+text_view_order = View Order
+text_no_purchases = You have not yet made any purchases.
+text_display_number_of_orders = Displaying <strong>{{listing_from}}</strong> to <strong>{{listing_to}}</strong> (of <strong>{{listing_total}}</strong> orders)

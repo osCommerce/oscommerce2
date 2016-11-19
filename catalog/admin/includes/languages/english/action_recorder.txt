@@ -1,0 +1,10 @@
+heading_title = Action Recorder
+table_heading_module = Module
+table_heading_customer = Customer
+table_heading_identifier = Identifier
+table_heading_date_added = Date
+table_heading_action = Action
+text_filter_search = Search
+text_all_modules = -- All Modules --
+text_guest = Guest
+success_expired_entries = Success: {{expired_entries}} expired entries were removed.

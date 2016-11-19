@@ -1,14 +1,10 @@
 <?php
-/*
-  $Id$
-
-  osCommerce, Open Source E-Commerce Solutions
-  http://www.oscommerce.com
-
-  Copyright (c) 2015 osCommerce
-
-  Released under the GNU General Public License
-*/
+/**
+  * osCommerce Online Merchant
+  *
+  * @copyright (c) 2016 osCommerce; https://www.oscommerce.com
+  * @license MIT; https://www.oscommerce.com/license/mit.txt
+  */
 
   use OSC\OM\OSCOM;
   use OSC\OM\Registry;
@@ -22,8 +18,8 @@
     var $enabled = false;
 
     function __construct() {
-      $this->title = MODULE_BOXES_PRODUCT_NOTIFICATIONS_TITLE;
-      $this->description = MODULE_BOXES_PRODUCT_NOTIFICATIONS_DESCRIPTION;
+      $this->title = OSCOM::getDef('module_boxes_product_notifications_title');
+      $this->description = OSCOM::getDef('module_boxes_product_notifications_description');
 
       if ( defined('MODULE_BOXES_PRODUCT_NOTIFICATIONS_STATUS') ) {
         $this->sort_order = MODULE_BOXES_PRODUCT_NOTIFICATIONS_SORT_ORDER;
@@ -48,9 +44,9 @@
         $notif_contents = '';
 
         if ($notification_exists == true) {
-          $notif_contents = '<a href="' . OSCOM::link(basename($PHP_SELF), tep_get_all_get_params(array('action')) . 'action=notify_remove') . '"><span class="fa fa-remove"></span> ' . sprintf(MODULE_BOXES_PRODUCT_NOTIFICATIONS_BOX_NOTIFY_REMOVE, tep_get_products_name($_GET['products_id'])) .'</a>';
+          $notif_contents = '<a href="' . OSCOM::link(basename($PHP_SELF), tep_get_all_get_params(array('action')) . 'action=notify_remove') . '"><span class="fa fa-remove"></span> ' . OSCOM::getDef('module_boxes_product_notifications_box_notify_remove', ['products_name' => tep_get_products_name($_GET['products_id'])]) .'</a>';
         } else {
-          $notif_contents = '<a href="' . OSCOM::link(basename($PHP_SELF), tep_get_all_get_params(array('action')) . 'action=notify') . '"><span class="fa fa-envelope"></span> ' . sprintf(MODULE_BOXES_PRODUCT_NOTIFICATIONS_BOX_NOTIFY, tep_get_products_name($_GET['products_id'])) .'</a>';
+          $notif_contents = '<a href="' . OSCOM::link(basename($PHP_SELF), tep_get_all_get_params(array('action')) . 'action=notify') . '"><span class="fa fa-envelope"></span> ' . OSCOM::getDef('module_boxes_product_notifications_box_notify', ['products_name' => tep_get_products_name($_GET['products_id'])]) .'</a>';
         }
 
         ob_start();

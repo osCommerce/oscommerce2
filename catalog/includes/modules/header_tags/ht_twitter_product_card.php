@@ -1,14 +1,10 @@
 <?php
-/*
-  $Id$
-
-  osCommerce, Open Source E-Commerce Solutions
-  http://www.oscommerce.com
-
-  Copyright (c) 2015 osCommerce
-
-  Released under the GNU General Public License
-*/
+/**
+  * osCommerce Online Merchant
+  *
+  * @copyright (c) 2016 osCommerce; https://www.oscommerce.com
+  * @license MIT; https://www.oscommerce.com/license/mit.txt
+  */
 
   use OSC\OM\HTML;
   use OSC\OM\OSCOM;
@@ -23,8 +19,8 @@
     var $enabled = false;
 
     function __construct() {
-      $this->title = MODULE_HEADER_TAGS_TWITTER_PRODUCT_CARD_TITLE;
-      $this->description = MODULE_HEADER_TAGS_TWITTER_PRODUCT_CARD_DESCRIPTION;
+      $this->title = OSCOM::getDef('module_header_tags_twitter_product_card_title');
+      $this->description = OSCOM::getDef('module_header_tags_twitter_product_card_description');
 
       if ( defined('MODULE_HEADER_TAGS_TWITTER_PRODUCT_CARD_STATUS') ) {
         $this->sort_order = MODULE_HEADER_TAGS_TWITTER_PRODUCT_CARD_SORT_ORDER;

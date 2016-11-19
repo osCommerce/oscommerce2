@@ -1,0 +1,9 @@
+heading_title = Online Update
+table_heading_version = Version
+table_heading_released = Release Date
+table_heading_action = Action
+text_release_link = View Release Annoucement
+title_installed_version = Installed Version:
+version_running_latest = You are running the latest version of osCommerce Online Merchant.
+version_upgrades_available = A new version is available for download! (osCommerce Online Merchant v{{version}})
+error_could_not_connect = Could not connect to the osCommerce website to check for new versions.

@@ -1,14 +1,10 @@
 <?php
-/*
-  $Id$
-
-  osCommerce, Open Source E-Commerce Solutions
-  http://www.oscommerce.com
-
-  Copyright (c) 2015 osCommerce
-
-  Released under the GNU General Public License
-*/
+/**
+  * osCommerce Online Merchant
+  *
+  * @copyright (c) 2016 osCommerce; https://www.oscommerce.com
+  * @license MIT; https://www.oscommerce.com/license/mit.txt
+  */
 
   use OSC\OM\OSCOM;
   use OSC\OM\Registry;
@@ -22,9 +18,9 @@
     var $enabled = false;
 
     function __construct() {
-      $this->title = MODULE_SOCIAL_BOOKMARKS_PINTEREST_TITLE;
-      $this->public_title = MODULE_SOCIAL_BOOKMARKS_PINTEREST_PUBLIC_TITLE;
-      $this->description = MODULE_SOCIAL_BOOKMARKS_PINTEREST_DESCRIPTION;
+      $this->title = OSCOM::getDef('module_social_bookmarks_pinterest_title');
+      $this->public_title = OSCOM::getDef('module_social_bookmarks_pinterest_public_title');
+      $this->description = OSCOM::getDef('module_social_bookmarks_pinterest_description');
 
       if ( defined('MODULE_SOCIAL_BOOKMARKS_PINTEREST_STATUS') ) {
         $this->sort_order = MODULE_SOCIAL_BOOKMARKS_PINTEREST_SORT_ORDER;

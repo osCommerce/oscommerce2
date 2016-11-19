@@ -1,15 +1,12 @@
 <?php
-/*
-  $Id$
+/**
+  * osCommerce Online Merchant
+  *
+  * @copyright (c) 2016 osCommerce; https://www.oscommerce.com
+  * @license MIT; https://www.oscommerce.com/license/mit.txt
+  */
 
-  osCommerce, Open Source E-Commerce Solutions
-  http://www.oscommerce.com
-
-  Copyright (c) 2015 osCommerce
-
-  Released under the GNU General Public License
-*/
-
+  use OSC\OM\OSCOM;
   use OSC\OM\Registry;
 
   class ot_shipping {
@@ -17,8 +14,8 @@
 
     function __construct() {
       $this->code = 'ot_shipping';
-      $this->title = MODULE_ORDER_TOTAL_SHIPPING_TITLE;
-      $this->description = MODULE_ORDER_TOTAL_SHIPPING_DESCRIPTION;
+      $this->title = OSCOM::getDef('module_order_total_shipping_title');
+      $this->description = OSCOM::getDef('module_order_total_shipping_description');
       $this->enabled = defined('MODULE_ORDER_TOTAL_SHIPPING_STATUS') && (MODULE_ORDER_TOTAL_SHIPPING_STATUS == 'true') ? true : false;
       $this->sort_order = defined('MODULE_ORDER_TOTAL_SHIPPING_SORT_ORDER') && ((int)MODULE_ORDER_TOTAL_SHIPPING_SORT_ORDER > 0) ? (int)MODULE_ORDER_TOTAL_SHIPPING_SORT_ORDER : 0;
 
@@ -42,18 +39,35 @@
         }
 
         if ( ($pass == true) && ( ($order->info['total'] - $order->info['shipping_cost']) >= MODULE_ORDER_TOTAL_SHIPPING_FREE_SHIPPING_OVER) ) {
-          $order->info['shipping_method'] = FREE_SHIPPING_TITLE;
+          $order->info['shipping_method'] = OSCOM::getDef('free_shipping_title');
           $order->info['total'] -= $order->info['shipping_cost'];
           $order->info['shipping_cost'] = 0;
         }
       }
 
-      $module = substr($_SESSION['shipping']['id'], 0, strpos($_SESSION['shipping']['id'], '_'));
+      if (strpos($_SESSION['shipping']['id'], '\\') !== false) {
+        list($vendor, $app, $module) = explode('\\', $_SESSION['shipping']['id']);
+        list($module, $method) = explode('_', $module);
+
+        $module = $vendor . '\\' . $app . '\\' . $module;
+
+        $code = 'Shipping_' . str_replace('\\', '_', $module);
+
+        if (Registry::exists($code)) {
+          $OSCOM_SM = Registry::get($code);
+        }
+      } else {
+        list($module, $method) = explode('_', $_SESSION['shipping']['id']);
+
+        if (is_object($GLOBALS[$module])) {
+          $OSCOM_SM = $GLOBALS[$module];
+        }
+      }
 
       if (tep_not_null($order->info['shipping_method'])) {
-        if ($GLOBALS[$module]->tax_class > 0) {
-          $shipping_tax = tep_get_tax_rate($GLOBALS[$module]->tax_class, $order->delivery['country']['id'], $order->delivery['zone_id']);
-          $shipping_tax_description = tep_get_tax_description($GLOBALS[$module]->tax_class, $order->delivery['country']['id'], $order->delivery['zone_id']);
+        if ($OSCOM_SM->tax_class > 0) {
+          $shipping_tax = tep_get_tax_rate($OSCOM_SM->tax_class, $order->delivery['country']['id'], $order->delivery['zone_id']);
+          $shipping_tax_description = tep_get_tax_description($OSCOM_SM->tax_class, $order->delivery['country']['id'], $order->delivery['zone_id']);
 
           $order->info['tax'] += tep_calculate_tax($order->info['shipping_cost'], $shipping_tax);
           $order->info['tax_groups']["$shipping_tax_description"] += tep_calculate_tax($order->info['shipping_cost'], $shipping_tax);

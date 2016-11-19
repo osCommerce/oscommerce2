@@ -1,14 +1,10 @@
 <?php
-/*
-  $Id$
-
-  osCommerce, Open Source E-Commerce Solutions
-  http://www.oscommerce.com
-
-  Copyright (c) 2015 osCommerce
-
-  Released under the GNU General Public License
-*/
+/**
+  * osCommerce Online Merchant
+  *
+  * @copyright (c) 2016 osCommerce; https://www.oscommerce.com
+  * @license MIT; https://www.oscommerce.com/license/mit.txt
+  */
 
   use OSC\OM\HTTP;
   use OSC\OM\OSCOM;
@@ -66,12 +62,13 @@
     tep_whos_online_update_session_id($parameters['old_id'], session_id());
   });
 
-// if gzip_compression is enabled, start to buffer the output
+// configure gzip compression if it is enabled
   if ((GZIP_COMPRESSION == 'true') && extension_loaded('zlib') && !headers_sent()) {
     if ((int)ini_get('zlib.output_compression') < 1) {
-      ob_start('ob_gzhandler');
+      ini_set('zlib.output_handler', '');
+      ini_set('zlib.output_compression', 1);
     }
-  } elseif (function_exists('ini_set')) {
+
     ini_set('zlib.output_compression_level', GZIP_LEVEL);
   }
 
@@ -98,9 +95,19 @@
     switch ( $_GET['action'] ) {
       // customer wants to update the product quantity in their shopping cart
       case 'update_product' : for ($i=0, $n=sizeof($_POST['products_id']); $i<$n; $i++) {
-                                $attributes = ($_POST['id'][$_POST['products_id'][$i]]) ? $_POST['id'][$_POST['products_id'][$i]] : '';
-                                $_SESSION['cart']->add_cart($_POST['products_id'][$i], $_POST['cart_quantity'][$i], $attributes, false);
-                                $messageStack->add_session('product_action', sprintf(PRODUCT_ADDED, tep_get_products_name((int)$_POST['products_id'][$i])), 'success');
+                                $attributes = isset($_POST['id'][$_POST['products_id'][$i]]) ? $_POST['id'][$_POST['products_id'][$i]] : '';
+
+                                $product_id = tep_get_uprid($_POST['products_id'][$i], $attributes);
+
+                                if ($_POST['cart_quantity'][$i] > 0) {
+                                  if ($_POST['cart_quantity'][$i] != $_SESSION['cart']->get_quantity(tep_get_uprid($_POST['products_id'][$i], $attributes))) {
+                                    $_SESSION['cart']->add_cart($_POST['products_id'][$i], $_POST['cart_quantity'][$i], $attributes, false);
+                                    $messageStack->add_session('product_action', OSCOM::getDef('product_updated', ['products_name' => tep_get_products_name((int)$_POST['products_id'][$i])]), 'success');
+                                  }
+                                } else {
+                                  $_SESSION['cart']->remove($product_id);
+                                  $messageStack->add_session('product_action', OSCOM::getDef('product_removed', ['products_name' =>  tep_get_products_name((int)$_POST['products_id'][$i])]), 'warning');
+                                }
                               }
                               OSCOM::redirect($goto, tep_get_all_get_params($parameters));
                               break;
@@ -108,14 +115,14 @@
       case 'add_product' :    if (isset($_POST['products_id']) && is_numeric($_POST['products_id'])) {
                                 $attributes = isset($_POST['id']) ? $_POST['id'] : '';
                                 $_SESSION['cart']->add_cart($_POST['products_id'], $_SESSION['cart']->get_quantity(tep_get_uprid($_POST['products_id'], $attributes))+1, $attributes);
-                                $messageStack->add_session('product_action', sprintf(PRODUCT_ADDED, tep_get_products_name((int)$_POST['products_id'])), 'success');
+                                $messageStack->add_session('product_action', OSCOM::getDef('product_added', ['products_name' =>  tep_get_products_name((int)$_POST['products_id'])]), 'success');
                               }
                               OSCOM::redirect($goto, tep_get_all_get_params($parameters));
                               break;
       // customer removes a product from their shopping cart
       case 'remove_product' : if (isset($_GET['products_id'])) {
                                 $_SESSION['cart']->remove($_GET['products_id']);
-                                $messageStack->add_session('product_action', sprintf(PRODUCT_REMOVED, tep_get_products_name($_GET['products_id'])), 'warning');
+                                $messageStack->add_session('product_action', OSCOM::getDef('product_removed', ['products_name' =>  tep_get_products_name($_GET['products_id'])]), 'warning');
                               }
                               OSCOM::redirect($goto, tep_get_all_get_params($parameters));
                               break;
@@ -125,7 +132,7 @@
                                   OSCOM::redirect('product_info.php', 'products_id=' . $_GET['products_id']);
                                 } else {
                                   $_SESSION['cart']->add_cart($_GET['products_id'], $_SESSION['cart']->get_quantity($_GET['products_id'])+1);
-                                  $messageStack->add_session('product_action', sprintf(PRODUCT_ADDED, tep_get_products_name((int)$_GET['products_id'])), 'success');
+                                  $messageStack->add_session('product_action', OSCOM::getDef('product_added', ['products_name' =>  tep_get_products_name((int)$_GET['products_id'])]), 'success');
                                 }
                               }
                               OSCOM::redirect($goto, tep_get_all_get_params($parameters));
@@ -146,7 +153,7 @@
 
                                   if ($Qcheck->fetch() === false) {
                                     $OSCOM_Db->save('products_notifications', ['products_id' => (int)$notify[$i], 'customers_id' => $_SESSION['customer_id'], 'date_added' => 'now()']);
-                                    $messageStack->add_session('product_action', sprintf(PRODUCT_SUBSCRIBED, tep_get_products_name((int)$notify[$i])), 'success');
+                                    $messageStack->add_session('product_action', OSCOM::getDef('product_subscribed', ['products_name' =>  tep_get_products_name((int)$notify[$i])]), 'success');
                                   }
                                 }
                                 OSCOM::redirect($PHP_SELF, tep_get_all_get_params(array('action', 'notify')));
@@ -160,7 +167,7 @@
 
                                 if ($Qcheck->fetch() !== false) {
                                   $OSCOM_Db->delete('products_notifications', ['customers_id' => $_SESSION['customer_id'], 'products_id' => (int)$_GET['products_id']]);
-                                  $messageStack->add_session('product_action', sprintf(PRODUCT_UNSUBSCRIBED, tep_get_products_name((int)$_GET['products_id'])), 'warning');
+                                  $messageStack->add_session('product_action', OSCOM::getDef('product_unsubscribed', ['products_name' =>  tep_get_products_name((int)$_GET['products_id'])]), 'warning');
                                 }
                                 OSCOM::redirect($PHP_SELF, tep_get_all_get_params(array('action')));
                               } else {

@@ -1,0 +1,6 @@
+module_boxes_reviews_title = Reviews
+module_boxes_reviews_description = Show product reviews
+module_boxes_reviews_box_title = Reviews
+module_boxes_reviews_box_write_review = Write a review on this product!
+module_boxes_reviews_box_no_reviews = There are currently no product reviews
+module_boxes_reviews_box_text_of_5_stars = {{reviews_rating}} of 5 Stars!

@@ -1,15 +1,4 @@
 <?php
-/*
-  $Id$
-
-  osCommerce, Open Source E-Commerce Solutions
-  http://www.oscommerce.com
-
-  Copyright (c) 2016 osCommerce
-
-  Released under the GNU General Public License
-*/
-
 use OSC\OM\DateTime;
 use OSC\OM\OSCOM;
 ?>
@@ -18,8 +7,8 @@ use OSC\OM\OSCOM;
   <table class="table table-striped table-condensed">
     <tbody>
       <tr>
-        <th><?php echo MODULE_CONTENT_UPCOMING_PRODUCTS_TABLE_HEADING_PRODUCTS; ?></th>
-        <th class="text-right"><?php echo MODULE_CONTENT_UPCOMING_PRODUCTS_TABLE_HEADING_DATE_EXPECTED; ?></th>
+        <th><?php echo OSCOM::getDef('module_content_upcoming_products_table_heading_products'); ?></th>
+        <th class="text-right"><?php echo OSCOM::getDef('module_content_upcoming_products_table_heading_date_expected'); ?></th>
       </tr>
       <?php
       foreach ($products as $product) {

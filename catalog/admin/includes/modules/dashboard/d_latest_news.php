@@ -1,17 +1,15 @@
 <?php
-/*
-  $Id$
-
-  osCommerce, Open Source E-Commerce Solutions
-  http://www.oscommerce.com
-
-  Copyright (c) 2014 osCommerce
-
-  Released under the GNU General Public License
-*/
+/**
+  * osCommerce Online Merchant
+  *
+  * @copyright (c) 2016 osCommerce; https://www.oscommerce.com
+  * @license MIT; https://www.oscommerce.com/license/mit.txt
+  */
 
   use OSC\OM\Cache;
+  use OSC\OM\DateTime;
   use OSC\OM\HTML;
+  use OSC\OM\HTTP;
   use OSC\OM\OSCOM;
   use OSC\OM\Registry;
 
@@ -23,8 +21,8 @@
     var $enabled = false;
 
     function d_latest_news() {
-      $this->title = MODULE_ADMIN_DASHBOARD_LATEST_NEWS_TITLE;
-      $this->description = MODULE_ADMIN_DASHBOARD_LATEST_NEWS_DESCRIPTION;
+      $this->title = OSCOM::getDef('module_admin_dashboard_latest_news_title');
+      $this->description = OSCOM::getDef('module_admin_dashboard_latest_news_description');
 
       if ( defined('MODULE_ADMIN_DASHBOARD_LATEST_NEWS_STATUS') ) {
         $this->sort_order = MODULE_ADMIN_DASHBOARD_LATEST_NEWS_SORT_ORDER;
@@ -33,40 +31,56 @@
     }
 
     function getOutput() {
-      if (!class_exists('lastRSS')) {
-        include('includes/classes/rss.php');
-      }
+      $entries = [];
 
-      $rss = new lastRSS;
-      $rss->items_limit = 5;
-      $rss->cache_dir = Cache::getPath();
-      $rss->cache_time = 86400;
-      $feed = $rss->get('http://feeds.feedburner.com/osCommerceNewsAndBlogs', 'oscommerce_website-rss-news');
+      $newsCache = new Cache('oscommerce_website-news-latest5');
+
+      if ($newsCache->exists(360)) {
+        $entries = $newsCache->get();
+      } else {
+        $response = HTTP::getResponse(['url' => 'https://www.oscommerce.com/index.php?RPC&GetLatestNews']);
+
+        if (!empty($response)) {
+          $response = json_decode($response, true);
+
+          if (is_array($response) && (count($response) === 5)) {
+            $entries = $response;
+          }
+        }
+
+        $newsCache->save($entries);
+      }
 
       $output = '<table class="table table-hover">
                    <thead>
                      <tr class="info">
-                       <th>' . MODULE_ADMIN_DASHBOARD_LATEST_NEWS_TITLE . '</th>
-                       <th class="text-right">' . MODULE_ADMIN_DASHBOARD_LATEST_NEWS_DATE . '</th>
+                       <th>' . OSCOM::getDef('module_admin_dashboard_latest_news_title') . '</th>
+                       <th class="text-right">' . OSCOM::getDef('module_admin_dashboard_latest_news_date') . '</th>
                      </tr>
                    </thead>
                    <tbody>';
 
-      if (is_array($feed) && !empty($feed)) {
-        foreach ($feed['items'] as $item) {
+      if (is_array($entries) && (count($entries) === 5)) {
+        foreach ($entries as $item) {
           $output .= '    <tr>
-                            <td><a href="' . $item['link'] . '" target="_blank">' . $item['title'] . '</a></td>
-                            <td class="text-right" style="white-space: nowrap;">' . date("F j, Y", strtotime($item['pubDate'])) . '</td>
+                            <td><a href="' . HTML::outputProtected($item['link']) . '" target="_blank">' . HTML::outputProtected($item['title']) . '</a></td>
+                            <td class="text-right" style="white-space: nowrap;">' . HTML::outputProtected(DateTime::toShort($item['date'])) . '</td>
                           </tr>';
         }
       } else {
         $output .= '    <tr>
-                          <td colspan="2">' . MODULE_ADMIN_DASHBOARD_LATEST_NEWS_FEED_ERROR . '</td>
+                          <td colspan="2">' . OSCOM::getDef('module_admin_dashboard_latest_news_feed_error') . '</td>
                         </tr>';
       }
 
       $output .= '    <tr>
-                        <td class="text-right" colspan="2"><a href="http://www.oscommerce.com/Us&News" target="_blank">' . HTML::image(OSCOM::linkImage('icon_oscommerce.png'), MODULE_ADMIN_DASHBOARD_LATEST_NEWS_ICON_NEWS) . '</a>&nbsp;<a href="http://www.oscommerce.com/newsletter/subscribe" target="_blank">' . HTML::image(OSCOM::linkImage('icon_newsletter.png'), MODULE_ADMIN_DASHBOARD_LATEST_NEWS_ICON_NEWSLETTER) . '</a>&nbsp;<a href="http://plus.google.com/+osCommerce" target="_blank">' . HTML::image(OSCOM::linkImage('icon_google_plus.png'), MODULE_ADMIN_DASHBOARD_LATEST_NEWS_ICON_GOOGLE_PLUS) . '</a>&nbsp;<a href="http://www.facebook.com/pages/osCommerce/33387373079" target="_blank">' . HTML::image(OSCOM::linkImage('icon_facebook.png'), MODULE_ADMIN_DASHBOARD_LATEST_NEWS_ICON_FACEBOOK) . '</a>&nbsp;<a href="http://twitter.com/osCommerce" target="_blank">' . HTML::image(OSCOM::linkImage('icon_twitter.png'), MODULE_ADMIN_DASHBOARD_LATEST_NEWS_ICON_TWITTER) . '</a>&nbsp;<a href="http://feeds.feedburner.com/osCommerceNewsAndBlogs" target="_blank">' . HTML::image(OSCOM::linkImage('icon_rss.png'), MODULE_ADMIN_DASHBOARD_LATEST_NEWS_ICON_RSS) . '</a></td>
+                        <td class="text-right" colspan="2">
+                          <a href="https://www.oscommerce.com/Us&News" target="_blank" title="' . HTML::outputProtected(OSCOM::getDef('module_admin_dashboard_latest_news_icon_news')) . '"><span class="fa fa-fw fa-home"></span></a>
+                          <a href="https://www.oscommerce.com/newsletter/subscribe" target="_blank" title="' . HTML::outputProtected(OSCOM::getDef('module_admin_dashboard_latest_news_icon_newsletter')) . '"><span class="fa fa-fw fa-newspaper-o"></span></a>
+                          <a href="https://plus.google.com/+osCommerce" target="_blank" title="' . HTML::outputProtected(OSCOM::getDef('module_admin_dashboard_latest_news_icon_google_plus')) . '"><span class="fa fa-fw fa-google-plus"></span></a>
+                          <a href="https://www.facebook.com/pages/osCommerce/33387373079" target="_blank" title="' . HTML::outputProtected(OSCOM::getDef('module_admin_dashboard_latest_news_icon_facebook')) . '"><span class="fa fa-fw fa-facebook"></span></a>
+                          <a href="https://twitter.com/osCommerce" target="_blank" title="' . HTML::outputProtected(OSCOM::getDef('module_admin_dashboard_latest_news_icon_twitter')) . '"><span class="fa fa-fw fa-twitter"></span></a>
+                        </td>
                       </tr>
                     </tbody>
                   </table>';

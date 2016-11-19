@@ -1,14 +1,10 @@
 <?php
-/*
-  $Id$
-
-  osCommerce, Open Source E-Commerce Solutions
-  http://www.oscommerce.com
-
-  Copyright (c) 2013 osCommerce
-
-  Released under the GNU General Public License
-*/
+/**
+  * osCommerce Online Merchant
+  *
+  * @copyright (c) 2016 osCommerce; https://www.oscommerce.com
+  * @license MIT; https://www.oscommerce.com/license/mit.txt
+  */
 
   use OSC\OM\Hash;
   use OSC\OM\HTML;
@@ -80,10 +76,10 @@
           }
 
           if (isset($_POST['username'])) {
-            $OSCOM_MessageStack->add(ERROR_INVALID_ADMINISTRATOR, 'error');
+            $OSCOM_MessageStack->add(OSCOM::getDef('error_invalid_administrator'), 'error');
           }
         } else {
-          $OSCOM_MessageStack->add(sprintf(ERROR_ACTION_RECORDER, (defined('MODULE_ACTION_RECORDER_ADMIN_LOGIN_MINUTES') ? (int)MODULE_ACTION_RECORDER_ADMIN_LOGIN_MINUTES : 5)));
+          $OSCOM_MessageStack->add(OSCOM::getDef('error_action_recorder', ['module_action_recorder_admin_login_minutes' => (defined('MODULE_ACTION_RECORDER_ADMIN_LOGIN_MINUTES') ? (int)MODULE_ACTION_RECORDER_ADMIN_LOGIN_MINUTES : 5)]));
         }
 
         if (isset($_POST['username'])) {
@@ -131,7 +127,7 @@
   $Qcheck = $OSCOM_Db->get('administrators', 'id', null, null, 1);
 
   if (!$Qcheck->check()) {
-    $OSCOM_MessageStack->add(TEXT_CREATE_FIRST_ADMINISTRATOR, 'warning');
+    $OSCOM_MessageStack->add(OSCOM::getDef('text_create_first_administrator'), 'warning');
   }
 
   require($oscTemplate->getFile('template_top.php'));
@@ -144,20 +140,20 @@
   $contents = array();
 
   if ($Qcheck->check()) {
-    $heading[] = array('text' => HEADING_TITLE);
+    $heading[] = array('text' => OSCOM::getDef('heading_title'));
 
     $contents = array('form' => HTML::form('login', OSCOM::link(FILENAME_LOGIN, 'action=process')));
-    $contents[] = array('text' => TEXT_USERNAME . '<br />' . HTML::inputField('username'));
-    $contents[] = array('text' => TEXT_PASSWORD . '<br />' . HTML::passwordField('password'));
-    $contents[] = array('text' => HTML::button(BUTTON_LOGIN, 'fa fa-sign-in', null, null, 'btn-primary'));
+    $contents[] = array('text' => OSCOM::getDef('text_username') . '<br />' . HTML::inputField('username'));
+    $contents[] = array('text' => OSCOM::getDef('text_password') . '<br />' . HTML::passwordField('password'));
+    $contents[] = array('text' => HTML::button(OSCOM::getDef('button_login'), 'fa fa-sign-in', null, null, 'btn-primary'));
   } else {
-    $heading[] = array('text' => HEADING_TITLE);
+    $heading[] = array('text' => OSCOM::getDef('heading_title'));
 
     $contents = array('form' => HTML::form('login', OSCOM::link(FILENAME_LOGIN, 'action=create')));
-    $contents[] = array('text' => TEXT_CREATE_FIRST_ADMINISTRATOR);
-    $contents[] = array('text' => TEXT_USERNAME . '<br />' . HTML::inputField('username'));
-    $contents[] = array('text' => TEXT_PASSWORD . '<br />' . HTML::passwordField('password'));
-    $contents[] = array('text' => HTML::button(BUTTON_CREATE_ADMINISTRATOR, 'fa fa-sign-in', null, null, 'btn-primary'));
+    $contents[] = array('text' => OSCOM::getDef('text_create_first_administrator'));
+    $contents[] = array('text' => OSCOM::getDef('text_username') . '<br />' . HTML::inputField('username'));
+    $contents[] = array('text' => OSCOM::getDef('text_password') . '<br />' . HTML::passwordField('password'));
+    $contents[] = array('text' => HTML::button(OSCOM::getDef('button_create_administrator'), 'fa fa-sign-in', null, null, 'btn-primary'));
   }
 
   echo HTML::panel($heading, $contents);

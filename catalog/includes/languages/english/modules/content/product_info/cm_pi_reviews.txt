@@ -1,0 +1,3 @@
+module_content_product_info_reviews_title = Product Reviews
+module_content_product_info_reviews_description = Show review block on the product info page.
+module_content_product_info_reviews_text_rated = Rated {{reviews_rating}} by <cite title="{{customers_name}}">{{customers_name}}</cite>

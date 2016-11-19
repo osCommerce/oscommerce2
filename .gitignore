@@ -1,4 +1,3 @@
-catalog/admin/images/graphs/*.png
 catalog/includes/OSC/Apps/*
 catalog/public/Apps/*
 catalog/includes/OSC/Work/Cache/*.cache

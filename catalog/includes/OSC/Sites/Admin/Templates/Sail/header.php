@@ -1,15 +1,5 @@
 <?php
-/*
-  $Id$
-
-  osCommerce, Open Source E-Commerce Solutions
-  http://www.oscommerce.com
-
-  Copyright (c) 2014 osCommerce
-
-  Released under the GNU General Public License
-*/
-
+  use OSC\OM\ErrorHandler;
   use OSC\OM\HTML;
   use OSC\OM\OSCOM;
   use OSC\OM\Registry;
@@ -33,16 +23,16 @@
 
     <div class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
-        <li><a><?= ADMIN_MENU_SHOP; ?> <span class="caret"></span></a>
+        <li><a><?= OSCOM::getDef('admin_menu_shop'); ?> <span class="caret"></span></a>
           <ul class="dropdown-menu">
 
 <?php
     foreach ($admin_menu['shop'] as $group => $links) {
-      echo '<li><a>' . HTML::outputProtected(constant(strtoupper('ADMIN_MENU_SHOP_' . $group))) . ' <span class="caret"></span></a>
+      echo '<li><a>' . HTML::outputProtected(OSCOM::getDef('admin_menu_shop_' . $group)) . ' <span class="caret"></span></a>
               <ul class="dropdown-menu">';
 
       foreach ($links as $code => $page) {
-        echo '<li><a href="' . (is_string($page) ? $page : $page['link']) . '">' . HTML::outputProtected(constant(strtoupper('ADMIN_MENU_SHOP_' . $group . '_' . $code))) . '</a></li>';
+        echo '<li><a href="' . (is_string($page) ? $page : $page['link']) . '">' . HTML::outputProtected(OSCOM::getDef('admin_menu_shop_' . $group . '_' . $code)) . '</a></li>';
       }
 
       echo '  </ul>
@@ -53,7 +43,7 @@
           </ul>
         </li>
 
-        <li><a><?= ADMIN_MENU_APPS; ?> <span class="caret"></span></a>
+        <li><a><?= OSCOM::getDef('admin_menu_apps'); ?> <span class="caret"></span></a>
           <ul class="dropdown-menu">
             <li><a href="<?= OSCOM::link('apps.php'); ?>">Manage</a></li>
 
@@ -77,7 +67,7 @@
 
           </ul>
         </li>
-        <li><a><?= ADMIN_MENU_LEGACY; ?> <span class="caret"></span></a>
+        <li><a><?= OSCOM::getDef('admin_menu_legacy'); ?> <span class="caret"></span></a>
           <ul class="dropdown-menu">
 
 <?php
@@ -96,6 +86,21 @@
 
           </ul>
         </li>
+
+<?php
+    if (count(glob(ErrorHandler::getDirectory() . 'errors-*.txt')) > 0) {
+?>
+
+        <li><a href="<?= OSCOM::link('error_log.php'); ?>"><i class="fa fa-exclamation-circle text-danger"></i></a>
+          <ul class="dropdown-menu">
+            <li><a href="<?= OSCOM::link('error_log.php'); ?>">View Error Log</a></li>
+          </ul>
+        </li>
+
+<?php
+    }
+?>
+
       </ul>
 
 <?php
@@ -130,7 +135,7 @@
   if (count($lang) > 1) {
 ?>
 
-        <li><a><i class="fa fa-globe"></i></a>
+        <li><a><i class="fa fa-language"></i></a>
           <ul class="dropdown-menu">
 
 <?php

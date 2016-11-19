@@ -2,8 +2,8 @@
 /**
   * osCommerce Online Merchant
   *
-  * @copyright Copyright (c) 2015 osCommerce; http://www.oscommerce.com
-  * @license GPL; http://www.oscommerce.com/gpllicense.txt
+  * @copyright (c) 2016 osCommerce; https://www.oscommerce.com
+  * @license MIT; https://www.oscommerce.com/license/mit.txt
   */
 
 namespace OSC\OM;
@@ -352,7 +352,7 @@ class Db extends \PDO
         if (is_file($sql_file)) {
             $import_queries = file_get_contents($sql_file);
         } else {
-            trigger_error(sprintf(ERROR_SQL_FILE_NONEXISTENT, $sql_file));
+            trigger_error('OSC\OM\Db::importSQL(): SQL file does not exist: ' . $sql_file);
 
             return false;
         }

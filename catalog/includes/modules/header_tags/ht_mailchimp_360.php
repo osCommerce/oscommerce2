@@ -1,15 +1,12 @@
 <?php
-/*
-  $Id$
+/**
+  * osCommerce Online Merchant
+  *
+  * @copyright (c) 2016 osCommerce; https://www.oscommerce.com
+  * @license MIT; https://www.oscommerce.com/license/mit.txt
+  */
 
-  osCommerce, Open Source E-Commerce Solutions
-  http://www.oscommerce.com
-
-  Copyright (c) 2015 osCommerce
-
-  Released under the GNU General Public License
-*/
-
+  use OSC\OM\OSCOM;
   use OSC\OM\Registry;
 
   class ht_mailchimp_360 {
@@ -21,8 +18,8 @@
     var $enabled = false;
 
     function __construct() {
-      $this->title = MODULE_HEADER_TAGS_MAILCHIMP_360_TITLE;
-      $this->description = MODULE_HEADER_TAGS_MAILCHIMP_360_DESCRIPTION;
+      $this->title = OSCOM::getDef('module_header_tags_mailchimp_360_title');
+      $this->description = OSCOM::getDef('module_header_tags_mailchimp_360_description');
 
       if ( defined('MODULE_HEADER_TAGS_MAILCHIMP_360_STATUS') ) {
         $this->sort_order = MODULE_HEADER_TAGS_MAILCHIMP_360_SORT_ORDER;

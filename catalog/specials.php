@@ -1,14 +1,10 @@
 <?php
-/*
-  $Id$
-
-  osCommerce, Open Source E-Commerce Solutions
-  http://www.oscommerce.com
-
-  Copyright (c) 2015 osCommerce
-
-  Released under the GNU General Public License
-*/
+/**
+  * osCommerce Online Merchant
+  *
+  * @copyright (c) 2016 osCommerce; https://www.oscommerce.com
+  * @license MIT; https://www.oscommerce.com/license/mit.txt
+  */
 
   use OSC\OM\OSCOM;
 
@@ -16,13 +12,13 @@
 
   $OSCOM_Language->loadDefinitions('specials');
 
-  $breadcrumb->add(NAVBAR_TITLE, OSCOM::link('specials.php'));
+  $breadcrumb->add(OSCOM::getDef('navbar_title'), OSCOM::link('specials.php'));
 
   require($oscTemplate->getFile('template_top.php'));
 ?>
 
 <div class="page-header">
-  <h1><?php echo HEADING_TITLE; ?></h1>
+  <h1><?php echo OSCOM::getDef('heading_title'); ?></h1>
 </div>
 
 <?php
@@ -69,7 +65,7 @@
     }
   }
 
-  $listing_sql = "select " . $select_column_list . " p.products_id, SUBSTRING_INDEX(pd.products_description, ' ', 20) as products_description, p.manufacturers_id, p.products_price, p.products_tax_class_id, IF(s.status, s.specials_new_products_price, NULL) as specials_new_products_price, IF(s.status, s.specials_new_products_price, p.products_price) as final_price from products_description pd, products p left join manufacturers m on p.manufacturers_id = m.manufacturers_id left join specials s on p.products_id = s.products_id where p.products_status = '1' and p.products_id = pd.products_id and pd.language_id = '" . $OSCOM_Language->getId() . "' and s.status = '1'";
+  $listing_sql = "select SQL_CALC_FOUND_ROWS " . $select_column_list . " p.products_id, SUBSTRING_INDEX(pd.products_description, ' ', 20) as products_description, p.manufacturers_id, p.products_price, p.products_tax_class_id, IF(s.status, s.specials_new_products_price, NULL) as specials_new_products_price, IF(s.status, s.specials_new_products_price, p.products_price) as final_price from :table_products_description pd, :table_products p left join :table_manufacturers m on p.manufacturers_id = m.manufacturers_id left join :table_specials s on p.products_id = s.products_id where p.products_status = '1' and p.products_id = pd.products_id and pd.language_id = :language_id and s.status = '1'";
 
   if ( (!isset($_GET['sort'])) || (!preg_match('/^[1-8][ad]$/', $_GET['sort'])) || (substr($_GET['sort'], 0, 1) > sizeof($column_list)) ) {
     for ($i=0, $n=sizeof($column_list); $i<$n; $i++) {
@@ -107,6 +103,13 @@
         break;
     }
   }
+
+  $listing_sql .= ' limit :page_set_offset, :page_set_max_results';
+
+  $Qlisting = $OSCOM_Db->prepare($listing_sql);
+  $Qlisting->bindInt(':language_id', $OSCOM_Language->getId());
+  $Qlisting->setPageSet(MAX_DISPLAY_SEARCH_RESULTS);
+  $Qlisting->execute();
 
   include('includes/content/product_listing.php');
 

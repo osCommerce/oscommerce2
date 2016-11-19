@@ -1,0 +1,4 @@
+module_content_upcoming_products_title = Upcoming Products
+module_content_upcoming_products_description = Shows the "Upcoming Products" module on your Index page.
+module_content_upcoming_products_table_heading_products = Upcoming Products
+module_content_upcoming_products_table_heading_date_expected = Date Expected

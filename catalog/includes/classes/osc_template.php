@@ -1,14 +1,10 @@
 <?php
-/*
-  $Id$
-
-  osCommerce, Open Source E-Commerce Solutions
-  http://www.oscommerce.com
-
-  Copyright (c) 2015 osCommerce
-
-  Released under the GNU General Public License
-*/
+/**
+  * osCommerce Online Merchant
+  *
+  * @copyright (c) 2016 osCommerce; https://www.oscommerce.com
+  * @license MIT; https://www.oscommerce.com/license/mit.txt
+  */
 
   use OSC\OM\Apps;
   use OSC\OM\OSCOM;
@@ -29,7 +25,9 @@
     function __construct() {
       $this->lang = Registry::get('Language');
 
-      $this->_title = TITLE;
+      $this->_title = OSCOM::getDef('title', ['store_name' => STORE_NAME]);
+
+      $this->addBlock('<meta name="generator" content="osCommerce Online Merchant" />', 'header_tags');
     }
 
     function setGridContainerWidth($width) {

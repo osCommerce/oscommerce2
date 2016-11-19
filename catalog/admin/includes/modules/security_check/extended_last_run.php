@@ -1,14 +1,10 @@
 <?php
-/*
-  $Id$
-
-  osCommerce, Open Source E-Commerce Solutions
-  http://www.oscommerce.com
-
-  Copyright (c) 2013 osCommerce
-
-  Released under the GNU General Public License
-*/
+/**
+  * osCommerce Online Merchant
+  *
+  * @copyright (c) 2016 osCommerce; https://www.oscommerce.com
+  * @license MIT; https://www.oscommerce.com/license/mit.txt
+  */
 
   use OSC\OM\OSCOM;
   use OSC\OM\Registry;
@@ -54,7 +50,7 @@
     }
 
     function getMessage() {
-      return '<a href="' . OSCOM::link('security_checks.php') . '">' . MODULE_SECURITY_CHECK_EXTENDED_LAST_RUN_OLD . '</a>';
+      return '<a href="' . OSCOM::link('security_checks.php') . '">' . OSCOM::getDef('module_security_check_extended_last_run_old') . '</a>';
     }
   }
 ?>

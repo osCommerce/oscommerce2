@@ -1,0 +1,7 @@
+heading_title = Define Languages
+table_heading_files = Files
+table_heading_writable = Writable
+table_heading_last_modified = Last Modified
+text_edit_note = <strong>Editing Definitions</strong><br /><br />Each language definition is set using the PHP <a href="http://www.php.net/define" target="_blank">define()</a> function in the following manner:<br /><br /><nobr>define('TEXT_MAIN', '<span style="background-color: #FFFF99;">This text can be edited. It\'s really easy to do!</span>');</nobr><br /><br />The highlighted text can be edited. As this definition is using single quotes to contain the text, any single quotes within the text definition must be escaped with a backslash (eg, It\'s).
+text_file_does_not_exist = File does not exist.
+error_file_not_writeable = Error: I can not write to this file. Please set the right user permissions on: {{file}}

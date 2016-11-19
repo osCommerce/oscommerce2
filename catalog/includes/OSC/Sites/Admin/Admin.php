@@ -3,7 +3,7 @@
   * osCommerce Online Merchant
   *
   * @copyright (c) 2016 osCommerce; https://www.oscommerce.com
-  * @license GPL; https://www.oscommerce.com/gpllicense.txt
+  * @license MIT; https://www.oscommerce.com/license/mit.txt
   */
 
 namespace OSC\Sites\Admin;
@@ -12,6 +12,7 @@ use OSC\OM\Apps;
 use OSC\OM\Cookies;
 use OSC\OM\Db;
 use OSC\OM\ErrorHandler;
+use OSC\OM\FileSystem;
 use OSC\OM\Hooks;
 use OSC\OM\Language;
 use OSC\OM\MessageStack;
@@ -45,9 +46,6 @@ class Admin extends \OSC\OM\SitesAbstract
             define($Qcfg->value('k'), $Qcfg->value('v'));
         }
 
-        $OSCOM_Language = new Language();
-        Registry::set('Language', $OSCOM_Language);
-
 // Used in the "Backup Manager" to compress backups
         define('LOCAL_EXE_GZIP', 'gzip');
         define('LOCAL_EXE_GUNZIP', 'gunzip');
@@ -62,6 +60,9 @@ class Admin extends \OSC\OM\SitesAbstract
         Registry::set('Session', $OSCOM_Session);
 
         $OSCOM_Session->start();
+
+        $OSCOM_Language = new Language();
+        Registry::set('Language', $OSCOM_Language);
 
 // set the language
         if (!isset($_SESSION['language']) || isset($_GET['language'])) {
@@ -113,9 +114,12 @@ class Admin extends \OSC\OM\SitesAbstract
         }
 
 // include the language translations
-        $_system_locale_numeric = setlocale(LC_NUMERIC, 0);
         $OSCOM_Language->loadDefinitions('main');
-        setlocale(LC_NUMERIC, $_system_locale_numeric); // Prevent LC_ALL from setting LC_NUMERIC to a locale with 1,0 float/decimal values instead of 1.0 (see bug #634)
+
+// Prevent LC_ALL from setting LC_NUMERIC to a locale with 1,0 float/decimal values instead of 1.0 (see bug #634)
+        $system_locale_numeric = setlocale(LC_NUMERIC, 0);
+        setlocale(LC_ALL, explode(';', OSCOM::getDef('system_locale')));
+        setlocale(LC_NUMERIC, $system_locale_numeric);
 
         $current_page = basename($PHP_SELF);
 
@@ -123,15 +127,13 @@ class Admin extends \OSC\OM\SitesAbstract
             $OSCOM_Language->loadDefinitions(pathinfo($current_page, PATHINFO_FILENAME));
         }
 
-        if (isset($_SESSION['admin'])) {
-            if (count(glob(ErrorHandler::getDirectory() . '/errors-*.txt')) > 0) {
-                Registry::get('MessageStack')->add('Errors have been logged. Please check: ' . ErrorHandler::getDirectory(), 'error');
-            }
-        }
-
         $oscTemplate = new \oscTemplate();
 
         $cfgModules = new \cfg_modules();
+
+        if (!FileSystem::isWritable(ErrorHandler::getDirectory())) {
+            Registry::get('MessageStack')->add('The log directory is not writable. Please allow the web server to write to: ' . FileSystem::displayPath(ErrorHandler::getDirectory()));
+        }
     }
 
     public function setPage()

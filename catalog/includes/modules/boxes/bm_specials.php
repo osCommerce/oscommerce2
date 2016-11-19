@@ -1,15 +1,12 @@
 <?php
-/*
-  $Id$
+/**
+  * osCommerce Online Merchant
+  *
+  * @copyright (c) 2016 osCommerce; https://www.oscommerce.com
+  * @license MIT; https://www.oscommerce.com/license/mit.txt
+  */
 
-  osCommerce, Open Source E-Commerce Solutions
-  http://www.oscommerce.com
-
-  Copyright (c) 2015 osCommerce
-
-  Released under the GNU General Public License
-*/
-
+  use OSC\OM\OSCOM;
   use OSC\OM\Registry;
 
   class bm_specials {
@@ -21,8 +18,8 @@
     var $enabled = false;
 
     function __construct() {
-      $this->title = MODULE_BOXES_SPECIALS_TITLE;
-      $this->description = MODULE_BOXES_SPECIALS_DESCRIPTION;
+      $this->title = OSCOM::getDef('module_boxes_specials_title');
+      $this->description = OSCOM::getDef('module_boxes_specials_description');
 
       if ( defined('MODULE_BOXES_SPECIALS_STATUS') ) {
         $this->sort_order = MODULE_BOXES_SPECIALS_SORT_ORDER;

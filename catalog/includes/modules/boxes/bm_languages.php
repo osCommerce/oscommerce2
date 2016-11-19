@@ -1,14 +1,10 @@
 <?php
-/*
-  $Id$
-
-  osCommerce, Open Source E-Commerce Solutions
-  http://www.oscommerce.com
-
-  Copyright (c) 2015 osCommerce
-
-  Released under the GNU General Public License
-*/
+/**
+  * osCommerce Online Merchant
+  *
+  * @copyright (c) 2016 osCommerce; https://www.oscommerce.com
+  * @license MIT; https://www.oscommerce.com/license/mit.txt
+  */
 
   use OSC\OM\HTML;
   use OSC\OM\OSCOM;
@@ -27,8 +23,8 @@
     function __construct() {
       $this->lang = Registry::get('Language');
 
-      $this->title = MODULE_BOXES_LANGUAGES_TITLE;
-      $this->description = MODULE_BOXES_LANGUAGES_DESCRIPTION;
+      $this->title = OSCOM::getDef('module_boxes_languages_title');
+      $this->description = OSCOM::getDef('module_boxes_languages_description');
 
       if ( defined('MODULE_BOXES_LANGUAGES_STATUS') ) {
         $this->sort_order = MODULE_BOXES_LANGUAGES_SORT_ORDER;
@@ -44,19 +40,17 @@
       if (substr(basename($PHP_SELF), 0, 8) != 'checkout') {
         $languages = $this->lang->getAll();
 
-        if (count($languages) > 1) {
-          $languages_string = '';
+        $languages_string = '';
 
-          foreach ($languages as $code => $value) {
-            $languages_string .= ' <a href="' . OSCOM::link($PHP_SELF, tep_get_all_get_params(array('language', 'currency')) . 'language=' . $code) . '">' . HTML::image('includes/languages/' . $value['directory'] . '/images/' . $value['image'], $value['name'], NULL, NULL, NULL, false) . '</a> ';
-          }
-
-          ob_start();
-          include('includes/modules/boxes/templates/languages.php');
-          $data = ob_get_clean();
-
-          $oscTemplate->addBlock($data, $this->group);
+        foreach ($languages as $code => $value) {
+          $languages_string .= ' <a href="' . OSCOM::link($PHP_SELF, tep_get_all_get_params(array('language', 'currency')) . 'language=' . $code) . '">' . $this->lang->getImage($value['code']) . '</a> ';
         }
+
+        ob_start();
+        include('includes/modules/boxes/templates/languages.php');
+        $data = ob_get_clean();
+
+        $oscTemplate->addBlock($data, $this->group);
       }
     }
 

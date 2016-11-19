@@ -1,0 +1,5 @@
+module_admin_dashboard_orders_title = Orders
+module_admin_dashboard_orders_description = Show the latest orders
+module_admin_dashboard_orders_total = Total
+module_admin_dashboard_orders_date = Date
+module_admin_dashboard_orders_order_status = Status

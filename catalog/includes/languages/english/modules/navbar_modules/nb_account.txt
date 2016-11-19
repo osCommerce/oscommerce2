@@ -1,0 +1,12 @@
+module_navbar_account_title = Account
+module_navbar_account_description = Show Customer Account Actions in Navbar.
+module_navbar_account_logged_out = <i class="fa fa-user"></i><span class="hidden-sm"> My Account</span> <span class="caret"></span>
+module_navbar_account_logged_in = <i class="fa fa-user"></i> {{customer_first_name}} <span class="caret"></span>
+module_navbar_account_login = <i class="fa fa-sign-in"></i> Log In
+module_navbar_account_logoff = <i class="fa fa-sign-out"></i> Log Off
+module_navbar_account = My Account
+module_navbar_account_history = My Orders
+module_navbar_account_edit = My Details
+module_navbar_account_address_book = My Address Book
+module_navbar_account_password = My Password
+module_navbar_account_register = <i class="fa fa-pencil"></i> Register

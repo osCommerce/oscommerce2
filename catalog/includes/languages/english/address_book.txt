@@ -1,0 +1,8 @@
+navbar_title_1 = My Account
+navbar_title_2 = Address Book
+heading_title = My Personal Address Book
+primary_address_title = Primary Address
+primary_address_description = This address is used as the pre-selected shipping and billing address for orders placed on this store.<br /><br />This address is also used as the base for product and service tax calculations.
+address_book_title = Address Book Entries
+primary_address = (primary address)
+text_maximum_entries = <span class="text-danger">NOTE:</span> A maximum of {{max_address_book_entries}} address book entries allowed.

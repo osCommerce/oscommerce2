@@ -1,10 +1,10 @@
 <?php
 /**
- * osCommerce Online Merchant
- *
- * @copyright (c) 2016 osCommerce; https://www.oscommerce.com
- * @license GPL; https://www.oscommerce.com/gpllicense.txt
- */
+  * osCommerce Online Merchant
+  *
+  * @copyright (c) 2016 osCommerce; https://www.oscommerce.com
+  * @license MIT; https://www.oscommerce.com/license/mit.txt
+  */
 
 namespace OSC\OM;
 
@@ -19,18 +19,20 @@ class ErrorHandler
         ini_set('html_errors', false);
         ini_set('ignore_repeated_errors', true);
 
-        if (FileSystem::isWritable(OSCOM::BASE_DIR . 'Work', true)) {
-            if (!is_dir(OSCOM::BASE_DIR . 'Work/Logs')) {
-                mkdir(OSCOM::BASE_DIR . 'Work/Logs', 0777, true);
+        if (FileSystem::isWritable(static::getDirectory(), true)) {
+            if (!is_dir(static::getDirectory())) {
+                mkdir(static::getDirectory(), 0777, true);
             }
+        }
 
+        if (FileSystem::isWritable(static::getDirectory())) {
             ini_set('log_errors', true);
-            ini_set('error_log', OSCOM::BASE_DIR . 'Work/Logs/errors-' . date('Ymd') . '.txt');
+            ini_set('error_log', static::getDirectory() . 'errors-' . date('Ymd') . '.txt');
         }
     }
 
     public static function getDirectory()
     {
-        return realpath(OSCOM::BASE_DIR . 'Work/Logs');
+        return OSCOM::BASE_DIR . 'Work/Logs/';
     }
 }

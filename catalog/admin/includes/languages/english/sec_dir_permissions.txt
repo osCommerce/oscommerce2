@@ -1,0 +1,5 @@
+heading_title = Security Directory Permissions
+table_heading_directories = Directories
+table_heading_writable = Writable
+table_heading_recommended = Recommended
+text_directory = Directory:

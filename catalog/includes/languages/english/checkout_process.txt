@@ -1,0 +1,14 @@
+email_text_subject = Order Process
+email_text_order_number = Order Number:
+email_text_invoice_url = Detailed Invoice:
+email_text_date_ordered = Date Ordered:
+email_text_products = Products
+email_text_subtotal = Sub-Total:
+email_text_tax = Tax:        
+email_text_shipping = Shipping: 
+email_text_total = Total:    
+email_text_delivery_address = Delivery Address
+email_text_billing_address = Billing Address
+email_text_payment_method = Payment Method
+email_separator = ------------------------------------------------------
+text_email_via = via
