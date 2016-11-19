@@ -1,6 +1,6 @@
 manufacturers_id int not_null auto_increment
-manufacturers_name varchar(32) not_null
-manufacturers_image varchar(64)
+manufacturers_name varchar(255) not_null
+manufacturers_image varchar(255)
 date_added datetime
 last_modified datetime
 --
