@@ -153,7 +153,9 @@
 
         $contents[] = array('align' => 'center', 'text' => HTML::button(OSCOM::getDef('image_edit'), 'fa fa-edit', OSCOM::link(FILENAME_TAX_CLASSES, 'page=' . $_GET['page'] . '&tID=' . $tcInfo->tax_class_id . '&action=edit')) . HTML::button(OSCOM::getDef('image_delete'), 'fa fa-trash', OSCOM::link(FILENAME_TAX_CLASSES, 'page=' . $_GET['page'] . '&tID=' . $tcInfo->tax_class_id . '&action=delete')));
         $contents[] = array('text' => '<br />' . OSCOM::getDef('text_info_date_added') . ' ' . DateTime::toShort($tcInfo->date_added));
-        $contents[] = array('text' => '' . OSCOM::getDef('text_info_last_modified') . ' ' . DateTime::toShort($tcInfo->last_modified));
+        if (isset($tcInfo->last_modified)) {
+          $contents[] = array('text' => OSCOM::getDef('text_info_last_modified') . ' ' . DateTime::toShort($tcInfo->last_modified));
+        }
         $contents[] = array('text' => '<br />' . OSCOM::getDef('text_info_class_description') . '<br />' . $tcInfo->tax_class_description);
       }
       break;
