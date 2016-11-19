@@ -3,7 +3,7 @@ orders_id int not_null
 title varchar(255) not_null
 text varchar(255) not_null
 value decimal(15,4) not_null
-class varchar(32) not_null
+class varchar(255) not_null
 sort_order int not_null
 --
 primary orders_total_id

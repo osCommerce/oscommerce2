@@ -1,4 +1,4 @@
-sesskey varchar(128) not_null
+sesskey varchar(255) not_null
 expiry int(11) unsigned not_null
 value text not_null
 --
