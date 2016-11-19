@@ -206,7 +206,7 @@
     if ($Qproduct->value('products_date_available') > date('Y-m-d H:i:s')) {
 ?>
 
-    <div class="alert alert-info"><?php echo OSCOM::getDef('text_date_available', ['products_date_available' => DateTime::toLong($Qproduct->value('products_date_available'))]); ?></div>
+    <div class="alert alert-info"><?php echo sprintf(OSCOM::getDef('text_date_available'), DateTime::toLong($Qproduct->value('products_date_available'))); ?></div>
 
 <?php
     }
