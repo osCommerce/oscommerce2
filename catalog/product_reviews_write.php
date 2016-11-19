@@ -168,7 +168,7 @@ function checkForm() {
           <?php echo HTML::radioField('rating', '4'); ?>
         </label>
         <label class="radio-inline">
-	        <?php echo HTML::radioField('rating', '5', 1); ?>
+          <?php echo HTML::radioField('rating', '5', 1, 'required aria-required="true"'); ?>
         </label>
         <?php echo '<div class="help-block justify" style="width: 150px;">' . OSCOM::getDef('text_bad') . '<p class="pull-right">' . OSCOM::getDef('text_good') . '</p></div>'; ?>
       </div>
