@@ -1,5 +1,47 @@
 # osCommerce Online Merchant
 
+## 19 Nov 2016 osCommerce Online Merchant v2.4.2beta
+
+* Specials page updated to use database table prefix in sql queries.
+  [#473](https://github.com/osCommerce/oscommerce2/issues/473)
+
+* Add check for PHP "zip" extension during installation procedure.
+
+* Make PHP "curl" a requirement for new installations.
+  [#476](https://github.com/osCommerce/oscommerce2/issues/476)
+
+* Only set the custom error handler if the work/log directory is writable.
+
+* Show a permanent notice in the Administration Dashboard if the work/log directory is not writable.
+
+* URL encode backslash and curly braces characters in urls.
+  [#512](https://github.com/osCommerce/oscommerce2/issues/512)
+
+* Fix message of all products being updated on the shopping cart page.
+  [#475](https://github.com/osCommerce/oscommerce2/issues/475)
+
+* Fix gzip compression.
+  [#518](https://github.com/osCommerce/oscommerce2/issues/518)
+
+* Add Apps support to the Shipping and Order Total modules.
+
+* General bug fixes, optimizations, and language definition updates.
+
+### Third Party Updates
+
+* Update random_compat to v2.0.4
+  [#479](https://github.com/osCommerce/oscommerce2/issues/479)
+
+### Thanks
+
+* [frankludriks](https://github.com/frankludriks)
+* [Kymation](https://github.com/Kymation)
+* [Moxamint](https://github.com/Moxamint)
+* [multimixer](https://github.com/multimixer)
+* [omarkhcool](https://github.com/omarkhcool)
+* [osc2nuke](https://github.com/osc2nuke)
+* [pmward](https://github.com/pmward)
+
 ## 11 Nov 2016 osCommerce Online Merchant v2.4.1beta
 
 * Add the following modules:
