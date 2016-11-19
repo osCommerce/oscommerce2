@@ -41,6 +41,7 @@
 * [omarkhcool](https://github.com/omarkhcool)
 * [osc2nuke](https://github.com/osc2nuke)
 * [pmward](https://github.com/pmward)
+* [scottcwilson](https://github.com/scottcwilson)
 
 ## 11 Nov 2016 osCommerce Online Merchant v2.4.1beta
 
