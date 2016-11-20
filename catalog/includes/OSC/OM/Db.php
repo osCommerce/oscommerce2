@@ -225,14 +225,16 @@ class Db extends \PDO
         return $Q;
     }
 
-    public function save($table, array $data, array $where_condition = null)
+    public function save($table, array $data, array $where_condition = null, array $options = null)
     {
         if (empty($data)) {
             return false;
         }
 
-        if ((strlen($table) < 7) || (substr($table, 0, 7) != ':table_')) {
-            $table = ':table_' . $table;
+        if (!isset($options['prefix_tables']) || ($options['prefix_tables'] === true)) {
+            if ((strlen($table) < 7) || (substr($table, 0, 7) != ':table_')) {
+                $table = ':table_' . $table;
+            }
         }
 
         if (isset($where_condition)) {
@@ -316,10 +318,12 @@ class Db extends \PDO
         return false;
     }
 
-    public function delete($table, array $where_condition = [])
+    public function delete($table, array $where_condition = [], array $options = null)
     {
-        if ((strlen($table) < 7) || (substr($table, 0, 7) != ':table_')) {
-            $table = ':table_' . $table;
+        if (!isset($options['prefix_tables']) || ($options['prefix_tables'] === true)) {
+            if ((strlen($table) < 7) || (substr($table, 0, 7) != ':table_')) {
+                $table = ':table_' . $table;
+            }
         }
 
         $statement = 'delete from ' . $table;
