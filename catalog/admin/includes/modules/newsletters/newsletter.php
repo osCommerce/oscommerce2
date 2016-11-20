@@ -43,7 +43,19 @@
                         '    <td>&nbsp;</td>' . "\n" .
                         '  </tr>' . "\n" .
                         '  <tr>' . "\n" .
-                        '    <td class="main"><tt>' . nl2br($this->content) . '</tt></td>' . "\n" .
+                        '    <td class="main"><strong>' . OSCOM::getDef('text_newsletter_content_html') . '</strong></td>' . "\n" .
+                        '  </tr>' . "\n" .
+                        '  <tr>' . "\n" .
+                        '    <td class="main"><code>' . nl2br(HTML::outputProtected($this->content)) . '</code></td>' . "\n" .
+                        '  </tr>' . "\n" .
+                        '  <tr>' . "\n" .
+                        '    <td>&nbsp;</td>' . "\n" .
+                        '  </tr>' . "\n" .
+                        '  <tr>' . "\n" .
+                        '    <td class="main"><strong>' . OSCOM::getDef('text_newsletter_content_plain') . '</strong></td>' . "\n" .
+                        '  </tr>' . "\n" .
+                        '  <tr>' . "\n" .
+                        '    <td class="main"><code>' . nl2br(strip_tags($this->content)) . '</code></td>' . "\n" .
                         '  </tr>' . "\n" .
                         '  <tr>' . "\n" .
                         '    <td>&nbsp;</td>' . "\n" .
@@ -62,7 +74,8 @@
       $newsletterEmail = new Mail();
       $newsletterEmail->setFrom(STORE_OWNER_EMAIL_ADDRESS, STORE_OWNER);
       $newsletterEmail->setSubject($this->title);
-      $newsletterEmail->setBody(nl2br($this->content, true));
+      $newsletterEmail->setBodyPlain(strip_tags($this->content));
+      $newsletterEmail->setBodyHTML(strip_tags($this->content) == $this->content ? nl2br($this->content) : $this->content);
 
       $Qmail = $OSCOM_Db->get('customers', [
         'customers_firstname',

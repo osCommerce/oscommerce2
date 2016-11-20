@@ -170,12 +170,24 @@ function selectAll(FormName, SelectBox) {
                         '    <td>&nbsp;</td>' . "\n" .
                         '  </tr>' . "\n" .
                         '  <tr>' . "\n" .
-                        '    <td class="main"><tt>' . nl2br($this->content) . '</tt></td>' . "\n" .
+                        '    <td class="main"><strong>' . OSCOM::getDef('text_newsletter_content_html') . '</strong></td>' . "\n" .
+                        '  </tr>' . "\n" .
+                        '  <tr>' . "\n" .
+                        '    <td class="main"><code>' . nl2br(HTML::outputProtected($this->content)) . '</code></td>' . "\n" .
                         '  </tr>' . "\n" .
                         '  <tr>' . "\n" .
                         '    <td>&nbsp;</td>' . "\n" .
                         '  </tr>' . "\n" .
-                        '  <tr>' . HTML::form('confirm', OSCOM::link(FILENAME_NEWSLETTERS, 'page=' . $_GET['page'] . '&nID=' . $_GET['nID'] . '&action=confirm_send')) . "\n" .
+                        '  <tr>' . "\n" .
+                        '    <td class="main"><strong>' . OSCOM::getDef('text_newsletter_content_plain') . '</strong></td>' . "\n" .
+                        '  </tr>' . "\n" .
+                        '  <tr>' . "\n" .
+                        '    <td class="main"><code>' . nl2br(strip_tags($this->content)) . '</code></td>' . "\n" .
+                        '  </tr>' . "\n" .
+                        '  <tr>' . "\n" .
+                        '    <td>&nbsp;</td>' . "\n" .
+                        '  </tr>' . "\n" .
+                        '  <tr>' . "\n" .
                         '    <td class="smallText" align="right">';
       if (sizeof($audience) > 0) {
         if (isset($_GET['global']) && ($_GET['global'] == 'true')) {
@@ -301,7 +313,8 @@ function selectAll(FormName, SelectBox) {
       $notificationEmail = new Mail();
       $notificationEmail->setFrom(STORE_OWNER_EMAIL_ADDRESS, STORE_OWNER);
       $notificationEmail->setSubject($this->title);
-      $notificationEmail->setBody(nl2br($this->content, true));
+      $newsletterEmail->setBodyPlain(strip_tags($this->content));
+      $newsletterEmail->setBodyHTML(strip_tags($this->content) == $this->content ? nl2br($this->content) : $this->content);
 
       foreach ( $audience as $key => $value ) {
         $notificationEmail->clearTo();

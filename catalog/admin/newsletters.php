@@ -205,7 +205,10 @@
         <td class="smallText" align="right"><?php echo HTML::button(OSCOM::getDef('image_back'), 'fa fa-chevron-left', OSCOM::link(FILENAME_NEWSLETTERS, 'page=' . $_GET['page'] . '&nID=' . $_GET['nID'])); ?></td>
       </tr>
       <tr>
-        <td><tt><?php echo nl2br($nInfo->content); ?></tt></td>
+        <td><div style="margin: 15px 0px 15px;"><strong><?php echo OSCOM::getDef('text_newsletter_content_html'); ?></strong></div><div class="html_preview"><?php echo (strip_tags($nInfo->content) == $nInfo->content ? nl2br($nInfo->content) : $nInfo->content); ?></div></td>
+      </tr>
+      <tr>
+        <td><div style="margin: 15px 0px 15px;"><strong><?php echo OSCOM::getDef('text_newsletter_content_plain'); ?></strong></div><div class="plain_preview"><?php echo nl2br(strip_tags($nInfo->content)); ?></div></td>
       </tr>
       <tr>
         <td class="smallText" align="right"><?php echo HTML::button(OSCOM::getDef('image_back'), 'fa fa-chevron-left', OSCOM::link(FILENAME_NEWSLETTERS, 'page=' . $_GET['page'] . '&nID=' . $_GET['nID'])); ?></td>
