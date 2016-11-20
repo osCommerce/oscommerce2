@@ -65,7 +65,6 @@
       case 'update_order':
         $oID = HTML::sanitize($_GET['oID']);
         $status = HTML::sanitize($_POST['status']);
-        $comments = $_POST['comments'];
 
         $order_updated = false;
 
@@ -78,7 +77,7 @@
           'orders_id' => (int)$oID
         ]);
 
-        if ( ($Qcheck->value('orders_status') != $status) || tep_not_null($comments)) {
+        if ( ($Qcheck->value('orders_status') != $status) || tep_not_null($_POST['comments'])) {
           $OSCOM_Db->save('orders', [
             'orders_status' => $status,
             'last_modified' => 'now()'
@@ -91,8 +90,8 @@
             $notify_comments_plain = '';
             $notify_comments_html = '';
             if (isset($_POST['notify_comments']) && ($_POST['notify_comments'] == 'on')) {
-              $notify_comments_plain = OSCOM::getDef('email_text_comments_update_plain', ['comments' => strip_tags(str_replace(array('<br>', '<br />'), "\n", $comments))]) . "\n\n";
-              $notify_comments_html = OSCOM::getDef('email_text_comments_update_html', ['comments' => nl2br($comments, true)]);
+              $notify_comments_plain = OSCOM::getDef('email_text_comments_update_plain', ['comments' => strip_tags($_POST['comments'])]) . "\n\n";
+              $notify_comments_html = OSCOM::getDef('email_text_comments_update_html', ['comments' => (strip_tags($_POST['comments']) == $_POST['comments'] ? nl2br($_POST['comments']) : $_POST['comments'])]);
             }
 
             $invoice_url = OSCOM::link('Shop/' . FILENAME_CATALOG_ACCOUNT_HISTORY_INFO, 'order_id=' . $oID);
@@ -114,7 +113,7 @@
             'orders_status_id' => $status,
             'date_added' => 'now()',
             'customer_notified' => $customer_notified,
-            'comments' => $comments
+            'comments' => $_POST['comments']
           ]);
 
           $order_updated = true;
