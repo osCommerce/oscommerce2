@@ -54,7 +54,8 @@
     $customerEmail = new Mail();
     $customerEmail->setFrom($_POST['from']);
     $customerEmail->setSubject($_POST['subject']);
-    $customerEmail->setBody($_POST['message']);
+    $customerEmail->setBodyPlain(strip_tags($_POST['message']));
+    $customerEmail->setBodyHTML(strip_tags($_POST['message']) == $_POST['message'] ? nl2br($_POST['message']) : $_POST['message']);
 
     while ($Qmail->fetch()) {
       $customerEmail->clearTo();
