@@ -121,7 +121,7 @@
 
 // dump the data
           if ( ($table != OSCOM::getConfig('db_table_prefix') . 'sessions' ) && ($table != OSCOM::getConfig('db_table_prefix') . 'whos_online') ) {
-            $Qrows = $OSCOM_Db->get($table, $table_list);
+            $Qrows = $OSCOM_Db->get($table, $table_list, null, null, null, null, ['prefix_tables' => false]);
 
             while ($Qrows->fetch()) {
               $schema = 'insert into ' . $table . ' (' . implode(', ', $table_list) . ') values (';

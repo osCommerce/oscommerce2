@@ -21,7 +21,7 @@ use OSC\OM\OSCOM;
           <div class="text-center">
             <div class="btn-group">
               <a href="<?php echo OSCOM::link('product_info.php', tep_get_all_get_params(array('action')) . 'products_id=' . (int)$product['products_id']); ?>" class="btn btn-default" role="button"><?php echo OSCOM::getDef('module_content_in_new_products_button_view'); ?></a>
-              <a href="<?php echo OSCOM::link($PHP_SELF, tep_get_all_get_params(array('action')) . 'action=buy_now&products_id=' . (int)$product['products_id']); ?>" class="btn btn-success" role="button"><?php echo OSCOM::getDef('module_content_in_new_products_button_buy'); ?></a>
+              <a href="<?php echo OSCOM::link($PHP_SELF, tep_get_all_get_params(array('action')) . 'action=buy_now&products_id=' . (int)$product['products_id']); ?>" class="btn btn-success btn-index-nested btn-buy" role="button"><?php echo OSCOM::getDef('module_content_in_new_products_button_buy'); ?></a>
             </div>
           </div>
         </div>

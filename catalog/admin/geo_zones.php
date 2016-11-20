@@ -224,7 +224,7 @@ function update_zone(theForm) {
 
     while ($Qzones->fetch()) {
       if ((!isset($_GET['zID']) || (isset($_GET['zID']) && ((int)$_GET['zID'] === $Qzones->valueInt('geo_zone_id')))) && !isset($zInfo) && (substr($action, 0, 3) != 'new')) {
-        $Qtotal = $OSCOM_Db->prepare('select count(*) as num_zones from :table_zones_to_geo_zones where geo_zone_id = :geo_zone_id group by geo_zone_id');
+        $Qtotal = $OSCOM_Db->prepare('select count(*) as num_zones from :table_zones_to_geo_zones where geo_zone_id = :geo_zone_id');
         $Qtotal->bindInt(':geo_zone_id', $Qzones->valueInt('geo_zone_id'));
         $Qtotal->execute();
 

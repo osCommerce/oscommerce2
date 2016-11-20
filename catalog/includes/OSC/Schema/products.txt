@@ -1,7 +1,7 @@
 products_id int not_null auto_increment
 products_quantity int(4) not_null
-products_model varchar(64)
-products_image varchar(64)
+products_model varchar(255)
+products_image varchar(255)
 products_price decimal(15,4) not_null
 products_date_added datetime not_null
 products_last_modified datetime

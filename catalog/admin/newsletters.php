@@ -33,6 +33,13 @@
       case 'update':
         if (isset($_POST['newsletter_id'])) $newsletter_id = HTML::sanitize($_POST['newsletter_id']);
         $newsletter_module = HTML::sanitize($_POST['module']);
+        
+        $allowed = array_map(function($v) {return basename($v, '.php');}, glob('includes/modules/newsletters/*.php'));
+        if (!in_array($newsletter_module, $allowed)) {
+          $OSCOM_MessageStack->add(OSCOM::getDef('error_newsletter_module_not_exists'), 'error');
+          $newsletter_error = true;
+        } 
+ 
         $title = HTML::sanitize($_POST['title']);
         $content = $_POST['content'];
 

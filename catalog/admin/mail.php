@@ -54,7 +54,7 @@
     $customerEmail = new Mail();
     $customerEmail->setFrom($_POST['from']);
     $customerEmail->setSubject($_POST['subject']);
-    $customerEmail->setBody($_POST['message'], true);
+    $customerEmail->setBody($_POST['message']);
 
     while ($Qmail->fetch()) {
       $customerEmail->clearTo();
@@ -105,7 +105,7 @@
           <tr><?php echo HTML::form('mail', OSCOM::link(FILENAME_MAIL, 'action=send_email_to_user')); ?>
             <td><table border="0" width="100%" cellpadding="0" cellspacing="2">
               <tr>
-                <td class="smallText"><strong><?php echo OSCOM::getDef('text_customer'); ?></strong><br /><?php echo $mail_sent_to; ?></td>
+                <td class="smallText"><strong><?php echo OSCOM::getDef('text_customer'); ?></strong><br /><?php echo HTML::outputProtected($mail_sent_to); ?></td>
               </tr>
               <tr>
                 <td>&nbsp;</td>

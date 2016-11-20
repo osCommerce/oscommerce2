@@ -39,6 +39,14 @@
     case 'payment':
       $appModuleType = 'Payment';
       break;
+
+    case 'shipping':
+      $appModuleType = 'Shipping';
+      break;
+
+    case 'order_total':
+      $appModuleType = 'OrderTotal';
+      break;
   }
 
   $action = (isset($_GET['action']) ? $_GET['action'] : '');
