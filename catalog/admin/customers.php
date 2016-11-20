@@ -696,6 +696,13 @@ function check_form() {
     $sql_query .= ' order by c.customers_lastname, c.customers_firstname limit :page_set_offset, :page_set_max_results';
 
     $Qcustomers = $OSCOM_Db->prepare($sql_query);
+
+    if (isset($_GET['search']) && tep_not_null($_GET['search'])) {
+      $Qcustomers->bindValue(':customers_lastname', '%' . $_GET['search'] . '%');
+      $Qcustomers->bindValue(':customers_firstname', '%' . $_GET['search'] . '%');
+      $Qcustomers->bindValue(':customers_email_address', '%' . $_GET['search'] . '%');
+    }
+
     $Qcustomers->setPageSet(MAX_DISPLAY_SEARCH_RESULTS);
     $Qcustomers->execute();
 
