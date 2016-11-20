@@ -112,11 +112,11 @@
       return array('MODULE_CONTENT_FOOTER_BANNER_STATUS', 'MODULE_CONTENT_FOOTER_BANNER_GROUP', 'MODULE_CONTENT_FOOTER_BANNER_CONTENT_WIDTH', 'MODULE_CONTENT_FOOTER_BANNER_SORT_ORDER');
     }
 
-    function showBannerGroupSelection($value) {
+    public static function showBannerGroupSelection($value) {
       return empty($value) ? '--None--' : $value;
     }
 
-    function getBannerGroupSelection($value, $key = '') {
+    public static function getBannerGroupSelection($value, $key = '') {
       $OSCOM_Db = Registry::get('Db');
 
       $name = !empty($key) ? 'configuration[' . $key . ']' : 'configuration_value';
