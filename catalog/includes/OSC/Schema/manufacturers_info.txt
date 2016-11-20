@@ -5,8 +5,8 @@ url_clicked int(5) default(0) not_null
 date_last_click datetime
 manufacturers_description text
 manufacturers_seo_description text
-manufacturers_seo_keywords varchar(128)
-manufacturers_seo_title varchar(128)
+manufacturers_seo_keywords varchar(255)
+manufacturers_seo_title varchar(255)
 --
 primary manufacturers_id languages_id
 ##

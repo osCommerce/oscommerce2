@@ -1,8 +1,8 @@
 banners_id int not_null auto_increment
-banners_title varchar(64) not_null
+banners_title varchar(255) not_null
 banners_url varchar(255) not_null
-banners_image varchar(64) not_null
-banners_group varchar(10) not_null
+banners_image varchar(255) not_null
+banners_group varchar(255) not_null
 banners_html_text text
 expires_impressions int(7) default(0)
 expires_date datetime

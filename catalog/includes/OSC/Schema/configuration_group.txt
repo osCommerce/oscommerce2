@@ -1,5 +1,5 @@
 configuration_group_id int not_null auto_increment
-configuration_group_title varchar(64) not_null
+configuration_group_title varchar(255) not_null
 configuration_group_description varchar(255) not_null
 sort_order int(5)
 visible int(1) default(1)

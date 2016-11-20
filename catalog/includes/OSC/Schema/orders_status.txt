@@ -1,6 +1,6 @@
 orders_status_id int default(0) not_null
 language_id int default(1) not_null
-orders_status_name varchar(32) not_null
+orders_status_name varchar(255) not_null
 public_flag int default(1)
 downloads_flag int default(0)
 --

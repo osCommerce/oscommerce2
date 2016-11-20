@@ -1,8 +1,8 @@
 languages_id int not_null auto_increment
-name varchar(32) not_null
+name varchar(255) not_null
 code char(2) not_null
 image varchar(64)
-directory varchar(32)
+directory varchar(255)
 sort_order int(3)
 --
 primary languages_id

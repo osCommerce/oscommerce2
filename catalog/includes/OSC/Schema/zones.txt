@@ -1,6 +1,6 @@
 zone_id int not_null auto_increment
 zone_country_id int not_null
-zone_code varchar(32) not_null
+zone_code varchar(255) not_null
 zone_name varchar(255) not_null
 --
 primary zone_id
