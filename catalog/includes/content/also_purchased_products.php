@@ -21,16 +21,19 @@
 
     if (count($orders) >= MIN_DISPLAY_ALSO_PURCHASED) {
       $also_pur_prods_content = NULL;
+      $position = 1;
 
       foreach ($orders as $o) {
         $also_pur_prods_content .= '<div class="col-sm-6 col-md-4">';
         $also_pur_prods_content .= '  <div class="thumbnail">';
-        $also_pur_prods_content .= '    <a href="' . OSCOM::link('product_info.php', 'products_id=' . $o['products_id']) . '">' . HTML::image(OSCOM::linkImage($o['products_image']), $o['products_name'], SMALL_IMAGE_WIDTH, SMALL_IMAGE_HEIGHT) . '</a>';
+        $also_pur_prods_content .= '    <a href="' . OSCOM::link('product_info.php', 'products_id=' . (int)$o['products_id']) . '">' . HTML::image(OSCOM::linkImage($o['products_image']), $o['products_name'], SMALL_IMAGE_WIDTH, SMALL_IMAGE_HEIGHT) . '</a>';
         $also_pur_prods_content .= '    <div class="caption">';
-        $also_pur_prods_content .= '      <h5 class="text-center"><a href="' . OSCOM::link('product_info.php', 'products_id=' . $o['products_id']) . '"><span itemprop="itemListElement">' . $o['products_name'] . '</span></a></h5>';
+        $also_pur_prods_content .= '      <h5 class="text-center" itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem"><a itemprop="url" href="' . OSCOM::link('product_info.php', 'products_id=' . (int)$o['products_id']) . '"><span itemprop="name">' . $o['products_name'] . '</span></a><meta itemprop="position" content="' . (int)$position . '" /></h5>';
         $also_pur_prods_content .= '    </div>';
         $also_pur_prods_content .= '  </div>';
         $also_pur_prods_content .= '</div>';
+        
+        $position++;
       }
 
 ?>

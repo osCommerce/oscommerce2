@@ -102,7 +102,7 @@
         }
       }
 
-      $products_name .= '<br>' . HTML::inputField('cart_quantity[]', $products[$i]['quantity'], 'style="width: 65px;" min="0"', 'number') . HTML::hiddenField('products_id[]', $products[$i]['id']) . ' ' . HTML::button(null, 'fa fa-refresh', null, null, 'btn-info btn-xs') . ' ' . HTML::button(null, 'fa fa-remove', OSCOM::link('shopping_cart.php', 'products_id=' . $products[$i]['id'] . '&action=remove_product'), null, 'btn-danger btn-xs');
+      $products_name .= '<br>' . HTML::inputField('cart_quantity[]', $products[$i]['quantity'], 'style="width: 65px;" min="0"', 'number') . HTML::hiddenField('products_id[]', $products[$i]['id']) . ' ' . HTML::button(OSCOM::getDef('text_cart_button_update'), 'fa fa-refresh', null, null, 'btn-info btn-xs') . ' ' . HTML::button(OSCOM::getDef('text_cart_button_remove'), 'fa fa-remove', OSCOM::link('shopping_cart.php', 'products_id=' . $products[$i]['id'] . '&action=remove_product'), null, 'btn-danger btn-xs');
 
       $products_name .= '</td>';
 

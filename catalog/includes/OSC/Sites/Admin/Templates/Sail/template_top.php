@@ -16,7 +16,7 @@ use OSC\OM\OSCOM;
 <script type="text/javascript" src="<?= OSCOM::link('Shop/ext/jquery/ui/jquery-ui-1.11.4.min.js', '', false); ?>"></script>
 
 <link href="<?= OSCOM::link('Shop/ext/bootstrap/css/bootstrap.min.css', '', false); ?>" rel="stylesheet">
-<link href="<?= OSCOM::link('Shop/ext/font-awesome/4.6.3/css/font-awesome.min.css', '', false); ?>" rel="stylesheet">
+<link href="<?= OSCOM::link('Shop/ext/font-awesome/4.7.0/css/font-awesome.min.css', '', false); ?>" rel="stylesheet">
 <link href="<?= OSCOM::link('Shop/ext/smartmenus/jquery.smartmenus.bootstrap.css', '', false); ?>" rel="stylesheet">
 <link href="<?= OSCOM::link('Shop/ext/chartist/chartist.min.css', '', false); ?>" rel="stylesheet">
 

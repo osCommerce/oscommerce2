@@ -129,7 +129,7 @@ function checkForm() {
     <div class="pull-right text-center">
       <?php echo '<a href="' . OSCOM::link('product_info.php', 'products_id=' . $Qcheck->valueInt('products_id')) . '">' . HTML::image(OSCOM::linkImage($Qcheck->value('products_image')), $Qcheck->value('products_name'), SMALL_IMAGE_WIDTH, SMALL_IMAGE_HEIGHT, 'hspace="5" vspace="5"') . '</a>'; ?>
 
-      <p><?php echo HTML::button(OSCOM::getDef('image_button_in_cart'), 'fa fa-shopping-cart', OSCOM::link(basename($PHP_SELF), tep_get_all_get_params(array('action')) . 'action=buy_now')); ?></p>
+      <p><?php echo HTML::button(OSCOM::getDef('image_button_in_cart'), 'fa fa-shopping-cart', OSCOM::link(basename($PHP_SELF), tep_get_all_get_params(array('action')) . 'action=buy_now'), null, null, 'btn-success btn-reviews btn-buy'); ?></p>
     </div>
 
     <div class="clearfix"></div>
@@ -168,7 +168,7 @@ function checkForm() {
           <?php echo HTML::radioField('rating', '4'); ?>
         </label>
         <label class="radio-inline">
-	  <?php echo HTML::radioField('rating', '5', 1); ?>
+          <?php echo HTML::radioField('rating', '5', 1, 'required aria-required="true"'); ?>
         </label>
         <?php echo '<div class="help-block justify" style="width: 150px;">' . OSCOM::getDef('text_bad') . '<p class="pull-right">' . OSCOM::getDef('text_good') . '</p></div>'; ?>
       </div>
