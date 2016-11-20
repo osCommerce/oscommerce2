@@ -345,8 +345,8 @@
             $Qcheck = $OSCOM_Db->get('products_images', 'count(*) as total', ['image' => $Qimages->value('image')]);
 
             if ($Qcheck->valueInt('total') < 2) {
-              if (is_file(OSCOM::getConfig('dir_root', 'Shop') . 'images/' . $Qimage->value('image'))) {
-                unlink(OSCOM::getConfig('dir_root', 'Shop') . 'images/' . $Qimage->value('image'));
+              if (is_file(OSCOM::getConfig('dir_root', 'Shop') . 'images/' . $Qimages->value('image'))) {
+                unlink(OSCOM::getConfig('dir_root', 'Shop') . 'images/' . $Qimages->value('image'));
               }
             }
           } while ($Qimages->fetch());
