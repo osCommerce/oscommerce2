@@ -51,14 +51,10 @@
         break;
     }
 
-    $from = HTML::sanitize($_POST['from']);
-    $subject = HTML::sanitize($_POST['subject']);
-    $message = $_POST['message'];
-
     $customerEmail = new Mail();
-    $customerEmail->setFrom($from);
-    $customerEmail->setSubject($subject);
-    $customerEmail->setBody(nl2br($message, true));
+    $customerEmail->setFrom($_POST['from']);
+    $customerEmail->setSubject($_POST['subject']);
+    $customerEmail->setBody($_POST['message'], true);
 
     while ($Qmail->fetch()) {
       $customerEmail->clearTo();
@@ -115,19 +111,25 @@
                 <td>&nbsp;</td>
               </tr>
               <tr>
-                <td class="smallText"><strong><?php echo OSCOM::getDef('text_from'); ?></strong><br /><?php echo htmlspecialchars(stripslashes($_POST['from'])); ?></td>
+                <td class="smallText"><strong><?php echo OSCOM::getDef('text_from'); ?></strong><br /><?php echo HTML::outputProtected($_POST['from']); ?></td>
               </tr>
               <tr>
                 <td>&nbsp;</td>
               </tr>
               <tr>
-                <td class="smallText"><strong><?php echo OSCOM::getDef('text_subject'); ?></strong><br /><?php echo htmlspecialchars(stripslashes($_POST['subject'])); ?></td>
+                <td class="smallText"><strong><?php echo OSCOM::getDef('text_subject'); ?></strong><br /><?php echo HTML::outputProtected($_POST['subject']); ?></td>
               </tr>
               <tr>
                 <td>&nbsp;</td>
               </tr>
               <tr>
-                <td class="smallText"><strong><?php echo OSCOM::getDef('text_message'); ?></strong><br /><?php echo nl2br(htmlspecialchars(stripslashes($_POST['message']))); ?></td>
+                <td class="smallText"><strong><?php echo OSCOM::getDef('text_message_html'); ?></strong><br /><?php echo nl2br(HTML::outputProtected($_POST['message'])); ?></td>
+              </tr>
+              <tr>
+                <td>&nbsp;</td>
+              </tr>
+              <tr>
+                <td class="smallText"><strong><?php echo OSCOM::getDef('text_message_plain'); ?></strong><br /><?php echo nl2br(strip_tags($_POST['message'])); ?></td>
               </tr>
               <tr>
                 <td>&nbsp;</td>
@@ -138,7 +140,7 @@
 /* Re-Post all POST'ed variables */
     foreach ( $_POST as $key => $value ) {
       if (!is_array($_POST[$key])) {
-        echo HTML::hiddenField($key, htmlspecialchars(stripslashes($value)));
+        echo HTML::hiddenField($key, $value);
       }
     }
 

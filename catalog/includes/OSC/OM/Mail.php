@@ -76,7 +76,14 @@ class Mail
         $this->to = [];
         $this->cc = [];
         $this->bcc = [];
-        $this->headers['X-Mailer'] = 'osCommerce';
+
+        if (isset($this->headers['Cc'])) {
+            unset($this->headers['Cc']);
+        }
+
+        if (isset($this->headers['Bcc'])) {
+            unset($this->headers['Bcc']);
+        }
     }
 
     public function setSubject($subject)
