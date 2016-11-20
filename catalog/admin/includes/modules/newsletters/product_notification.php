@@ -155,7 +155,8 @@ function selectAll(FormName, SelectBox) {
         }
       }
 
-      $confirm_string = '<table border="0" cellspacing="0" cellpadding="2">' . "\n" .
+      $confirm_string =  HTML::form('confirm', OSCOM::link(FILENAME_NEWSLETTERS, 'page=' . $_GET['page'] . '&nID=' . $_GET['nID'] . '&action=confirm_send')) . "\n" .
+                        '<table border="0" cellspacing="0" cellpadding="2">' . "\n" .
                         '  <tr>' . "\n" .
                         '    <td class="main"><font color="#ff0000"><strong>' . OSCOM::getDef('text_count_customers', ['audience' => sizeof($audience)]) . '</strong></font></td>' . "\n" .
                         '  </tr>' . "\n" .
@@ -188,7 +189,8 @@ function selectAll(FormName, SelectBox) {
       }
       $confirm_string .= HTML::button(OSCOM::getDef('image_cancel'), 'fa fa-close', OSCOM::link(FILENAME_NEWSLETTERS, 'page=' . $_GET['page'] . '&nID=' . $_GET['nID'] . '&action=send')) . '</td>' . "\n" .
                          '  </tr>' . "\n" .
-                         '</table>';
+                         '</table>' . "\n" .
+                         '</form>';
 
       return $confirm_string;
     }
