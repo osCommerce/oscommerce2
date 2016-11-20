@@ -313,8 +313,8 @@ function selectAll(FormName, SelectBox) {
       $notificationEmail = new Mail();
       $notificationEmail->setFrom(STORE_OWNER_EMAIL_ADDRESS, STORE_OWNER);
       $notificationEmail->setSubject($this->title);
-      $newsletterEmail->setBodyPlain(strip_tags($this->content));
-      $newsletterEmail->setBodyHTML(strip_tags($this->content) == $this->content ? nl2br($this->content) : $this->content);
+      $notificationEmail->setBodyPlain(strip_tags($this->content));
+      $notificationEmail->setBodyHTML(strip_tags($this->content) == $this->content ? nl2br($this->content) : $this->content);
 
       foreach ( $audience as $key => $value ) {
         $notificationEmail->clearTo();
