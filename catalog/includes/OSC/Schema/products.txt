@@ -11,6 +11,7 @@ products_status tinyint(1) not_null
 products_tax_class_id int not_null
 manufacturers_id int
 products_ordered int default(0) not_null
+products_gtin char(14) null
 --
 primary products_id
 idx_products_model products_model

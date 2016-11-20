@@ -69,6 +69,7 @@ text_products_url_without_http = <small>(without http://)</small>
 text_products_price_net = Products Price (Net):
 text_products_price_gross = Products Price (Gross):
 text_products_weight = Products Weight:
+text_products_gtin = Products <abbr title="GTIN must be stored as 14 Digits. Any GTIN smaller than this will be zero-padded per GTIN Specifications.">GTIN</abbr>:<br><small>1 of UPC, EAN, ISBN etc</small>
 empty_category = Empty Category
 text_how_to_copy = Copy Method:
 text_copy_as_link = Link product

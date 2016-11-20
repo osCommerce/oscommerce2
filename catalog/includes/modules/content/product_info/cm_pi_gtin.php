@@ -32,12 +32,19 @@
     }
 
     function execute() {
-      global $oscTemplate, $product_info;
+      global $oscTemplate;
 
       $content_width = (int)MODULE_CONTENT_PRODUCT_INFO_GTIN_CONTENT_WIDTH;
+      
+      $OSCOM_Db = Registry::get('Db');
 
-      if (tep_not_null($product_info['products_gtin'])) {
-        $gtin = substr($product_info['products_gtin'], 0-MODULE_CONTENT_PRODUCT_INFO_GTIN_LENGTH);
+      $Qgtin = $OSCOM_Db->prepare('select products_gtin from :table_products where products_id = :products_id');
+      $Qgtin->bindInt(':products_id', $_GET['products_id']);
+      $Qgtin->execute();
+
+      if ($Qgtin->fetch() !== false) {
+        $gtin = $Qgtin->valueProtected('products_gtin')
+        $gtin = substr($gtin, 0-MODULE_CONTENT_PRODUCT_INFO_GTIN_LENGTH);
 
         ob_start();
         include('includes/modules/content/' . $this->group . '/templates/gtin.php');
