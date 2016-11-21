@@ -6,6 +6,7 @@
   * @license MIT; https://www.oscommerce.com/license/mit.txt
   */
 
+  use OSC\OM\HTML;
   use OSC\OM\OSCOM;
   use OSC\OM\Registry;
 
@@ -32,18 +33,32 @@
     }
 
     function execute() {
-      global $oscTemplate, $product_info;
+      global $oscTemplate;
 
       $content_width = (int)MODULE_CONTENT_PRODUCT_INFO_GTIN_CONTENT_WIDTH;
 
-      if (tep_not_null($product_info['products_gtin'])) {
-        $gtin = substr($product_info['products_gtin'], 0-MODULE_CONTENT_PRODUCT_INFO_GTIN_LENGTH);
+      $OSCOM_Db = Registry::get('Db');
 
-        ob_start();
-        include('includes/modules/content/' . $this->group . '/templates/gtin.php');
-        $template = ob_get_clean();
+      $Qgtin = $OSCOM_Db->prepare('select products_gtin from :table_products where products_id = :products_id');
+      $Qgtin->bindInt(':products_id', $_GET['products_id']);
+      $Qgtin->execute();
 
-        $oscTemplate->addContent($template, $this->group);
+      if ($Qgtin->fetch() !== false) {
+        $gtin = $Qgtin->value('products_gtin');
+
+        if (!empty($gtin)) {
+          $gtin = substr($gtin, 0 - MODULE_CONTENT_PRODUCT_INFO_GTIN_LENGTH);
+
+          if (!empty($gtin)) {
+            $gtin = HTML::outputProtected($gtin);
+
+            ob_start();
+            include('includes/modules/content/' . $this->group . '/templates/gtin.php');
+            $template = ob_get_clean();
+
+            $oscTemplate->addContent($template, $this->group);
+          }
+        }
       }
     }
 

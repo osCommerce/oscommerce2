@@ -242,7 +242,8 @@
                                 'products_weight' => (float)HTML::sanitize($_POST['products_weight']),
                                 'products_status' => HTML::sanitize($_POST['products_status']),
                                 'products_tax_class_id' => HTML::sanitize($_POST['products_tax_class_id']),
-                                'manufacturers_id' => (int)HTML::sanitize($_POST['manufacturers_id']));
+                                'manufacturers_id' => (int)HTML::sanitize($_POST['manufacturers_id']),
+                                'products_gtin' => tep_not_null($_POST['products_gtin']) ? str_pad(HTML::sanitize($_POST['products_gtin']), 14, '0', STR_PAD_LEFT) : 'null');
 
         $products_image = new upload('products_image');
         $products_image->set_destination(OSCOM::getConfig('dir_root', 'Shop') . 'images/');
@@ -397,7 +398,8 @@
               'products_weight' => $Qproduct->value('products_weight'),
               'products_status' => 0,
               'products_tax_class_id' => $Qproduct->valueInt('products_tax_class_id'),
-              'manufacturers_id' => $Qproduct->valueInt('manufacturers_id')
+              'manufacturers_id' => $Qproduct->valueInt('manufacturers_id'),
+              'products_gtin' => $Qproduct->value('products_gtin'),
             ]);
             $dup_products_id = $OSCOM_Db->lastInsertId();
 
@@ -516,12 +518,13 @@
                           'products_date_available' => '',
                           'products_status' => '',
                           'products_tax_class_id' => '',
-                          'manufacturers_id' => '');
+                          'manufacturers_id' => '',
+                          'products_gtin' => '');
 
       $pInfo = new objectInfo($parameters);
 
       if (isset($_GET['pID']) && empty($_POST)) {
-        $Qproduct = $OSCOM_Db->prepare('select pd.products_name, pd.products_description, pd.products_url, p.products_id, p.products_quantity, p.products_model, p.products_image, p.products_price, p.products_weight, p.products_date_added, p.products_last_modified, date_format(p.products_date_available, "%Y-%m-%d") as products_date_available, p.products_status, p.products_tax_class_id, p.manufacturers_id from :table_products p, :table_products_description pd where p.products_id = :products_id and p.products_id = pd.products_id and pd.language_id = :language_id');
+        $Qproduct = $OSCOM_Db->prepare('select pd.products_name, pd.products_description, pd.products_url, p.products_id, p.products_quantity, p.products_model, p.products_image, p.products_price, p.products_weight, p.products_date_added, p.products_last_modified, date_format(p.products_date_available, "%Y-%m-%d") as products_date_available, p.products_status, p.products_tax_class_id, p.manufacturers_id, p.products_gtin from :table_products p, :table_products_description pd where p.products_id = :products_id and p.products_id = pd.products_id and pd.language_id = :language_id');
         $Qproduct->bindInt(':products_id', $_GET['pID']);
         $Qproduct->bindInt(':language_id', $OSCOM_Language->getId());
         $Qproduct->execute();
@@ -740,6 +743,10 @@ function updateNet() {
             <div class="row">
               <?= OSCOM::getDef('text_products_weight') . HTML::inputField('products_weight', $pInfo->products_weight); ?>
             </div>
+
+            <div class="row">
+              <?= OSCOM::getDef('text_products_gtin') . HTML::inputField('products_gtin', $pInfo->products_gtin); ?>
+            </div>
           </div>
         </div>
       </div>
@@ -919,7 +926,8 @@ $(function() {
         'p.products_last_modified',
         'p.products_date_available',
         'p.products_status',
-        'p.manufacturers_id'
+        'p.manufacturers_id',
+        'p.products_gtin'
       ], [
         'p.products_id' => [
           'val' => (int)$_GET['pID'],
