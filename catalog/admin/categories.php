@@ -242,8 +242,8 @@
                                 'products_weight' => (float)HTML::sanitize($_POST['products_weight']),
                                 'products_status' => HTML::sanitize($_POST['products_status']),
                                 'products_tax_class_id' => HTML::sanitize($_POST['products_tax_class_id']),
-                                'manufacturers_id' => (int)HTML::sanitize($_POST['manufacturers_id']));
-        $sql_data_array['products_gtin'] = (tep_not_null($_POST['products_gtin'])) ? str_pad(HTML::sanitize($_POST['products_gtin']), 14, '0', STR_PAD_LEFT) : 'null';
+                                'manufacturers_id' => (int)HTML::sanitize($_POST['manufacturers_id']),
+                                'products_gtin' => tep_not_null($_POST['products_gtin']) ? str_pad(HTML::sanitize($_POST['products_gtin']), 14, '0', STR_PAD_LEFT) : 'null');
 
         $products_image = new upload('products_image');
         $products_image->set_destination(OSCOM::getConfig('dir_root', 'Shop') . 'images/');
@@ -743,7 +743,7 @@ function updateNet() {
             <div class="row">
               <?= OSCOM::getDef('text_products_weight') . HTML::inputField('products_weight', $pInfo->products_weight); ?>
             </div>
-            
+
             <div class="row">
               <?= OSCOM::getDef('text_products_gtin') . HTML::inputField('products_gtin', $pInfo->products_gtin); ?>
             </div>

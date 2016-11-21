@@ -6,6 +6,7 @@
   * @license MIT; https://www.oscommerce.com/license/mit.txt
   */
 
+  use OSC\OM\HTML;
   use OSC\OM\OSCOM;
   use OSC\OM\Registry;
 
@@ -35,7 +36,7 @@
       global $oscTemplate;
 
       $content_width = (int)MODULE_CONTENT_PRODUCT_INFO_GTIN_CONTENT_WIDTH;
-      
+
       $OSCOM_Db = Registry::get('Db');
 
       $Qgtin = $OSCOM_Db->prepare('select products_gtin from :table_products where products_id = :products_id');
@@ -43,14 +44,21 @@
       $Qgtin->execute();
 
       if ($Qgtin->fetch() !== false) {
-        $gtin = $Qgtin->valueProtected('products_gtin')
-        $gtin = substr($gtin, 0-MODULE_CONTENT_PRODUCT_INFO_GTIN_LENGTH);
+        $gtin = $Qgtin->value('products_gtin');
 
-        ob_start();
-        include('includes/modules/content/' . $this->group . '/templates/gtin.php');
-        $template = ob_get_clean();
+        if (!empty($gtin)) {
+          $gtin = substr($gtin, 0 - MODULE_CONTENT_PRODUCT_INFO_GTIN_LENGTH);
 
-        $oscTemplate->addContent($template, $this->group);
+          if (!empty($gtin)) {
+            $gtin = HTML::outputProtected($gtin);
+
+            ob_start();
+            include('includes/modules/content/' . $this->group . '/templates/gtin.php');
+            $template = ob_get_clean();
+
+            $oscTemplate->addContent($template, $this->group);
+          }
+        }
       }
     }
 
