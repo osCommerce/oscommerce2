@@ -192,3 +192,6 @@ error_filetype_not_allowed = Error: File upload type not allowed.
 success_file_saved_successfully = Success: File upload saved successfully.
 warning_no_file_uploaded = Warning: No file uploaded.
 module_content_bootstrap_row_description = <p>Content Width can be 12 or less per column per row.</p><p>12/12 = 100% width, 6/12 = 50% width, 4/12 = 33% width.</p><p>Total of all columns in any one row must equal 12 (eg:  3 boxes of 4 columns each, 1 box of 12 columns and so on).</p>
+
+email_type_html = HTML
+email_type_plain = Plain

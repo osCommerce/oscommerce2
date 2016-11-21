@@ -48,37 +48,36 @@ text_date_order_last_modified = Last Modified:
 text_info_payment_method = Payment Method:
 text_all_orders = All Orders
 text_no_order_history = No Order History Available
+email_separator = ------------------------------------------------------
 email_text_subject = Order Update
-email_separator_plain = ------------------------------------------------------
-email_text_order_number_plain = Order Number:
-email_text_invoice_url_plain = Detailed Invoice:
-email_text_date_ordered_plain = Date Ordered:
+email_text_order_number = Order Number:
+email_text_invoice_url = Detailed Invoice:
+email_text_date_ordered = Date Ordered:
 
-email_text_status_update_plain = Your order has been updated to the following status.
+email_text_status_update = Your order has been updated to the following status.
 
 New status: {{status}}
 
 Please reply to this email if you have any questions.
 
-email_text_comments_update_plain = The comments for your order are
+email_text_comments_update = The comments for your order are
 
 {{comments}}
 
 email_separator_html = <hr>
-email_text_order_number_html = <br /><strong>Order Number</strong>:
-email_text_invoice_url_html = <br /><strong>Detailed Invoice</strong>:
-email_text_date_ordered_html = <br /><strong>Date Ordered</strong>:
+email_text_order_number_html = <strong>Order Number:</strong>
+email_text_invoice_url_html = <strong>Detailed Invoice:</strong>
+email_text_date_ordered_html = <strong>Date Ordered:</strong>
 
-email_text_status_update_html = <p>Your order has been updated to the following status.<br />
-<br />
-New status: {{status}}<br />
-<br />
-Please reply to this email if you have any questions.<br/>
-</p>
+email_text_status_update_html = <p>Your order has been updated to the following status.</p>
+<p>New status: {{status}}</p>
+<p>Please reply to this email if you have any questions.</p>
+
 email_text_comments_update_html = <p>The comments for your order are</p>
 <div>
 <blockquote>{{comments}}</blockquote>
 </div>
+
 error_order_does_not_exist = Error: Order #{{order_id}} does not exist.
 success_order_updated = Success: Order has been successfully updated.
 warning_order_not_updated = Warning: Nothing to change. The order was not updated.

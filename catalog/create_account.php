@@ -241,31 +241,30 @@
 
       if (ACCOUNT_GENDER == 'true') {
          if ($gender == 'm') {
-           $email_text_plain = OSCOM::getDef('email_greet_mr_plain', ['lastname' => $lastname]);
+           $email_text = OSCOM::getDef('email_greet_mr', ['lastname' => $lastname]);
            $email_text_html = OSCOM::getDef('email_greet_mr_html', ['lastname' => $lastname]);
          } else {
-           $email_text_plain = OSCOM::getDef('email_greet_ms_plain', ['lastname' => $lastname]);
+           $email_text = OSCOM::getDef('email_greet_ms', ['lastname' => $lastname]);
            $email_text_html = OSCOM::getDef('email_greet_ms_html', ['lastname' => $lastname]);
          }
       } else {
-        $email_text_plain = OSCOM::getDef('email_greet_none_plain', ['firstname' => $firstname]);
+        $email_text = OSCOM::getDef('email_greet_none', ['firstname' => $firstname]);
         $email_text_html = OSCOM::getDef('email_greet_none_html', ['firstname' => $firstname]);
       }
 
-      $email_text_plain .= "\n\n" .
-                     OSCOM::getDef('email_welcome_plain', ['store_name' => STORE_NAME]) . "\n\n" .
-                     OSCOM::getDef('email_text_plain') . "\n\n" .
-                     OSCOM::getDef('email_contact_plain', ['store_email_address' => STORE_OWNER_EMAIL_ADDRESS]) . "\n\n" .
-                     OSCOM::getDef('email_warning_plain', ['store_email_address' => STORE_OWNER_EMAIL_ADDRESS]) . "\n";
+      $email_text .= "\n\n" .
+                     OSCOM::getDef('email_welcome', ['store_name' => STORE_NAME]) . "\n\n" .
+                     OSCOM::getDef('email_text') . "\n\n" .
+                     OSCOM::getDef('email_contact', ['store_email_address' => STORE_OWNER_EMAIL_ADDRESS]) . "\n\n" .
+                     OSCOM::getDef('email_warning', ['store_email_address' => STORE_OWNER_EMAIL_ADDRESS]) . "\n";
 
-      $email_text_html .=
-                     OSCOM::getDef('email_welcome_html', ['store_name' => STORE_NAME]) .
-                     OSCOM::getDef('email_text_html') .
-                     OSCOM::getDef('email_contact_html', ['store_email_address' => STORE_OWNER_EMAIL_ADDRESS]) .
-                     OSCOM::getDef('email_warning_html', ['store_email_address' => STORE_OWNER_EMAIL_ADDRESS]);
+      $email_text_html .= OSCOM::getDef('email_welcome_html', ['store_name' => STORE_NAME]) .
+                          OSCOM::getDef('email_text_html') .
+                          OSCOM::getDef('email_contact_html', ['store_email_address' => STORE_OWNER_EMAIL_ADDRESS]) .
+                          OSCOM::getDef('email_warning_html', ['store_email_address' => STORE_OWNER_EMAIL_ADDRESS]);
 
       $customerEmail = new Mail($email_address, $name, STORE_OWNER_EMAIL_ADDRESS, STORE_OWNER, OSCOM::getDef('email_subject', ['store_name' => STORE_NAME]));
-      $customerEmail->setBodyPlain($email_text_plain);
+      $customerEmail->setBodyPlain($email_text);
       $customerEmail->setBodyHTML($email_text_html);
       $customerEmail->send();
 

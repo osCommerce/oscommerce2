@@ -40,7 +40,7 @@
 
         $passwordEmail = new Mail($email_address, $Qcheck->value('customers_firstname') . ' ' . $Qcheck->value('customers_lastname'), STORE_OWNER_EMAIL_ADDRESS, STORE_OWNER, OSCOM::getDef('email_password_reset_subject', ['store_name' => STORE_NAME]));
         $passwordEmail->setBodyHTML(OSCOM::getDef('email_password_reset_body_html', ['store_name' => STORE_NAME, 'store_email_address' => STORE_OWNER_EMAIL_ADDRESS, 'reset_url' => $reset_key_url]));
-        $passwordEmail->setBodyPlain(OSCOM::getDef('email_password_reset_body_plain', ['store_name' => STORE_NAME, 'store_email_address' => STORE_OWNER_EMAIL_ADDRESS, 'reset_url' => $reset_key_url]));
+        $passwordEmail->setBodyPlain(OSCOM::getDef('email_password_reset_body', ['store_name' => STORE_NAME, 'store_email_address' => STORE_OWNER_EMAIL_ADDRESS, 'reset_url' => $reset_key_url]));
         $passwordEmail->send();
 
         $password_reset_initiated = true;

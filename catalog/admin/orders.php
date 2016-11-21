@@ -65,6 +65,7 @@
       case 'update_order':
         $oID = HTML::sanitize($_GET['oID']);
         $status = HTML::sanitize($_POST['status']);
+        $comments = HTML::sanitize($_POST['comments']);
 
         $order_updated = false;
 
@@ -77,7 +78,7 @@
           'orders_id' => (int)$oID
         ]);
 
-        if ( ($Qcheck->value('orders_status') != $status) || tep_not_null($_POST['comments'])) {
+        if ( ($Qcheck->value('orders_status') != $status) || tep_not_null($comments)) {
           $OSCOM_Db->save('orders', [
             'orders_status' => $status,
             'last_modified' => 'now()'
@@ -89,16 +90,17 @@
           if (isset($_POST['notify']) && ($_POST['notify'] == 'on')) {
             $notify_comments_plain = '';
             $notify_comments_html = '';
+
             if (isset($_POST['notify_comments']) && ($_POST['notify_comments'] == 'on')) {
-              $notify_comments_plain = OSCOM::getDef('email_text_comments_update_plain', ['comments' => strip_tags($_POST['comments'])]) . "\n\n";
-              $notify_comments_html = OSCOM::getDef('email_text_comments_update_html', ['comments' => (strip_tags($_POST['comments']) == $_POST['comments'] ? nl2br($_POST['comments']) : $_POST['comments'])]);
+              $notify_comments_plain = OSCOM::getDef('email_text_comments_update_plain', ['comments' => $comments]) . "\n\n";
+              $notify_comments_html = OSCOM::getDef('email_text_comments_update_html', ['comments' => nl2br($comments)]);
             }
 
             $invoice_url = OSCOM::link('Shop/' . FILENAME_CATALOG_ACCOUNT_HISTORY_INFO, 'order_id=' . $oID);
 
             $email_plain = STORE_NAME . "\n" . OSCOM::getDef('email_separator_plain') . "\n" . OSCOM::getDef('email_text_order_number_plain') . ' ' . $oID . "\n" . OSCOM::getDef('email_text_invoice_url_plain') . ' ' . $invoice_url . "\n" . OSCOM::getDef('email_text_date_ordered_plain') . ' ' . DateTime::toLong($Qcheck->value('date_purchased')) . "\n\n" . $notify_comments_plain . OSCOM::getDef('email_text_status_update_plain', ['status' => $orders_status_array[$status]]) . "\n";
 
-            $email_html = STORE_NAME . OSCOM::getDef('email_separator_html') . OSCOM::getDef('email_text_order_number_html') . ' ' . $oID . OSCOM::getDef('email_text_invoice_url_html') . ' <a href="' . $invoice_url . '">' . $invoice_url . '</a>' . OSCOM::getDef('email_text_date_ordered_html') . ' ' . DateTime::toLong($Qcheck->value('date_purchased')) . $notify_comments_html . OSCOM::getDef('email_text_status_update_html', ['status' => $orders_status_array[$status]]);
+            $email_html = '<p>' . STORE_NAME . '</p>' . OSCOM::getDef('email_separator_html') . '<p>' . OSCOM::getDef('email_text_order_number_html') . ' ' . $oID . '</p><p>' . OSCOM::getDef('email_text_invoice_url_html') . ' <a href="' . $invoice_url . '">' . $invoice_url . '</a></p><p>' . OSCOM::getDef('email_text_date_ordered_html') . ' ' . DateTime::toLong($Qcheck->value('date_purchased')) . '</p>' . $notify_comments_html . OSCOM::getDef('email_text_status_update_html', ['status' => $orders_status_array[$status]]);
 
             $orderEmail = new Mail($Qcheck->value('customers_email_address'), $Qcheck->value('customers_name'), STORE_OWNER_EMAIL_ADDRESS, STORE_OWNER, OSCOM::getDef('email_text_subject'));
             $orderEmail->setBodyPlain($email_plain);
@@ -113,7 +115,7 @@
             'orders_status_id' => $status,
             'date_added' => 'now()',
             'customer_notified' => $customer_notified,
-            'comments' => $_POST['comments']
+            'comments' => $comments
           ]);
 
           $order_updated = true;

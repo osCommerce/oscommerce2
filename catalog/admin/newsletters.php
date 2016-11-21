@@ -33,15 +33,16 @@
       case 'update':
         if (isset($_POST['newsletter_id'])) $newsletter_id = HTML::sanitize($_POST['newsletter_id']);
         $newsletter_module = HTML::sanitize($_POST['module']);
-        
+
         $allowed = array_map(function($v) {return basename($v, '.php');}, glob('includes/modules/newsletters/*.php'));
         if (!in_array($newsletter_module, $allowed)) {
           $OSCOM_MessageStack->add(OSCOM::getDef('error_newsletter_module_not_exists'), 'error');
           $newsletter_error = true;
-        } 
- 
+        }
+
         $title = HTML::sanitize($_POST['title']);
         $content = $_POST['content'];
+        $content_html = $_POST['content_html'];
 
         $newsletter_error = false;
         if (empty($title)) {
@@ -57,6 +58,7 @@
         if ($newsletter_error == false) {
           $sql_data_array = array('title' => $title,
                                   'content' => $content,
+                                  'content_html' => $content_html,
                                   'module' => $newsletter_module);
 
           if ($action == 'insert') {
@@ -125,6 +127,7 @@
 
     $parameters = array('title' => '',
                         'content' => '',
+                        'content_html' => '',
                         'module' => '');
 
     $nInfo = new objectInfo($parameters);
@@ -137,6 +140,7 @@
       $Qnewsletter = $OSCOM_Db->get('newsletters', [
         'title',
         'content',
+        'content_html',
         'module'
       ], [
         'newsletters_id' => (int)$nID
@@ -183,7 +187,22 @@
           </tr>
           <tr>
             <td class="main" valign="top"><?php echo OSCOM::getDef('text_newsletter_content'); ?></td>
-            <td class="main"><?php echo HTML::textareaField('content', '100%', '20', $nInfo->content); ?></td>
+            <td class="main">
+              <ul class="nav nav-tabs" role="tablist">
+                <li role="presentation" class="active"><a href="#html_email" aria-controls="html_email" role="tab" data-toggle="tab"><?= OSCOM::getDef('email_type_html'); ?></a></li>
+                <li role="presentation"><a href="#plain_email" aria-controls="plain_email" role="tab" data-toggle="tab"><?= OSCOM::getDef('email_type_plain'); ?></a></li>
+              </ul>
+
+              <div class="tab-content">
+                <div role="tabpanel" class="tab-pane active" id="html_email">
+                  <?= HTML::textareaField('content_html', '60', '15', $nInfo->content_html); ?>
+                </div>
+
+                <div role="tabpanel" class="tab-pane" id="plain_email">
+                  <?= HTML::textareaField('content', '60', '15', $nInfo->content); ?>
+                </div>
+              </div>
+            </td>
           </tr>
         </table></td>
       </tr>
@@ -201,6 +220,7 @@
     $Qnewsletter = $OSCOM_Db->get('newsletters', [
       'title',
       'content',
+      'content_html',
       'module'
     ], [
       'newsletters_id' => (int)$nID
@@ -212,10 +232,33 @@
         <td class="smallText" align="right"><?php echo HTML::button(OSCOM::getDef('image_back'), 'fa fa-chevron-left', OSCOM::link(FILENAME_NEWSLETTERS, 'page=' . $_GET['page'] . '&nID=' . $_GET['nID'])); ?></td>
       </tr>
       <tr>
-        <td><div style="margin: 15px 0px 15px;"><strong><?php echo OSCOM::getDef('text_newsletter_content_html'); ?></strong></div><div class="html_preview"><?php echo (strip_tags($nInfo->content) == $nInfo->content ? nl2br($nInfo->content) : $nInfo->content); ?></div></td>
-      </tr>
-      <tr>
-        <td><div style="margin: 15px 0px 15px;"><strong><?php echo OSCOM::getDef('text_newsletter_content_plain'); ?></strong></div><div class="plain_preview"><?php echo nl2br(strip_tags($nInfo->content)); ?></div></td>
+        <td>
+          <ul class="nav nav-tabs" role="tablist">
+            <li role="presentation" class="active"><a href="#html_preview" aria-controls="html_preview" role="tab" data-toggle="tab"><?= OSCOM::getDef('email_type_html'); ?></a></li>
+            <li role="presentation"><a href="#plain_preview" aria-controls="plain_preview" role="tab" data-toggle="tab"><?= OSCOM::getDef('email_type_plain'); ?></a></li>
+          </ul>
+
+          <div class="tab-content">
+            <div role="tabpanel" class="tab-pane active" id="html_preview">
+              <iframe id="newsletterHtmlPreviewContent" style="width: 100%; height: 400px; border: 0;"></iframe>
+
+              <script id="newsletterHtmlPreview" type="x-tmpl-mustache">
+                <?= HTML::outputProtected($nInfo->content_html); ?>
+              </script>
+
+              <script>
+                $(function() {
+                  var content = $('<div />').html($('#newsletterHtmlPreview').html()).text();
+                  $('#newsletterHtmlPreviewContent').contents().find('html').html(content);
+                });
+              </script>
+            </div>
+
+            <div role="tabpanel" class="tab-pane" id="plain_preview">
+              <?= nl2br(HTML::outputProtected($nInfo->content)); ?>
+            </div>
+          </div>
+        </td>
       </tr>
       <tr>
         <td class="smallText" align="right"><?php echo HTML::button(OSCOM::getDef('image_back'), 'fa fa-chevron-left', OSCOM::link(FILENAME_NEWSLETTERS, 'page=' . $_GET['page'] . '&nID=' . $_GET['nID'])); ?></td>
@@ -227,6 +270,7 @@
     $Qnewsletter = $OSCOM_Db->get('newsletters', [
       'title',
       'content',
+      'content_html',
       'module'
     ], [
       'newsletters_id' => (int)$nID
@@ -237,7 +281,7 @@
     $OSCOM_Language->loadDefinitions('modules/newsletters/' . $nInfo->module);
     include('includes/modules/newsletters/' . $nInfo->module . substr($PHP_SELF, strrpos($PHP_SELF, '.')));
     $module_name = $nInfo->module;
-    $module = new $module_name($nInfo->title, $nInfo->content);
+    $module = new $module_name($nInfo->title, $nInfo->content, $nInfo->content_html);
 ?>
       <tr>
         <td><?php if ($module->show_choose_audience) { echo $module->choose_audience(); } else { echo $module->confirm(); } ?></td>
@@ -249,6 +293,7 @@
     $Qnewsletter = $OSCOM_Db->get('newsletters', [
       'title',
       'content',
+      'content_html',
       'module'
     ], [
       'newsletters_id' => (int)$nID
@@ -259,7 +304,7 @@
     $OSCOM_Language->loadDefinitions('modules/newsletters/' . $nInfo->module);
     include('includes/modules/newsletters/' . $nInfo->module . substr($PHP_SELF, strrpos($PHP_SELF, '.')));
     $module_name = $nInfo->module;
-    $module = new $module_name($nInfo->title, $nInfo->content);
+    $module = new $module_name($nInfo->title, $nInfo->content, $nInfo->content_html);
 ?>
       <tr>
         <td><?php echo $module->confirm(); ?></td>
@@ -272,6 +317,7 @@
       'newsletters_id',
       'title',
       'content',
+      'content_html',
       'module'
     ], [
       'newsletters_id' => (int)$nID
@@ -282,7 +328,7 @@
     $OSCOM_Language->loadDefinitions('modules/newsletters/' . $nInfo->module);
     include('includes/modules/newsletters/' . $nInfo->module . substr($PHP_SELF, strrpos($PHP_SELF, '.')));
     $module_name = $nInfo->module;
-    $module = new $module_name($nInfo->title, $nInfo->content);
+    $module = new $module_name($nInfo->title, $nInfo->content, $nInfo->content_html);
 ?>
       <tr>
         <td><table border="0" cellspacing="0" cellpadding="2">

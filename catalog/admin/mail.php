@@ -54,8 +54,14 @@
     $customerEmail = new Mail();
     $customerEmail->setFrom($_POST['from']);
     $customerEmail->setSubject($_POST['subject']);
-    $customerEmail->setBodyPlain(strip_tags($_POST['message']));
-    $customerEmail->setBodyHTML(strip_tags($_POST['message']) == $_POST['message'] ? nl2br($_POST['message']) : $_POST['message']);
+
+    if (!empty($_POST['message'])) {
+      $customerEmail->setBodyPlain($_POST['message']);
+    }
+
+    if (!empty($_POST['message_html'])) {
+      $customerEmail->setBodyHTML($_POST['message_html']);
+    }
 
     while ($Qmail->fetch()) {
       $customerEmail->clearTo();
@@ -124,13 +130,33 @@
                 <td>&nbsp;</td>
               </tr>
               <tr>
-                <td class="smallText"><strong><?php echo OSCOM::getDef('text_message_html'); ?></strong><br /><?php echo nl2br(HTML::outputProtected($_POST['message'])); ?></td>
-              </tr>
-              <tr>
-                <td>&nbsp;</td>
-              </tr>
-              <tr>
-                <td class="smallText"><strong><?php echo OSCOM::getDef('text_message_plain'); ?></strong><br /><?php echo nl2br(strip_tags($_POST['message'])); ?></td>
+                <td class="smallText">
+                  <ul class="nav nav-tabs" role="tablist">
+                    <li role="presentation" class="active"><a href="#html_preview" aria-controls="html_preview" role="tab" data-toggle="tab"><?= OSCOM::getDef('email_type_html'); ?></a></li>
+                    <li role="presentation"><a href="#plain_preview" aria-controls="plain_preview" role="tab" data-toggle="tab"><?= OSCOM::getDef('email_type_plain'); ?></a></li>
+                  </ul>
+
+                  <div class="tab-content">
+                    <div role="tabpanel" class="tab-pane active" id="html_preview">
+                      <iframe id="emailHtmlPreviewContent" style="width: 100%; height: 400px; border: 0;"></iframe>
+
+                      <script id="emailHtmlPreview" type="x-tmpl-mustache">
+                        <?= HTML::outputProtected($_POST['message_html']); ?>
+                      </script>
+
+                      <script>
+                        $(function() {
+                          var content = $('<div />').html($('#emailHtmlPreview').html()).text();
+                          $('#emailHtmlPreviewContent').contents().find('html').html(content);
+                        });
+                      </script>
+                    </div>
+
+                    <div role="tabpanel" class="tab-pane" id="plain_preview">
+                      <?= nl2br(HTML::outputProtected($_POST['message'])); ?>
+                    </div>
+                  </div>
+                </td>
               </tr>
               <tr>
                 <td>&nbsp;</td>
@@ -208,7 +234,22 @@
               </tr>
               <tr>
                 <td valign="top" class="main"><?php echo OSCOM::getDef('text_message'); ?></td>
-                <td><?php echo HTML::textareaField('message', '60', '15'); ?></td>
+                <td>
+                  <ul class="nav nav-tabs" role="tablist">
+                    <li role="presentation" class="active"><a href="#html_email" aria-controls="html_email" role="tab" data-toggle="tab"><?= OSCOM::getDef('email_type_html'); ?></a></li>
+                    <li role="presentation"><a href="#plain_email" aria-controls="plain_email" role="tab" data-toggle="tab"><?= OSCOM::getDef('email_type_plain'); ?></a></li>
+                  </ul>
+
+                  <div class="tab-content">
+                    <div role="tabpanel" class="tab-pane active" id="html_email">
+                      <?= HTML::textareaField('message_html', '60', '15'); ?>
+                    </div>
+
+                    <div role="tabpanel" class="tab-pane" id="plain_email">
+                      <?= HTML::textareaField('message', '60', '15'); ?>
+                    </div>
+                  </div>
+                </td>
               </tr>
               <tr>
                 <td colspan="2">&nbsp;</td>

@@ -12,12 +12,13 @@
   use OSC\OM\Registry;
 
   class product_notification {
-    var $show_choose_audience, $title, $content;
+    var $show_choose_audience, $title, $content, $content_html;
 
-    function product_notification($title, $content) {
+    function __construct($title, $content, $content_html = null) {
       $this->show_choose_audience = true;
       $this->title = $title;
       $this->content = $content;
+      $this->content_html = $content_html;
     }
 
     function choose_audience() {
@@ -170,19 +171,29 @@ function selectAll(FormName, SelectBox) {
                         '    <td>&nbsp;</td>' . "\n" .
                         '  </tr>' . "\n" .
                         '  <tr>' . "\n" .
-                        '    <td class="main"><strong>' . OSCOM::getDef('text_newsletter_content_html') . '</strong></td>' . "\n" .
-                        '  </tr>' . "\n" .
-                        '  <tr>' . "\n" .
-                        '    <td class="main"><code>' . nl2br(HTML::outputProtected($this->content)) . '</code></td>' . "\n" .
-                        '  </tr>' . "\n" .
-                        '  <tr>' . "\n" .
-                        '    <td>&nbsp;</td>' . "\n" .
-                        '  </tr>' . "\n" .
-                        '  <tr>' . "\n" .
-                        '    <td class="main"><strong>' . OSCOM::getDef('text_newsletter_content_plain') . '</strong></td>' . "\n" .
-                        '  </tr>' . "\n" .
-                        '  <tr>' . "\n" .
-                        '    <td class="main"><code>' . nl2br(strip_tags($this->content)) . '</code></td>' . "\n" .
+                        '    <td class="main">' . "\n" .
+                        '      <ul class="nav nav-tabs" role="tablist">' . "\n" .
+                        '        <li role="presentation" class="active"><a href="#html_preview" aria-controls="html_preview" role="tab" data-toggle="tab">' . OSCOM::getDef('email_type_html') . '</a></li>' . "\n" .
+                        '        <li role="presentation"><a href="#plain_preview" aria-controls="plain_preview" role="tab" data-toggle="tab">' . OSCOM::getDef('email_type_plain') . '</a></li>' . "\n" .
+                        '      </ul>' . "\n" .
+                        '      <div class="tab-content">' . "\n" .
+                        '        <div role="tabpanel" class="tab-pane active" id="html_preview">' . "\n" .
+                        '          <iframe id="emailHtmlPreviewContent" style="width: 100%; height: 400px; border: 0;"></iframe>' . "\n" .
+                        '          <script id="emailHtmlPreview" type="x-tmpl-mustache">' . "\n" .
+                        '            ' . HTML::outputProtected($this->content_html) . "\n" .
+                        '          </script>' . "\n" .
+                        '          <script>' . "\n" .
+                        '            $(function() {' . "\n" .
+                        '              var content = $(\'<div />\').html($(\'#emailHtmlPreview\').html()).text();' . "\n" .
+                        '              $(\'#emailHtmlPreviewContent\').contents().find(\'html\').html(content);' . "\n" .
+                        '            });' . "\n" .
+                        '          </script>' . "\n" .
+                        '        </div>' . "\n" .
+                        '        <div role="tabpanel" class="tab-pane" id="plain_preview">' . "\n" .
+                        '          ' . nl2br(HTML::outputProtected($this->content)) . "\n" .
+                        '        </div>' . "\n" .
+                        '      </div>' . "\n" .
+                        '    </td>' . "\n" .
                         '  </tr>' . "\n" .
                         '  <tr>' . "\n" .
                         '    <td>&nbsp;</td>' . "\n" .
@@ -313,8 +324,14 @@ function selectAll(FormName, SelectBox) {
       $notificationEmail = new Mail();
       $notificationEmail->setFrom(STORE_OWNER_EMAIL_ADDRESS, STORE_OWNER);
       $notificationEmail->setSubject($this->title);
-      $notificationEmail->setBodyPlain(strip_tags($this->content));
-      $notificationEmail->setBodyHTML(strip_tags($this->content) == $this->content ? nl2br($this->content) : $this->content);
+
+      if (!empty($this->content)) {
+        $notificationEmail->setBodyPlain($this->content);
+      }
+
+      if (!empty($this->content_html)) {
+        $notificationEmail->setBodyHTML($this->content_html);
+      }
 
       foreach ( $audience as $key => $value ) {
         $notificationEmail->clearTo();

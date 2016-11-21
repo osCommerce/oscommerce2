@@ -91,12 +91,15 @@ class Mail
         $this->subject = $subject;
     }
 
-    public function setBody($html)
+    public function setBody($text, $html = null)
     {
-        $plain = strip_tags($html);
+        $this->setBodyPlain($text);
+
+        if (!isset($html) || empty($html)) {
+            $html = nl2br($text);
+        }
 
         $this->setBodyHTML($html);
-        $this->setBodyPlain($plain);
     }
 
     public function setBodyPlain($body)
