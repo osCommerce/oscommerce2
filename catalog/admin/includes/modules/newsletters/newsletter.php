@@ -12,12 +12,13 @@
   use OSC\OM\Registry;
 
   class newsletter {
-    var $show_choose_audience, $title, $content;
+    var $show_choose_audience, $title, $content, $content_html;
 
-    function newsletter($title, $content) {
+    function __construct($title, $content, $content_html = null) {
       $this->show_choose_audience = false;
       $this->title = $title;
       $this->content = $content;
+      $this->content_html = $content_html;
     }
 
     function choose_audience() {
@@ -43,7 +44,29 @@
                         '    <td>&nbsp;</td>' . "\n" .
                         '  </tr>' . "\n" .
                         '  <tr>' . "\n" .
-                        '    <td class="main"><tt>' . nl2br($this->content) . '</tt></td>' . "\n" .
+                        '    <td class="main">' . "\n" .
+                        '      <ul class="nav nav-tabs" role="tablist">' . "\n" .
+                        '        <li role="presentation" class="active"><a href="#html_preview" aria-controls="html_preview" role="tab" data-toggle="tab">' . OSCOM::getDef('email_type_html') . '</a></li>' . "\n" .
+                        '        <li role="presentation"><a href="#plain_preview" aria-controls="plain_preview" role="tab" data-toggle="tab">' . OSCOM::getDef('email_type_plain') . '</a></li>' . "\n" .
+                        '      </ul>' . "\n" .
+                        '      <div class="tab-content">' . "\n" .
+                        '        <div role="tabpanel" class="tab-pane active" id="html_preview">' . "\n" .
+                        '          <iframe id="emailHtmlPreviewContent" style="width: 100%; height: 400px; border: 0;"></iframe>' . "\n" .
+                        '          <script id="emailHtmlPreview" type="x-tmpl-mustache">' . "\n" .
+                        '            ' . HTML::outputProtected($this->content_html) . "\n" .
+                        '          </script>' . "\n" .
+                        '          <script>' . "\n" .
+                        '            $(function() {' . "\n" .
+                        '              var content = $(\'<div />\').html($(\'#emailHtmlPreview\').html()).text();' . "\n" .
+                        '              $(\'#emailHtmlPreviewContent\').contents().find(\'html\').html(content);' . "\n" .
+                        '            });' . "\n" .
+                        '          </script>' . "\n" .
+                        '        </div>' . "\n" .
+                        '        <div role="tabpanel" class="tab-pane" id="plain_preview">' . "\n" .
+                        '          ' . nl2br(HTML::outputProtected($this->content)) . "\n" .
+                        '        </div>' . "\n" .
+                        '      </div>' . "\n" .
+                        '    </td>' . "\n" .
                         '  </tr>' . "\n" .
                         '  <tr>' . "\n" .
                         '    <td>&nbsp;</td>' . "\n" .
@@ -62,7 +85,14 @@
       $newsletterEmail = new Mail();
       $newsletterEmail->setFrom(STORE_OWNER_EMAIL_ADDRESS, STORE_OWNER);
       $newsletterEmail->setSubject($this->title);
-      $newsletterEmail->setBody($this->content);
+
+      if (!empty($this->content)) {
+        $newsletterEmail->setBodyPlain($this->content);
+      }
+
+      if (!empty($this->content_html)) {
+        $newsletterEmail->setBodyHTML($this->content_html);
+      }
 
       $Qmail = $OSCOM_Db->get('customers', [
         'customers_firstname',

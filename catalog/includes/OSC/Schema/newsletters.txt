@@ -1,6 +1,7 @@
 newsletters_id int not_null auto_increment
 title varchar(255) not_null
 content text not_null
+content_html text not_null
 module varchar(255) not_null
 date_added datetime not_null
 date_sent datetime
