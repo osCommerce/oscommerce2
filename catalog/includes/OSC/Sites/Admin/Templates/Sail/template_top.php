@@ -12,7 +12,7 @@ use OSC\OM\OSCOM;
 <base href="<?= OSCOM::getConfig('http_server', 'Admin') . OSCOM::getConfig('http_path', 'Admin'); ?>" />
 <meta name="generator" content="osCommerce Online Merchant" />
 <link rel="stylesheet" type="text/css" href="<?= OSCOM::link('Shop/ext/jquery/ui/redmond/jquery-ui-1.11.4.min.css', '', false); ?>">
-<script type="text/javascript" src="<?= OSCOM::link('Shop/ext/jquery/jquery-2.2.3.min.js', '', false); ?>"></script>
+<script type="text/javascript" src="<?= OSCOM::link('Shop/ext/jquery/jquery-3.1.1.min.js', '', false); ?>"></script>
 <script type="text/javascript" src="<?= OSCOM::link('Shop/ext/jquery/ui/jquery-ui-1.11.4.min.js', '', false); ?>"></script>
 
 <link href="<?= OSCOM::link('Shop/ext/bootstrap/css/bootstrap.min.css', '', false); ?>" rel="stylesheet">
