@@ -176,7 +176,7 @@
 $(function() {
   var drag_here_li = '{$drag_here_li}';
 
-  if ( $('#ca_logos li').size() < 1 ) {
+  if ( $('#ca_logos li').length < 1 ) {
     $('#ca_logos').append(drag_here_li);
   }
 
@@ -184,7 +184,7 @@ $(function() {
     connectWith: '#new_ca_logos',
     items: 'li:not("#caLogoEmpty")',
     stop: function (event, ui) {
-      if ( $('#ca_logos li').size() < 1 ) {
+      if ( $('#ca_logos li').length < 1 ) {
         $('#ca_logos').append(drag_here_li);
       } else if ( $('#caLogoEmpty').length > 0 ) {
         $('#caLogoEmpty').remove();
@@ -195,7 +195,7 @@ $(function() {
   $('#new_ca_logos').sortable({
     connectWith: '#ca_logos',
     stop: function (event, ui) {
-      if ( $('#ca_logos li').size() < 1 ) {
+      if ( $('#ca_logos li').length < 1 ) {
         $('#ca_logos').append(drag_here_li);
       } else if ( $('#caLogoEmpty').length > 0 ) {
         $('#caLogoEmpty').remove();
@@ -208,7 +208,7 @@ $(function() {
   $('form[name="modules"]').submit(function(event) {
     var ca_selected_cards = '';
 
-    if ( $('#ca_logos li').size() > 0 ) {
+    if ( $('#ca_logos li').length > 0 ) {
       $('#ca_logos li input[name="bm_card_acceptance_logos[]"]').each(function() {
         ca_selected_cards += $(this).attr('value') + ';';
       });
