@@ -1,8 +1,8 @@
 # osCommerce Online Merchant
 
-## 19 Nov 2016 osCommerce Online Merchant v2.4.2beta
+## 21 Nov 2016 osCommerce Online Merchant v2.4.2beta
 
-* Specials page updated to use database table prefix in sql queries.
+* Specials page fixed to use database table prefix in sql queries.
   [#473](https://github.com/osCommerce/oscommerce2/issues/473)
 
 * Add check for PHP "zip" extension during installation procedure.
@@ -25,12 +25,24 @@
 
 * Add Apps support to the Shipping and Order Total modules.
 
+* Support HTML emails. The following pages allow for HTML specific emails:
+  - Admin Dashboard: Legacy -> Tools -> Newsletter Manager
+  - Admin Dashboard: Legacy -> Tools -> Send Email
+
+* Add options parameter to OSC\OM\Db save() and delete() to disable automatic table prefixing.
+
 * General bug fixes, optimizations, and language definition updates.
 
 ### Third Party Updates
 
-* Update random_compat to v2.0.4
+* Update random_compat to v2.0.4.
   [#479](https://github.com/osCommerce/oscommerce2/issues/479)
+
+* Update Bootstrap to v3.3.7.
+
+* Update jQuery to v3.1.1.
+
+* Update Font Awesome to 4.7.0.
 
 ### Thanks
 
