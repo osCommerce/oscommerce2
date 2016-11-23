@@ -61,7 +61,7 @@
 
       case 'dbCheck':
         try {
-          $OSCOM_Db = Db::initialize(isset($_POST['server']) ? $_POST['server'] : '', isset($_POST['username']) ? $_POST['username'] : '', isset($_POST['password']) ? $_POST['password'] : '', isset($_POST['name']) ? $_POST['name'] : '');
+          $OSCOM_Db = Db::initialize(isset($_POST['server']) ? $_POST['server'] : '', isset($_POST['username']) ? $_POST['username'] : '', isset($_POST['password']) ? $_POST['password'] : '', isset($_POST['name']) ? $_POST['name'] : '', null, null, ['log_errors' => false]);
 
           $result['status'] = '1';
           $result['message'] = 'success';
@@ -71,7 +71,7 @@
 
           if (($e->getCode() == '1049') && isset($_GET['createDb']) && ($_GET['createDb'] == 'true')) {
             try {
-              $OSCOM_Db = Db::initialize($_POST['server'], $_POST['username'], $_POST['password'], '');
+              $OSCOM_Db = Db::initialize($_POST['server'], $_POST['username'], $_POST['password'], '', null, null, ['log_errors' => false]);
 
               $OSCOM_Db->exec('create database ' . Db::prepareIdentifier($_POST['name']) . ' character set utf8 collate utf8_unicode_ci');
 

@@ -121,8 +121,6 @@ class OSCOM
 
     public static function link($page, $parameters = null, $add_session_id = true, $search_engine_safe = true)
     {
-        $OSCOM_Session = Registry::get('Session');
-
         $page = HTML::sanitize($page);
 
         $site = $req_site = static::$site;
@@ -170,9 +168,13 @@ class OSCOM
         }
 
 // Add the session ID when moving from different HTTP and HTTPS servers, or when SID is defined
-        if (($add_session_id == true) && $OSCOM_Session->hasStarted() && ($OSCOM_Session->isForceCookies() === false)) {
-            if ((strlen(SID) > 0) || (((HTTP::getRequestType() == 'NONSSL') && (parse_url(static::getConfig('http_server', $req_site), PHP_URL_SCHEME) == 'https')) || ((HTTP::getRequestType() == 'SSL') && (parse_url(static::getConfig('http_server', $req_site), PHP_URL_SCHEME) == 'http')))) {
-                $link .= $separator . HTML::sanitize(session_name() . '=' . session_id());
+        if (($add_session_id == true) && Registry::exists('Session')) {
+            $OSCOM_Session = Registry::get('Session');
+
+            if ($OSCOM_Session->hasStarted() && ($OSCOM_Session->isForceCookies() === false)) {
+                if ((strlen(SID) > 0) || (((HTTP::getRequestType() == 'NONSSL') && (parse_url(static::getConfig('http_server', $req_site), PHP_URL_SCHEME) == 'https')) || ((HTTP::getRequestType() == 'SSL') && (parse_url(static::getConfig('http_server', $req_site), PHP_URL_SCHEME) == 'http')))) {
+                    $link .= $separator . HTML::sanitize(session_name() . '=' . session_id());
+                }
             }
         }
 
@@ -180,7 +182,7 @@ class OSCOM
             $link = str_replace('&&', '&', $link);
         }
 
-        if ((SEARCH_ENGINE_FRIENDLY_URLS == 'true') && ($search_engine_safe == true)) {
+        if (($search_engine_safe == true) && defined('SEARCH_ENGINE_FRIENDLY_URLS') && (SEARCH_ENGINE_FRIENDLY_URLS == 'true')) {
             $link = str_replace(['?', '&', '='], '/', $link);
         }
 
