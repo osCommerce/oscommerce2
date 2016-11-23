@@ -29,8 +29,13 @@ class Admin extends \OSC\OM\SitesAbstract
         $OSCOM_Cookies = new Cookies();
         Registry::set('Cookies', $OSCOM_Cookies);
 
-        $OSCOM_Db = Db::initialize();
-        Registry::set('Db', $OSCOM_Db);
+        try {
+            $OSCOM_Db = Db::initialize();
+            Registry::set('Db', $OSCOM_Db);
+        } catch (\Exception $e) {
+            include(OSCOM::getConfig('dir_root', 'Shop') . 'includes/error_documents/maintenance.php');
+            exit;
+        }
 
         Registry::set('Hooks', new Hooks());
 

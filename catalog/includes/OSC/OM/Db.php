@@ -21,6 +21,7 @@ class Db extends \PDO
     protected $table_prefix;
     protected $port;
     protected $driver_options = [];
+    protected $options = [];
 
     public static function initialize(
         $server = null,
@@ -28,7 +29,8 @@ class Db extends \PDO
         $password = null,
         $database = null,
         $port = null,
-        array $driver_options = []
+        array $driver_options = null,
+        array $options = null
     ) {
         if (!isset($server)) {
             $server = OSCOM::getConfig('db_server');
@@ -46,6 +48,10 @@ class Db extends \PDO
             $database = OSCOM::getConfig('db_database');
         }
 
+        if (!is_array($driver_options)) {
+            $driver_options = [];
+        }
+
         if (!isset($driver_options[\PDO::ATTR_ERRMODE])) {
             $driver_options[\PDO::ATTR_ERRMODE] = \PDO::ERRMODE_EXCEPTION;
         }
@@ -58,8 +64,25 @@ class Db extends \PDO
             $driver_options[\PDO::ATTR_STATEMENT_CLASS] = array('OSC\OM\DbStatement');
         }
 
-        $class = 'OSC\OM\Db\MySQL';
-        $object = new $class($server, $username, $password, $database, $port, $driver_options);
+        if (!is_array($options)) {
+            $options = [];
+        }
+
+        $object = false;
+
+        try {
+            $class = 'OSC\OM\Db\MySQL';
+            $object = new $class($server, $username, $password, $database, $port, $driver_options, $options);
+        } catch (\Exception $e) {
+            $message = $e->getMessage();
+            // $message .= "\n" . $e->getTraceAsString(); // the trace will contain the password in plain text
+
+            if (!isset($options['log_errors']) || ($options['log_errors'] === true)) {
+                error_log('OSC\OM\Db::initialize(): ' . $message);
+            }
+
+            throw new \Exception($message, $e->getCode());
+        }
 
         return $object;
     }

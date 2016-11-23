@@ -10,7 +10,7 @@ namespace OSC\OM\Db;
 
 class MySQL extends \OSC\OM\Db
 {
-    public function __construct($server, $username, $password, $database, $port, $driver_options)
+    public function __construct($server, $username, $password, $database, $port, $driver_options, $options)
     {
         $this->server = $server;
         $this->username = $username;
@@ -18,6 +18,7 @@ class MySQL extends \OSC\OM\Db
         $this->database = $database;
         $this->port = $port;
         $this->driver_options = $driver_options;
+        $this->options = $options;
 
         if (!isset($this->driver_options[\PDO::MYSQL_ATTR_INIT_COMMAND])) {
             // STRICT_ALL_TABLES 5.0.2
