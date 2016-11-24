@@ -1,4 +1,9 @@
-heading_title = Define Languages
+heading_title = Define Language
+heading_title_2 = Define Language :: [ {{content_group}} ]
+table_heading_definition_key = Definition key
+table_heading_definition_value = Definition value
+table_heading_content_group_title = Content group
+table_heading_content_group_action = Action
 table_heading_files = Files
 table_heading_writable = Writable
 table_heading_last_modified = Last Modified
