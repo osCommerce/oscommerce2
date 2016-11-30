@@ -1036,7 +1036,7 @@
       } else {
         $module = substr($m, 0, strrpos($m, '.'));
 
-        if (is_object($GLOBALS[$module])) {
+        if (isset($GLOBALS[$module]) && is_object($GLOBALS[$module])) {
           $OSCOM_PM = $GLOBALS[$module];
         }
       }
