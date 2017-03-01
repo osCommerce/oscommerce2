@@ -131,7 +131,7 @@ class TransactionGateway
             'type',
             'venmoSdkPaymentMethodCode',
             ['riskData' =>
-                ['customer_browser', 'customer_ip']
+                ['customerBrowser', 'customerIp', 'customer_browser', 'customer_ip']
             ],
             ['creditCard' =>
                 ['token', 'cardholderName', 'cvv', 'expirationDate', 'expirationMonth', 'expirationYear', 'number'],
@@ -171,7 +171,12 @@ class TransactionGateway
                     'venmoSdkSession',
                     'storeShippingAddressInVault',
                     'payeeEmail',
+                    'skipAdvancedFraudChecking',
                     ['threeDSecure' =>
+                        ['required']
+                    ],
+                    # Included for backwards compatiblity. Remove in the next major version
+                    ['three_d_secure' =>
                         ['required']
                     ],
                     ['paypal' =>
@@ -195,7 +200,8 @@ class TransactionGateway
             ['customFields' => ['_anyKey_']],
             ['descriptor' => ['name', 'phone', 'url']],
             ['paypalAccount' => ['payeeEmail']],
-            ['apple_pay_card' => ['number', 'cardholder_name', 'cryptogram', 'expiration_month', 'expiration_year']],
+            ['apple_pay_card' => ['number', 'cardholder_name', 'cryptogram', 'expiration_month', 'expiration_year']], #backwards compatibility
+            ['applePayCard' => ['number', 'cardholderName', 'cryptogram', 'expirationMonth', 'expirationYear']],
             ['industry' =>
                 ['industryType',
                     ['data' =>
@@ -340,10 +346,14 @@ class TransactionGateway
         $path = $this->_config->merchantPath() . '/transactions/advanced_search';
         $response = $this->_http->post($path, ['search' => $criteria]);
 
-        return Util::extractattributeasarray(
-            $response['creditCardTransactions'],
-            'transaction'
-        );
+        if (array_key_exists('creditCardTransactions', $response)) {
+            return Util::extractattributeasarray(
+                $response['creditCardTransactions'],
+                'transaction'
+            );
+        } else {
+            throw new Exception\DownForMaintenance();
+        }
     }
 
     /**

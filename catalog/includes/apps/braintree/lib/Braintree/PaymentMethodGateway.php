@@ -90,23 +90,28 @@ class PaymentMethodGateway
         return $this->_doUpdate('/payment_methods/any/' . $token, ['payment_method' => $attribs]);
     }
 
-    public function delete($token)
+    public function delete($token, $options=[])
     {
+        Util::verifyKeys(self::deleteSignature(), $options);
         $this->_validateId($token);
-        $path = $this->_config->merchantPath() . '/payment_methods/any/' . $token;
-        $this->_http->delete($path);
-        return new Result\Successful();
+        $queryString = "";
+        if (!empty($options)) {
+            $queryString = "?" . http_build_query(Util::camelCaseToDelimiterArray($options, '_'));
+        }
+        return $this->_doDelete('/payment_methods/any/' . $token  . $queryString);
     }
 
-    public function grant($sharedPaymentMethodToken, $allowVaulting)
+    public function grant($sharedPaymentMethodToken, $attribs=[])
     {
+        if (is_bool($attribs) === true) {
+            $attribs = ['allow_vaulting' => $attribs];
+        }
+        $options = [ 'shared_payment_method_token' => $sharedPaymentMethodToken ];
+
         return $this->_doCreate(
             '/payment_methods/grant',
             [
-                'payment_method' => [
-                    'shared_payment_method_token' => $sharedPaymentMethodToken,
-                    'allow_vaulting' => $allowVaulting
-                ]
+                'payment_method' => array_merge($attribs, $options)
             ]
         );
     }
@@ -172,6 +177,11 @@ class PaymentMethodGateway
         return $signature;
     }
 
+    private static function deleteSignature()
+    {
+        return ['revokeAllGrants'];
+    }
+
     /**
      * sends the create request to the gateway
      *
@@ -202,6 +212,21 @@ class PaymentMethodGateway
         $response = $this->_http->put($fullPath, $params);
 
         return $this->_verifyGatewayResponse($response);
+    }
+
+
+    /**
+     * sends the delete request to the gateway
+     *
+     * @ignore
+     * @param string $subPath
+     * @return mixed
+     */
+    public function _doDelete($subPath)
+    {
+        $fullPath = $this->_config->merchantPath() . $subPath;
+        $this->_http->delete($fullPath);
+        return new Result\Successful();
     }
 
     /**
