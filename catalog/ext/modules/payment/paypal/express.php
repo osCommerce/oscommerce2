@@ -5,7 +5,7 @@
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com
 
-  Copyright (c) 2014 osCommerce
+  Copyright (c) 2017 osCommerce
 
   Released under the GNU General Public License
 */
@@ -110,7 +110,7 @@
                         'lastname' => '',
                         'company' => '',
                         'street_address' => $HTTP_POST_VARS['SHIPTOSTREET'],
-                        'suburb' => '',
+                        'suburb' => $HTTP_POST_VARS['SHIPTOSTREET2'],
                         'postcode' => $HTTP_POST_VARS['SHIPTOZIP'],
                         'city' => $HTTP_POST_VARS['SHIPTOCITY'],
                         'zone_id' => '',
@@ -122,6 +122,7 @@
                         'address_format_id' => '');
 
         $log_sane['SHIPTOSTREET'] = $HTTP_POST_VARS['SHIPTOSTREET'];
+        $log_sane['SHIPTOSTREET2'] = $HTTP_POST_VARS['SHIPTOSTREET2'];
         $log_sane['SHIPTOZIP'] = $HTTP_POST_VARS['SHIPTOZIP'];
         $log_sane['SHIPTOCITY'] = $HTTP_POST_VARS['SHIPTOCITY'];
         $log_sane['SHIPTOSTATE'] = $HTTP_POST_VARS['SHIPTOSTATE'];
@@ -420,6 +421,7 @@ EOD;
           $ship_firstname = tep_db_prepare_input(substr($appPayPalEcResult['PAYMENTREQUEST_0_SHIPTONAME'], 0, strpos($appPayPalEcResult['PAYMENTREQUEST_0_SHIPTONAME'], ' ')));
           $ship_lastname = tep_db_prepare_input(substr($appPayPalEcResult['PAYMENTREQUEST_0_SHIPTONAME'], strpos($appPayPalEcResult['PAYMENTREQUEST_0_SHIPTONAME'], ' ')+1));
           $ship_address = tep_db_prepare_input($appPayPalEcResult['PAYMENTREQUEST_0_SHIPTOSTREET']);
+          $ship_suburb = tep_db_prepare_input($appPayPalEcResult['PAYMENTREQUEST_0_SHIPTOSTREET2']);
           $ship_city = tep_db_prepare_input($appPayPalEcResult['PAYMENTREQUEST_0_SHIPTOCITY']);
           $ship_zone = tep_db_prepare_input($appPayPalEcResult['PAYMENTREQUEST_0_SHIPTOSTATE']);
           $ship_postcode = tep_db_prepare_input($appPayPalEcResult['PAYMENTREQUEST_0_SHIPTOZIP']);
@@ -428,6 +430,7 @@ EOD;
           $ship_firstname = tep_db_prepare_input(substr($appPayPalEcResult['SHIPTONAME'], 0, strpos($appPayPalEcResult['SHIPTONAME'], ' ')));
           $ship_lastname = tep_db_prepare_input(substr($appPayPalEcResult['SHIPTONAME'], strpos($appPayPalEcResult['SHIPTONAME'], ' ')+1));
           $ship_address = tep_db_prepare_input($appPayPalEcResult['SHIPTOSTREET']);
+          $ship_suburb = tep_db_prepare_input($appPayPalEcResult['SHIPTOSTREET2']);
           $ship_city = tep_db_prepare_input($appPayPalEcResult['SHIPTOCITY']);
           $ship_zone = tep_db_prepare_input($appPayPalEcResult['SHIPTOSTATE']);
           $ship_postcode = tep_db_prepare_input($appPayPalEcResult['SHIPTOZIP']);
@@ -455,7 +458,7 @@ EOD;
           }
         }
 
-        $check_query = tep_db_query("select address_book_id from " . TABLE_ADDRESS_BOOK . " where customers_id = '" . (int)$customer_id . "' and entry_firstname = '" . tep_db_input($ship_firstname) . "' and entry_lastname = '" . tep_db_input($ship_lastname) . "' and entry_street_address = '" . tep_db_input($ship_address) . "' and entry_postcode = '" . tep_db_input($ship_postcode) . "' and entry_city = '" . tep_db_input($ship_city) . "' and (entry_state = '" . tep_db_input($ship_zone) . "' or entry_zone_id = '" . (int)$ship_zone_id . "') and entry_country_id = '" . (int)$ship_country_id . "' limit 1");
+        $check_query = tep_db_query("select address_book_id from " . TABLE_ADDRESS_BOOK . " where customers_id = '" . (int)$customer_id . "' and entry_firstname = '" . tep_db_input($ship_firstname) . "' and entry_lastname = '" . tep_db_input($ship_lastname) . "' and entry_street_address = '" . tep_db_input($ship_address) . "' and entry_suburb = '" . tep_db_input($ship_suburb) . "' and entry_postcode = '" . tep_db_input($ship_postcode) . "' and entry_city = '" . tep_db_input($ship_city) . "' and (entry_state = '" . tep_db_input($ship_zone) . "' or entry_zone_id = '" . (int)$ship_zone_id . "') and entry_country_id = '" . (int)$ship_country_id . "' limit 1");
         if ( tep_db_num_rows($check_query) ) {
           $check = tep_db_fetch_array($check_query);
 
@@ -465,6 +468,7 @@ EOD;
                                   'entry_firstname' => $ship_firstname,
                                   'entry_lastname' => $ship_lastname,
                                   'entry_street_address' => $ship_address,
+                                  'entry_suburb' => $ship_suburb,
                                   'entry_postcode' => $ship_postcode,
                                   'entry_city' => $ship_city,
                                   'entry_country_id' => $ship_country_id,
@@ -685,15 +689,14 @@ EOD;
 
       if ( OSCOM_APP_PAYPAL_GATEWAY == '1' ) { // PayPal
         $params['PAYMENTREQUEST_0_CURRENCYCODE'] = $order->info['currency'];
-        $params['ALLOWNOTE'] = '0';
       } else { // Payflow
         $params['CURRENCY'] = $order->info['currency'];
         $params['EMAIL'] = $order->customer['email_address'];
-        $params['ALLOWNOTE'] = '0';
 
         $params['BILLTOFIRSTNAME'] = $order->billing['firstname'];
         $params['BILLTOLASTNAME'] = $order->billing['lastname'];
         $params['BILLTOSTREET'] = $order->billing['street_address'];
+        $params['BILLTOSTREET2'] = $order->billing['suburb'];
         $params['BILLTOCITY'] = $order->billing['city'];
         $params['BILLTOSTATE'] = tep_get_zone_code($order->billing['country']['id'], $order->billing['zone_id'], $order->billing['state']);
         $params['BILLTOCOUNTRY'] = $order->billing['country']['iso_code_2'];
@@ -741,6 +744,7 @@ EOD;
         if ( OSCOM_APP_PAYPAL_GATEWAY == '1' ) { // PayPal
           $params['PAYMENTREQUEST_0_SHIPTONAME'] = $order->delivery['firstname'] . ' ' . $order->delivery['lastname'];
           $params['PAYMENTREQUEST_0_SHIPTOSTREET'] = $order->delivery['street_address'];
+          $params['PAYMENTREQUEST_0_SHIPTOSTREET2'] = $order->delivery['suburb'];
           $params['PAYMENTREQUEST_0_SHIPTOCITY'] = $order->delivery['city'];
           $params['PAYMENTREQUEST_0_SHIPTOSTATE'] = tep_get_zone_code($order->delivery['country']['id'], $order->delivery['zone_id'], $order->delivery['state']);
           $params['PAYMENTREQUEST_0_SHIPTOCOUNTRYCODE'] = $order->delivery['country']['iso_code_2'];
@@ -748,6 +752,7 @@ EOD;
         } else { // Payflow
           $params['SHIPTONAME'] = $order->delivery['firstname'] . ' ' . $order->delivery['lastname'];
           $params['SHIPTOSTREET'] = $order->delivery['street_address'];
+          $params['SHIPTOSTREET2'] = $order->delivery['suburb'];
           $params['SHIPTOCITY'] = $order->delivery['city'];
           $params['SHIPTOSTATE'] = tep_get_zone_code($order->delivery['country']['id'], $order->delivery['zone_id'], $order->delivery['state']);
           $params['SHIPTOCOUNTRY'] = $order->delivery['country']['iso_code_2'];
@@ -958,10 +963,6 @@ EOD;
         if ( $paypal_express->_app->formatCurrencyRaw($paypal_item_total) == $params['AMT'] ) {
           $params = array_merge($params, $item_params);
         }
-      }
-
-      if ( tep_not_null(OSCOM_APP_PAYPAL_EC_PAGE_STYLE) && (OSCOM_APP_PAYPAL_EC_CHECKOUT_FLOW == '0') ) {
-        $params['PAGESTYLE'] = OSCOM_APP_PAYPAL_EC_PAGE_STYLE;
       }
 
       $appPayPalEcSecret = tep_create_random_value(16, 'digits');

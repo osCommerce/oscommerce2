@@ -5,7 +5,7 @@
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com
 
-  Copyright (c) 2014 osCommerce
+  Copyright (c) 2017 osCommerce
 
   Released under the GNU General Public License
 */
@@ -34,6 +34,14 @@
       if ( !$OSCOM_PayPal->hasCredentials('PS', 'email') ) {
         $this->_req_notes[] = $OSCOM_PayPal->getDef('module_ps_error_credentials');
       }
+
+      if ( !defined('OSCOM_APP_PAYPAL_PS_PDT_IDENTITY_TOKEN') || (!tep_not_null(OSCOM_APP_PAYPAL_PS_PDT_IDENTITY_TOKEN) && !$OSCOM_PayPal->hasCredentials('PS')) ) {
+        $this->_req_notes[] = $OSCOM_PayPal->getDef('module_ps_error_credentials_pdt_api');
+      }
+
+      $this->_req_notes[] = $OSCOM_PayPal->getDef('module_ps_info_auto_return_url', array(
+        'auto_return_url' => tep_catalog_href_link('checkout_process.php', '', 'SSL')
+      ));
     }
 
     function getTitle() {
@@ -110,7 +118,6 @@
       }
 
       if ( defined('MODULE_PAYMENT_PAYPAL_STANDARD_PAGE_STYLE') ) {
-        $OSCOM_PayPal->saveParameter('OSCOM_APP_PAYPAL_PS_PAGE_STYLE', MODULE_PAYMENT_PAYPAL_STANDARD_PAGE_STYLE);
         $OSCOM_PayPal->deleteParameter('MODULE_PAYMENT_PAYPAL_STANDARD_PAGE_STYLE');
       }
 

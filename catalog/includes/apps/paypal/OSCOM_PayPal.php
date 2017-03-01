@@ -383,7 +383,7 @@
       return $result['res'];
     }
 
-    function makeApiCall($url, $parameters = null, $headers = null) {
+    function makeApiCall($url, $parameters = null, $headers = null, $opts = null) {
       $server = parse_url($url);
 
       if ( !isset($server['port']) ) {
@@ -429,12 +429,36 @@
         curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
       }
 
+      if (substr($server['host'], -10) == 'paypal.com') {
+        $ssl_version = 0;
+
+        if ( defined('OSCOM_APP_PAYPAL_SSL_VERSION') && (OSCOM_APP_PAYPAL_SSL_VERSION == '1') ) {
+          $ssl_version = 6;
+        }
+
+        if (isset($opts['sslVersion']) && is_int($opts['sslVersion'])) {
+          $ssl_version = $opts['sslVersion'];
+        }
+
+        if ($ssl_version !== 0) {
+          curl_setopt($curl, CURLOPT_SSLVERSION, $ssl_version);
+        }
+      }
+
       if ( defined('OSCOM_APP_PAYPAL_PROXY') && tep_not_null(OSCOM_APP_PAYPAL_PROXY) ) {
         curl_setopt($curl, CURLOPT_HTTPPROXYTUNNEL, true);
         curl_setopt($curl, CURLOPT_PROXY, OSCOM_APP_PAYPAL_PROXY);
       }
 
       $result = curl_exec($curl);
+
+      if (isset($opts['returnFull']) && ($opts['returnFull'] === true)) {
+        $result = array(
+          'response' => $result,
+          'error' => curl_error($curl),
+          'info' => curl_getinfo($curl)
+        );
+      }
 
       curl_close($curl);
 

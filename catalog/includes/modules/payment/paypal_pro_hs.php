@@ -5,7 +5,7 @@
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com
 
-  Copyright (c) 2014 osCommerce
+  Copyright (c) 2017 osCommerce
 
   Released under the GNU General Public License
 */
@@ -318,6 +318,7 @@
                         'billing_first_name' => $order->billing['firstname'],
                         'billing_last_name' => $order->billing['lastname'],
                         'billing_address1' => $order->billing['street_address'],
+                        'billing_address2' => $order->billing['suburb'],
                         'billing_city' => $order->billing['city'],
                         'billing_state' => tep_get_zone_code($order->billing['country']['id'], $order->billing['zone_id'], $order->billing['state']),
                         'billing_zip' => $order->billing['postcode'],
@@ -334,6 +335,7 @@
           $params['first_name'] = $order->delivery['firstname'];
           $params['last_name'] = $order->delivery['lastname'];
           $params['address1'] = $order->delivery['street_address'];
+          $params['address2'] = $order->delivery['suburb'];
           $params['city'] = $order->delivery['city'];
           $params['state'] = tep_get_zone_code($order->delivery['country']['id'], $order->delivery['zone_id'], $order->delivery['state']);
           $params['zip'] = $order->delivery['postcode'];

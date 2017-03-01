@@ -5,7 +5,7 @@
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com
 
-  Copyright (c) 2014 osCommerce
+  Copyright (c) 2017 osCommerce
 
   Released under the GNU General Public License
 */
@@ -56,6 +56,14 @@
       if ( $this->enabled === true ) {
         if ( !$this->_app->hasCredentials('PS', 'email') ) {
           $this->description .= '<div class="secWarning">' . $this->_app->getDef('module_ps_error_credentials') . '</div>';
+
+          $this->enabled = false;
+        }
+      }
+
+      if ( $this->enabled === true ) {
+        if ( !defined('OSCOM_APP_PAYPAL_PS_PDT_IDENTITY_TOKEN') || (!tep_not_null(OSCOM_APP_PAYPAL_PS_PDT_IDENTITY_TOKEN) && !$this->_app->hasCredentials('PS')) ) {
+          $this->description .= '<div class="secWarning">' . $this->_app->getDef('module_ps_error_credentials_pdt_api') . '</div>';
 
           $this->enabled = false;
         }
@@ -355,12 +363,11 @@
                           'currency_code' => $currency,
                           'invoice' => substr($cart_PayPal_Standard_ID, strpos($cart_PayPal_Standard_ID, '-')+1),
                           'custom' => $customer_id,
-                          'no_note' => '1',
                           'notify_url' => tep_href_link('ext/modules/payment/paypal/standard_ipn.php', (isset($ipn_language) ? 'language=' . $ipn_language : ''), 'SSL', false, false),
                           'rm' => '2',
                           'return' => tep_href_link(FILENAME_CHECKOUT_PROCESS, '', 'SSL'),
                           'cancel_return' => tep_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL'),
-                          'bn' => $OSCOM_PayPal->getIdentifier(),
+                          'bn' => $this->_app->getIdentifier(),
                           'paymentaction' => (OSCOM_APP_PAYPAL_PS_TRANSACTION_METHOD == '1') ? 'sale' : 'authorization');
 
       $return_link_title = $this->_app->getDef('module_ps_button_return_to_store', array('storename' => STORE_NAME));
@@ -374,6 +381,7 @@
         $parameters['first_name'] = $order->delivery['firstname'];
         $parameters['last_name'] = $order->delivery['lastname'];
         $parameters['address1'] = $order->delivery['street_address'];
+        $parameters['address2'] = $order->delivery['suburb'];
         $parameters['city'] = $order->delivery['city'];
         $parameters['state'] = tep_get_zone_code($order->delivery['country']['id'], $order->delivery['zone_id'], $order->delivery['state']);
         $parameters['zip'] = $order->delivery['postcode'];
@@ -383,14 +391,11 @@
         $parameters['first_name'] = $order->billing['firstname'];
         $parameters['last_name'] = $order->billing['lastname'];
         $parameters['address1'] = $order->billing['street_address'];
+        $parameters['address2'] = $order->billing['suburb'];
         $parameters['city'] = $order->billing['city'];
         $parameters['state'] = tep_get_zone_code($order->billing['country']['id'], $order->billing['zone_id'], $order->billing['state']);
         $parameters['zip'] = $order->billing['postcode'];
         $parameters['country'] = $order->billing['country']['iso_code_2'];
-      }
-
-      if (tep_not_null(OSCOM_APP_PAYPAL_PS_PAGE_STYLE)) {
-        $parameters['page_style'] = OSCOM_APP_PAYPAL_PS_PAGE_STYLE;
       }
 
       $item_params = array();
@@ -537,7 +542,7 @@
         $seller_accounts[] = $this->_app->getCredentials('PS', 'email_primary');
       }
 
-      if ( isset($HTTP_POST_VARS['receiver_email']) && in_array($HTTP_POST_VARS['receiver_email'], $seller_accounts) ) {
+      if ( (isset($HTTP_POST_VARS['receiver_email']) && in_array($HTTP_POST_VARS['receiver_email'], $seller_accounts)) || (isset($HTTP_POST_VARS['business']) && in_array($HTTP_POST_VARS['business'], $seller_accounts)) ) {
         $parameters = 'cmd=_notify-validate&';
 
         foreach ( $HTTP_POST_VARS as $key => $value ) {
@@ -550,19 +555,20 @@
 
         $result = $this->_app->makeApiCall($this->form_action_url, $parameters);
 
-        $pptx_params = $HTTP_POST_VARS;
-        $pptx_params['cmd'] = '_notify-validate';
-
-        foreach ( $HTTP_GET_VARS as $key => $value ) {
-          $pptx_params['GET ' . $key] = $value;
+        foreach ( $HTTP_POST_VARS as $key => $value ) {
+          $pptx_params[$key] = stripslashes($value);
         }
 
-        $this->_app->log('PS', $pptx_params['cmd'], ($result == 'VERIFIED') ? 1 : -1, $pptx_params, $result, (OSCOM_APP_PAYPAL_PS_STATUS == '1') ? 'live' : 'sandbox');
+        foreach ( $HTTP_GET_VARS as $key => $value ) {
+          $pptx_params['GET ' . $key] = stripslashes($value);
+        }
+
+        $this->_app->log('PS', '_notify-validate', ($result == 'VERIFIED') ? 1 : -1, $pptx_params, $result, (OSCOM_APP_PAYPAL_PS_STATUS == '1') ? 'live' : 'sandbox');
       } elseif ( isset($HTTP_GET_VARS['tx']) ) { // PDT
         if ( tep_not_null(OSCOM_APP_PAYPAL_PS_PDT_IDENTITY_TOKEN) ) {
           $pptx_params['cmd'] = '_notify-synch';
 
-          $parameters = 'cmd=_notify-synch&tx=' . urlencode($HTTP_GET_VARS['tx']) . '&at=' . urlencode(OSCOM_APP_PAYPAL_PS_PDT_IDENTITY_TOKEN);
+          $parameters = 'cmd=_notify-synch&tx=' . urlencode(stripslashes($HTTP_GET_VARS['tx'])) . '&at=' . urlencode(OSCOM_APP_PAYPAL_PS_PDT_IDENTITY_TOKEN);
 
           $pdt_raw = $this->_app->makeApiCall($this->form_action_url, $parameters);
 
@@ -591,12 +597,12 @@
           }
 
           foreach ( $HTTP_GET_VARS as $key => $value ) {
-            $pptx_params['GET ' . $key] = $value;
+            $pptx_params['GET ' . $key] = stripslashes($value);
           }
 
           $this->_app->log('PS', $pptx_params['cmd'], ($result == 'VERIFIED') ? 1 : -1, $pptx_params, $result, (OSCOM_APP_PAYPAL_PS_STATUS == '1') ? 'live' : 'sandbox');
         } else {
-          $details = $this->_app->getApiResult('PS', 'GetTransactionDetails', array('TRANSACTIONID' => $HTTP_GET_VARS['tx']), (OSCOM_APP_PAYPAL_DP_STATUS == '1') ? 'live' : 'sandbox');
+          $details = $this->_app->getApiResult('PS', 'GetTransactionDetails', array('TRANSACTIONID' => stripslashes($HTTP_GET_VARS['tx'])), (OSCOM_APP_PAYPAL_PS_STATUS == '1') ? 'live' : 'sandbox');
 
           if ( in_array($details['ACK'], array('Success', 'SuccessWithWarning')) ) {
             $result = 'VERIFIED';
@@ -615,14 +621,15 @@
           }
         }
       } else {
-        $pptx_params = $HTTP_POST_VARS;
-        $pptx_params['cmd'] = '_notify-validate';
-
-        foreach ( $HTTP_GET_VARS as $key => $value ) {
-          $pptx_params['GET ' . $key] = $value;
+        foreach ( $HTTP_POST_VARS as $key => $value ) {
+          $pptx_params[$key] = stripslashes($value);
         }
 
-        $this->_app->log('PS', $pptx_params['cmd'], ($result == 'VERIFIED') ? 1 : -1, $pptx_params, $result, (OSCOM_APP_PAYPAL_PS_STATUS == '1') ? 'live' : 'sandbox');
+        foreach ( $HTTP_GET_VARS as $key => $value ) {
+          $pptx_params['GET ' . $key] = stripslashes($value);
+        }
+
+        $this->_app->log('PS', 'UNKNOWN', ($result == 'VERIFIED') ? 1 : -1, $pptx_params, $result, (OSCOM_APP_PAYPAL_PS_STATUS == '1') ? 'live' : 'sandbox');
       }
 
       if ( $result != 'VERIFIED' ) {
