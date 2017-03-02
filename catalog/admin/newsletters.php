@@ -5,7 +5,7 @@
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com
 
-  Copyright (c) 2010 osCommerce
+  Copyright (c) 2017 osCommerce
 
   Released under the GNU General Public License
 */
@@ -28,7 +28,7 @@
       case 'insert':
       case 'update':
         if (isset($HTTP_POST_VARS['newsletter_id'])) $newsletter_id = tep_db_prepare_input($HTTP_POST_VARS['newsletter_id']);
-        $newsletter_module = tep_db_prepare_input($HTTP_POST_VARS['module']);
+        $newsletter_module = basename(tep_db_prepare_input($HTTP_POST_VARS['module']));
         $title = tep_db_prepare_input($HTTP_POST_VARS['title']);
         $content = tep_db_prepare_input($HTTP_POST_VARS['content']);
 
@@ -38,7 +38,7 @@
           $newsletter_error = true;
         }
 
-        if (empty($newsletter_module)) {
+        if (empty($newsletter_module) || !is_file(DIR_WS_MODULES . 'newsletters/' . $newsletter_module . '.php')) {
           $messageStack->add(ERROR_NEWSLETTER_MODULE, 'error');
           $newsletter_error = true;
         }
