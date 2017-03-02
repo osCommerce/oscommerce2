@@ -1,4 +1,4 @@
-Options -Indexes
+#Options -Indexes
 
 <Files *.php>
   <IfModule mod_authz_core.c>
