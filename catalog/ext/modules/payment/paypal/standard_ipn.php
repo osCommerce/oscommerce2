@@ -17,12 +17,11 @@
     exit;
   }
 
-  require(DIR_WS_LANGUAGES . $language . '/' . FILENAME_CHECKOUT_PROCESS);
-
-  require(DIR_WS_LANGUAGES . $language . '/modules/payment/paypal_standard.php');
   require('includes/modules/payment/paypal_standard.php');
 
   $paypal_standard = new paypal_standard();
+
+  require(DIR_FS_CATALOG . 'includes/languages/' . $language . '/' . FILENAME_CHECKOUT_PROCESS);
 
   $result = false;
 
@@ -86,7 +85,7 @@
 
         tep_db_perform(TABLE_ORDERS_STATUS_HISTORY, $sql_data_array);
 
-        include(DIR_WS_CLASSES . 'order.php');
+        include(DIR_FS_CATALOG . 'includes/classes/order.php');
         $order = new order($order_id);
 
         if (DOWNLOAD_ENABLED == 'true') {

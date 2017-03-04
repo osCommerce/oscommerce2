@@ -76,7 +76,7 @@ EOD;
     include(DIR_FS_CATALOG . 'includes/apps/paypal/admin/actions/' . $action . '/' . $subaction . '.php');
   }
 
-  include(DIR_WS_INCLUDES . 'template_top.php');
+  include(DIR_FS_ADMIN . 'includes/template_top.php');
 ?>
 
 <style>
@@ -456,6 +456,6 @@ $(function() {
 </script>
 
 <?php
-  include(DIR_WS_INCLUDES . 'template_bottom.php');
-  require(DIR_WS_INCLUDES . 'application_bottom.php');
+  include(DIR_FS_ADMIN . 'includes/template_bottom.php');
+  require(DIR_FS_ADMIN . 'includes/application_bottom.php');
 ?>

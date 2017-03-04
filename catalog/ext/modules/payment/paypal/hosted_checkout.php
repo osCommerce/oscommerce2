@@ -5,13 +5,15 @@
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com
 
-  Copyright (c) 2014 osCommerce
+  Copyright (c) 2017 osCommerce
 
   Released under the GNU General Public License
 */
 
   chdir('../../../../');
   require('includes/application_top.php');
+
+  include(DIR_FS_CATALOG . 'includes/apps/paypal/functions/compatibility.php');
 
   $error = false;
 
@@ -69,5 +71,5 @@
 </html>
 
 <?php
-  require(DIR_WS_INCLUDES . 'application_bottom.php');
+  require(DIR_FS_CATALOG . 'includes/application_bottom.php');
 ?>

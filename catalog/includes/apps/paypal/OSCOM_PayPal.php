@@ -5,10 +5,12 @@
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com
 
-  Copyright (c) 2014 osCommerce
+  Copyright (c) 2017 osCommerce
 
   Released under the GNU General Public License
 */
+
+  include(DIR_FS_CATALOG . 'includes/apps/paypal/functions/compatibility.php');
 
   class OSCOM_PayPal {
     var $_code = 'paypal';

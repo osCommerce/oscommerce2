@@ -339,7 +339,7 @@
       $ipn_language = null;
 
       if ( !class_exists('language') ) {
-        include(DIR_WS_CLASSES . 'language.php');
+        include(DIR_FS_CATALOG . 'includes/classes/language.php');
       }
 
       $lng = new language();
