@@ -5,7 +5,7 @@
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com
 
-  Copyright (c) 2016 osCommerce
+  Copyright (c) 2017 osCommerce
 
   Released under the GNU General Public License
 */
@@ -16,7 +16,7 @@
 
   $ma_data = [];
 
-  if (!empty(OSCOM_APP_PAYPAL_BRAINTREE_CURRENCIES_MA)) {
+  if (tep_not_null(OSCOM_APP_PAYPAL_BRAINTREE_CURRENCIES_MA)) {
     foreach (explode(';', OSCOM_APP_PAYPAL_BRAINTREE_CURRENCIES_MA) as $ma) {
       list($a, $currency) = explode(':', $ma);
 
@@ -26,7 +26,7 @@
 
   $sandbox_ma_data = [];
 
-  if (!empty(OSCOM_APP_PAYPAL_BRAINTREE_SANDBOX_CURRENCIES_MA)) {
+  if (tep_not_null(OSCOM_APP_PAYPAL_BRAINTREE_SANDBOX_CURRENCIES_MA)) {
     foreach (explode(';', OSCOM_APP_PAYPAL_BRAINTREE_SANDBOX_CURRENCIES_MA) as $ma) {
       list($a, $currency) = explode(':', $ma);
 
