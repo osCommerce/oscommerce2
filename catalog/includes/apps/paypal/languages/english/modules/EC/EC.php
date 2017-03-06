@@ -36,3 +36,4 @@ module_ec_error_address = Error: A match of the Shipping Address City, State, an
 module_ec_error_declined = Error: This transaction has been declined. Please try again.
 module_ec_error_local_login_required = Please log into your account to verify the order.
 module_ec_error_no_shipping_available = Shipping is currently not available for the selected shipping address. Please select or create a new shipping address to use with your purchase.
+module_ec_error_setexpresscheckout_call = There was a problem initiating the payment at PayPal. Please try again or select another payment method if the problem persists.

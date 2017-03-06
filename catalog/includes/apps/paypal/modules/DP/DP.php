@@ -5,7 +5,7 @@
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com
 
-  Copyright (c) 2014 osCommerce
+  Copyright (c) 2017 osCommerce
 
   Released under the GNU General Public License
 */
@@ -38,6 +38,10 @@
         } elseif ( (OSCOM_APP_PAYPAL_GATEWAY == '0') && !$OSCOM_PayPal->hasCredentials('DP', 'payflow') ) { // Payflow
           $this->_req_notes[] = $OSCOM_PayPal->getDef('module_dp_error_credentials_payflow');
         }
+      }
+
+      if ( !$OSCOM_PayPal->isInstalled('EC') || !in_array(OSCOM_APP_PAYPAL_EC_STATUS, array('1', '0')) ) {
+        $this->_req_notes[] = $OSCOM_PayPal->getDef('module_dp_error_express_module');
       }
     }
 

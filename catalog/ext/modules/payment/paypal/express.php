@@ -61,6 +61,10 @@
   $cartID = $cart->cartID;
 
   switch ($HTTP_GET_VARS['osC_Action']) {
+    case 'setECError':
+      tep_redirect(tep_href_link(FILENAME_SHOPPING_CART, 'error_message=' . $paypal_express->_app->getDef('module_ec_error_setexpresscheckout_call'), 'SSL'));
+      break;
+
     case 'cancel':
       tep_session_unregister('appPayPalEcResult');
       tep_session_unregister('appPayPalEcSecret');
@@ -993,6 +997,15 @@ EOD;
 
           tep_redirect($paypal_url . 'token=' . $response_array['TOKEN']);
         } else {
+          if ( isset($HTTP_GET_VARS['format']) && ($HTTP_GET_VARS['format'] == 'json') ) {
+            $result = array(
+              'token' => ''
+            );
+
+            echo json_encode($result);
+            exit;
+          }
+
           tep_redirect(tep_href_link(FILENAME_SHOPPING_CART, 'error_message=' . stripslashes($response_array['L_LONGMESSAGE0']), 'SSL'));
         }
       } else { // Payflow
