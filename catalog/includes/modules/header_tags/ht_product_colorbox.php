@@ -18,7 +18,11 @@
     var $sort_order;
     var $enabled = false;
 
+    protected $lang;
+
     function __construct() {
+      $this->lang = Registry::get('Language');
+
       $this->title = OSCOM::getDef('module_header_tags_product_colorbox_title');
       $this->description = OSCOM::getDef('module_header_tags_product_colorbox_description');
 
@@ -46,6 +50,7 @@
           $oscTemplate->addBlock('<script src="ext/photoset-grid/jquery.photoset-grid.min.js"></script>' . "\n", $this->group);
           $oscTemplate->addBlock('<link rel="stylesheet" href="ext/colorbox/colorbox.css" />' . "\n", 'header_tags');
           $oscTemplate->addBlock('<script src="ext/colorbox/jquery.colorbox-min.js"></script>' . "\n", $this->group);
+          $oscTemplate->addBlock('<script src="ext/colorbox/i18n/jquery.colorbox-' . HTML::outputProtected($this->lang->get('code')) . '.js"></script>' . "\n", $this->group);
           $oscTemplate->addBlock('<script>var ImgCount = $(".piGal").data("imgcount"); $(function() {$(\'.piGal\').css({\'visibility\': \'hidden\'});$(\'.piGal\').photosetGrid({layout: ""+ ImgCount +"",width: \'100%\',highresLinks: true,rel: \'pigallery\',onComplete: function() {$(\'.piGal\').css({\'visibility\': \'visible\'});$(\'.piGal a\').colorbox({maxHeight: \'90%\',maxWidth: \'90%\', rel: \'pigallery\'});$(\'.piGal img\').each(function() {var imgid = $(this).attr(\'id\') ? $(this).attr(\'id\').substring(9) : 0;if ( $(\'#piGalDiv_\' + imgid).length ) {$(this).parent().colorbox({ inline: true, href: "#piGalDiv_" + imgid });}});}});});</script>', $this->group);
         }
       }
