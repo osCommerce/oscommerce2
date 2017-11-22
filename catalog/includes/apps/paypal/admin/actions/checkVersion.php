@@ -13,7 +13,7 @@
   if ( class_exists('ZipArchive') && function_exists('json_encode') && function_exists('openssl_verify') ) {
     $ppUpdateReleasesResult = array('rpcStatus' => -1);
 
-    $ppUpdateReleasesResponse = @json_decode($OSCOM_PayPal->makeApiCall('http://apps.oscommerce.com/index.php?RPC&GetUpdates&paypal&app&2_3&' . str_replace('.', '_', number_format($OSCOM_PayPal->getVersion(), 3))), true);
+    $ppUpdateReleasesResponse = @json_decode($OSCOM_PayPal->makeApiCall('https://apps.oscommerce.com/index.php?RPC&GetUpdates&paypal&app&2_3&' . str_replace('.', '_', number_format($OSCOM_PayPal->getVersion(), 3))), true);
 
     if ( is_array($ppUpdateReleasesResponse) && isset($ppUpdateReleasesResponse['rpcStatus']) && ($ppUpdateReleasesResponse['rpcStatus'] === 1) ) {
       $ppUpdateReleasesResult['rpcStatus'] = 1;
@@ -37,7 +37,7 @@
   } else {
     $ppUpdateReleasesResult = 'rpcStatus=-1';
 
-    $ppUpdateReleasesResponse = $OSCOM_PayPal->makeApiCall('http://apps.oscommerce.com/index.php?RPC&GetUpdates&paypal&app&2_3&' . str_replace('.', '_', number_format($OSCOM_PayPal->getVersion(), 3)) . '&format=simple');
+    $ppUpdateReleasesResponse = $OSCOM_PayPal->makeApiCall('https://apps.oscommerce.com/index.php?RPC&GetUpdates&paypal&app&2_3&' . str_replace('.', '_', number_format($OSCOM_PayPal->getVersion(), 3)) . '&format=simple');
 
     if ( !empty($ppUpdateReleasesResponse) && (strpos($ppUpdateReleasesResponse, 'rpcStatus') !== false) ) {
       parse_str($ppUpdateReleasesResponse, $ppUpdateRelease);

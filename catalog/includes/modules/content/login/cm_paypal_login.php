@@ -5,7 +5,7 @@
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com
 
-  Copyright (c) 2014 osCommerce
+  Copyright (c) 2017 osCommerce
 
   Released under the GNU General Public License
 */
@@ -90,7 +90,7 @@
       $cm_paypal_login = $this;
 
       ob_start();
-      include(DIR_WS_MODULES . 'content/' . $this->group . '/templates/paypal_login.php');
+      include(DIR_FS_CATALOG . 'includes/modules/content/' . $this->group . '/templates/paypal_login.php');
       $template = ob_get_clean();
 
       $oscTemplate->addContent($template, $this->group);
@@ -277,8 +277,7 @@
         if (defined('MODULE_PAYMENT_INSTALLED') && tep_not_null(MODULE_PAYMENT_INSTALLED)) {
           if ( in_array('paypal_express.php', explode(';', MODULE_PAYMENT_INSTALLED)) ) {
             if ( !class_exists('paypal_express') ) {
-              include(DIR_WS_LANGUAGES . $language . '/modules/payment/paypal_express.php');
-              include(DIR_WS_MODULES . 'payment/paypal_express.php');
+              include(DIR_FS_CATALOG . 'includes/modules/payment/paypal_express.php');
             }
 
             $ppe = new paypal_express();

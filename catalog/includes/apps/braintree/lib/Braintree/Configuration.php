@@ -27,6 +27,8 @@ class Configuration
     private $_proxyUser = null;
     private $_proxyPassword = null;
     private $_timeout = 60;
+    private $_sslVersion = null;
+    private $_acceptGzipEncoding = true;
 
     /**
      * Braintree API version to use
@@ -128,6 +130,22 @@ class Configuration
     }
 
     /**
+     * Sets or gets the SSL version to use for making requests. See
+     * http://php.net/manual/en/function.curl-setopt.php for possible
+     * CURLOPT_SSLVERSION values.
+     *
+     * @param integer $value If provided, sets the SSL version
+     * @return integer The SSL version used for connecting to Braintree
+     */
+    public static function sslVersion($value=null)
+    {
+        if (empty($value)) {
+            return self::$global->getSslVersion();
+        }
+        self::$global->setSslVersion($value);
+    }
+
+    /**
      * Sets or gets the proxy host to use for connecting to Braintree
      *
      * @param string $value If provided, sets the proxy host
@@ -209,6 +227,20 @@ class Configuration
         $proxyUser = self::$global->getProxyUser();
         $proxyPwd = self::$global->getProxyPassword();
         return !empty($proxyUser) && !empty($proxyPwd);
+    }
+
+    /**
+     * Specify if the HTTP client is able to decode gzipped responses.
+     *
+     * @param bool $value If true, will send an Accept-Encoding header with a gzip value. If false, will not send an Accept-Encoding header with a gzip value.
+     * @return bool true if an Accept-Encoding header with a gzip value will be sent, false if not
+     */
+    public static function acceptGzipEncoding($value = null)
+    {
+        if (is_null($value)) {
+            return self::$global->getAcceptGzipEncoding();
+        }
+        self::$global->setAcceptGzipEncoding($value);
     }
 
     public static function assertGlobalHasAccessTokenOrKeys()
@@ -371,6 +403,26 @@ class Configuration
     public function getTimeout()
     {
         return $this->_timeout;
+    }
+
+    private function setSslVersion($value)
+    {
+        $this->_sslVersion = $value;
+    }
+
+    private function getSslVersion()
+    {
+        return $this->_sslVersion;
+    }
+
+    private function getAcceptGzipEncoding()
+    {
+        return $this->_acceptGzipEncoding;
+    }
+
+    private function setAcceptGzipEncoding($value)
+    {
+        $this->_acceptGzipEncoding = $value;
     }
 
     public function getAccessToken()

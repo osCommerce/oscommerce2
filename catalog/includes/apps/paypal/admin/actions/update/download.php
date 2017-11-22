@@ -24,7 +24,7 @@
         unlink($filepath);
       }
 
-      $ppUpdateDownloadFile = $OSCOM_PayPal->makeApiCall('http://apps.oscommerce.com/index.php?Download&paypal&app&2_300&' . str_replace('.', '_', $HTTP_GET_VARS['v']) . '&update');
+      $ppUpdateDownloadFile = $OSCOM_PayPal->makeApiCall('https://apps.oscommerce.com/index.php?Download&paypal&app&2_300&' . str_replace('.', '_', $HTTP_GET_VARS['v']) . '&update');
 
       $save_result = @file_put_contents($filepath, $ppUpdateDownloadFile);
 

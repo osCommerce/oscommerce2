@@ -141,7 +141,7 @@ $(function() {
         rel: 'pigallery'
       });
 
-      $('#piGal img').each(function() {
+      $('#piGal img[id^="piGalImg_"]').each(function() {
         var imgid = $(this).attr('id').substring(9);
 
         if ( $('#piGalDiv_' + imgid).length ) {

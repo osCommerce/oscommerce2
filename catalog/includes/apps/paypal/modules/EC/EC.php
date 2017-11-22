@@ -5,7 +5,7 @@
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com
 
-  Copyright (c) 2014 osCommerce
+  Copyright (c) 2017 osCommerce
 
   Released under the GNU General Public License
 */
@@ -168,12 +168,10 @@
       }
 
       if ( defined('MODULE_PAYMENT_PAYPAL_EXPRESS_PAGE_STYLE') ) {
-        $OSCOM_PayPal->saveParameter('OSCOM_APP_PAYPAL_EC_PAGE_STYLE', MODULE_PAYMENT_PAYPAL_EXPRESS_PAGE_STYLE);
         $OSCOM_PayPal->deleteParameter('MODULE_PAYMENT_PAYPAL_EXPRESS_PAGE_STYLE');
       }
 
       if ( defined('MODULE_PAYMENT_PAYPAL_PRO_PAYFLOW_EC_PAGE_STYLE') ) {
-        $OSCOM_PayPal->saveParameter('OSCOM_APP_PAYPAL_EC_PAGE_STYLE', MODULE_PAYMENT_PAYPAL_PRO_PAYFLOW_EC_PAGE_STYLE);
         $OSCOM_PayPal->deleteParameter('MODULE_PAYMENT_PAYPAL_PRO_PAYFLOW_EC_PAGE_STYLE');
       }
 

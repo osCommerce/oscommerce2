@@ -5,7 +5,7 @@
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com
 
-  Copyright (c) 2014 osCommerce
+  Copyright (c) 2017 osCommerce
 
   Released under the GNU General Public License
 */
@@ -17,12 +17,11 @@
     exit;
   }
 
-  require(DIR_WS_LANGUAGES . $language . '/' . FILENAME_CHECKOUT_PROCESS);
-
-  require(DIR_WS_LANGUAGES . $language . '/modules/payment/paypal_standard.php');
   require('includes/modules/payment/paypal_standard.php');
 
   $paypal_standard = new paypal_standard();
+
+  require(DIR_FS_CATALOG . 'includes/languages/' . $language . '/' . FILENAME_CHECKOUT_PROCESS);
 
   $result = false;
 
@@ -32,7 +31,7 @@
     $seller_accounts[] = $paypal_standard->_app->getCredentials('PS', 'email_primary');
   }
 
-  if ( isset($HTTP_POST_VARS['receiver_email']) && in_array($HTTP_POST_VARS['receiver_email'], $seller_accounts) ) {
+  if ( (isset($HTTP_POST_VARS['receiver_email']) && in_array($HTTP_POST_VARS['receiver_email'], $seller_accounts)) || (isset($HTTP_POST_VARS['business']) && in_array($HTTP_POST_VARS['business'], $seller_accounts)) ) {
     $parameters = 'cmd=_notify-validate&';
 
     foreach ( $HTTP_POST_VARS as $key => $value ) {
@@ -46,11 +45,14 @@
     $result = $paypal_standard->_app->makeApiCall($paypal_standard->form_action_url, $parameters);
   }
 
-  $log_params = $HTTP_POST_VARS;
-  $log_params['cmd'] = '_notify-validate';
+  $log_params = array();
+
+  foreach ( $HTTP_POST_VARS as $key => $value ) {
+    $log_params[$key] = stripslashes($value);
+  }
 
   foreach ( $HTTP_GET_VARS as $key => $value ) {
-    $log_params['GET ' . $key] = $value;
+    $log_params['GET ' . $key] = stripslashes($value);
   }
 
   $paypal_standard->_app->log('PS', '_notify-validate', ($result == 'VERIFIED') ? 1 : -1, $log_params, $result, (OSCOM_APP_PAYPAL_PS_STATUS == '1') ? 'live' : 'sandbox', true);
@@ -83,7 +85,7 @@
 
         tep_db_perform(TABLE_ORDERS_STATUS_HISTORY, $sql_data_array);
 
-        include(DIR_WS_CLASSES . 'order.php');
+        include(DIR_FS_CATALOG . 'includes/classes/order.php');
         $order = new order($order_id);
 
         if (DOWNLOAD_ENABLED == 'true') {

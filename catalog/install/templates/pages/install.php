@@ -5,7 +5,7 @@
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com
 
-  Copyright (c) 2013 osCommerce
+  Copyright (c) 2017 osCommerce
 
   Released under the GNU General Public License
 */
@@ -18,6 +18,7 @@
   var dbUsername;
   var dbPassword;
   var dbName;
+  var dbImportSample;
 
   var formSubmited = false;
   var formSuccess = false;
@@ -37,6 +38,7 @@
     dbUsername = $('#DB_SERVER_USERNAME').val();
     dbPassword = $('#DB_SERVER_PASSWORD').val();
     dbName = $('#DB_DATABASE').val();
+    dbImportSample = $('#DB_IMPORT_SAMPLE').val();
 
     $.get('rpc.php?action=dbCheck&server=' + encodeURIComponent(dbServer) + '&username=' + encodeURIComponent(dbUsername) + '&password=' + encodeURIComponent(dbPassword) + '&name=' + encodeURIComponent(dbName), function (response) {
       var result = /\[\[([^|]*?)(?:\|([^|]*?)){0,1}\]\]/.exec(response);
@@ -45,7 +47,7 @@
       if (result[0] == '1') {
         $('#mBoxContents').html('<p><img src="images/progress.gif" align="right" hspace="5" vspace="5" />The database structure is now being imported. Please be patient during this procedure.</p>');
 
-        $.get('rpc.php?action=dbImport&server=' + encodeURIComponent(dbServer) + '&username=' + encodeURIComponent(dbUsername) + '&password='+ encodeURIComponent(dbPassword) + '&name=' + encodeURIComponent(dbName), function (response2) {
+        $.get('rpc.php?action=dbImport&server=' + encodeURIComponent(dbServer) + '&username=' + encodeURIComponent(dbUsername) + '&password='+ encodeURIComponent(dbPassword) + '&name=' + encodeURIComponent(dbName) + '&importsample=' + encodeURIComponent(dbImportSample), function (response2) {
           var result2 = /\[\[([^|]*?)(?:\|([^|]*?)){0,1}\]\]/.exec(response2);
           result2.shift();
 
@@ -144,6 +146,10 @@
       <tr>
         <td class="inputField"><?php echo 'Database Name<br />' . osc_draw_input_field('DB_DATABASE', null, 'class="text"'); ?></td>
         <td class="inputDescription">The name of the database to hold the data in.</td>
+      </tr>
+      <tr>
+        <td class="inputField"><?php echo 'Import Sample Data<br />' . osc_draw_select_menu('DB_IMPORT_SAMPLE', array(array('id' => '0', 'text' => 'Skip sample data'), array('id' => '1', 'text' => 'Import sample data')), '1'); ?></td>
+        <td class="inputDescription">Import sample product and category data?</td>
       </tr>
     </table>
 

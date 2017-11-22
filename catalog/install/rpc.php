@@ -5,7 +5,7 @@
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com
 
-  Copyright (c) 2013 osCommerce
+  Copyright (c) 2017 osCommerce
 
   Released under the GNU General Public License
 */
@@ -47,15 +47,23 @@
                     'DB_SERVER_USERNAME' => trim(rawurldecode($HTTP_GET_VARS['username'])),
                     'DB_SERVER_PASSWORD' => trim(rawurldecode($HTTP_GET_VARS['password'])),
                     'DB_DATABASE' => trim(rawurldecode($HTTP_GET_VARS['name'])),
+                    'DB_IMPORT_SAMPLE' => trim(rawurldecode($HTTP_GET_VARS['importsample']))
                    );
 
         osc_db_connect($db['DB_SERVER'], $db['DB_SERVER_USERNAME'], $db['DB_SERVER_PASSWORD']);
 
         $db_error = false;
         $sql_file = $dir_fs_www_root . '/oscommerce.sql';
+        $sql_sample_file = $dir_fs_www_root . '/oscommerce_data_sample.sql';
 
         osc_set_time_limit(0);
         osc_db_install($db['DB_DATABASE'], $sql_file);
+
+        if ($db_error == false) {
+          if ($db['DB_IMPORT_SAMPLE'] == '1') {
+            osc_db_install($db['DB_DATABASE'], $sql_sample_file);
+          }
+        }
 
         if ($db_error != false) {
           echo '[[0|' . $db_error . ']]';

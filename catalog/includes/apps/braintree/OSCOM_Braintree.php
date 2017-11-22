@@ -5,7 +5,7 @@
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com
 
-  Copyright (c) 2016 osCommerce
+  Copyright (c) 2017 osCommerce
 
   Released under the GNU General Public License
 */
@@ -312,7 +312,7 @@ EOD;
       return $result;
     }
 
-    function makeApiCall($url, $parameters = null, $headers = null) {
+    function makeApiCall($url, $parameters = null, $headers = null, $opts = null) {
       $server = parse_url($url);
 
       if ( !isset($server['port']) ) {
@@ -356,12 +356,36 @@ EOD;
         curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
       }
 
+      if (substr($server['host'], -10) == 'paypal.com') {
+        $ssl_version = 0;
+
+        if ( defined('OSCOM_APP_PAYPAL_BRAINTREE_SSL_VERSION') && (OSCOM_APP_PAYPAL_BRAINTREE_SSL_VERSION == '1') ) {
+          $ssl_version = 6;
+        }
+
+        if (isset($opts['sslVersion']) && is_int($opts['sslVersion'])) {
+          $ssl_version = $opts['sslVersion'];
+        }
+
+        if ($ssl_version !== 0) {
+          curl_setopt($curl, CURLOPT_SSLVERSION, $ssl_version);
+        }
+      }
+
       if ( defined('OSCOM_APP_PAYPAL_BRAINTREE_PROXY') && tep_not_null(OSCOM_APP_PAYPAL_BRAINTREE_PROXY) ) {
         curl_setopt($curl, CURLOPT_HTTPPROXYTUNNEL, true);
         curl_setopt($curl, CURLOPT_PROXY, OSCOM_APP_PAYPAL_BRAINTREE_PROXY);
       }
 
       $result = curl_exec($curl);
+
+      if (isset($opts['returnFull']) && ($opts['returnFull'] === true)) {
+        $result = array(
+          'response' => $result,
+          'error' => curl_error($curl),
+          'info' => curl_getinfo($curl)
+        );
+      }
 
       curl_close($curl);
 
@@ -519,6 +543,10 @@ EOD;
       Braintree_Configuration::merchantId($status === '1' ? OSCOM_APP_PAYPAL_BRAINTREE_MERCHANT_ID : OSCOM_APP_PAYPAL_BRAINTREE_SANDBOX_MERCHANT_ID);
       Braintree_Configuration::publicKey($status === '1' ? OSCOM_APP_PAYPAL_BRAINTREE_PUBLIC_KEY : OSCOM_APP_PAYPAL_BRAINTREE_SANDBOX_PUBLIC_KEY);
       Braintree_Configuration::privateKey($status === '1' ? OSCOM_APP_PAYPAL_BRAINTREE_PRIVATE_KEY : OSCOM_APP_PAYPAL_BRAINTREE_SANDBOX_PRIVATE_KEY);
+
+      if (defined('OSCOM_APP_PAYPAL_BRAINTREE_SSL_VERSION') && (OSCOM_APP_PAYPAL_BRAINTREE_SSL_VERSION == '1')) {
+        Braintree_Configuration::sslVersion(6);
+      }
 
       if (defined('OSCOM_APP_PAYPAL_BRAINTREE_PROXY') && tep_not_null(OSCOM_APP_PAYPAL_BRAINTREE_PROXY)) {
         $url = parse_url(OSCOM_APP_PAYPAL_BRAINTREE_PROXY);

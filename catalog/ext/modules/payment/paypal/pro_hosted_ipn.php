@@ -5,7 +5,7 @@
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com
 
-  Copyright (c) 2014 osCommerce
+  Copyright (c) 2017 osCommerce
 
   Released under the GNU General Public License
 */
@@ -17,7 +17,6 @@
     exit;
   }
 
-  require(DIR_WS_LANGUAGES . $language . '/modules/payment/paypal_pro_hs.php');
   require('includes/modules/payment/paypal_pro_hs.php');
 
   $result = false;

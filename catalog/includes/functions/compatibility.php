@@ -5,10 +5,27 @@
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com
 
-  Copyright (c) 2012 osCommerce
+  Copyright (c) 2017 osCommerce
 
   Released under the GNU General Public License
 */
+
+// don't display errors
+  ini_set('display_errors', false);
+  ini_set('html_errors', false);
+  ini_set('ignore_repeated_errors', true);
+
+// log errors
+  if (is_dir(DIR_FS_CATALOG . 'includes/work') && is_writable(DIR_FS_CATALOG . 'includes/work')) {
+    if (!is_dir(DIR_FS_CATALOG . 'includes/work/error_logs')) {
+      mkdir(DIR_FS_CATALOG . 'includes/work/error_logs', 0777, true);
+    }
+
+    if (is_dir(DIR_FS_CATALOG . 'includes/work/error_logs') && is_writable(DIR_FS_CATALOG . 'includes/work/error_logs')) {
+      ini_set('log_errors', true);
+      ini_set('error_log', DIR_FS_CATALOG . 'includes/work/error_logs/errors-' . date('Ymd') . '.txt');
+    }
+  }
 
 ////
 // Recursively handle magic_quotes_gpc turned off.

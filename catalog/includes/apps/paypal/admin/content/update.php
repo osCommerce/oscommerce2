@@ -31,7 +31,7 @@ $(function() {
     } else if ( OSCOM.APP.PAYPAL.getUpdatesProgress == 'retrieveFresh' ) {
       window.location('<?php echo tep_href_link('paypal.php', 'action=update'); ?>');
     } else if ( OSCOM.APP.PAYPAL.getUpdatesProgress == 'manualDownload' ) {
-      window.open('http://apps.oscommerce.com/index.php?Info&paypal&app');
+      window.open('https://apps.oscommerce.com/index.php?Info&paypal&app');
     }
   });
 

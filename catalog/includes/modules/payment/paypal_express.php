@@ -5,7 +5,7 @@
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com
 
-  Copyright (c) 2014 osCommerce
+  Copyright (c) 2017 osCommerce
 
   Released under the GNU General Public License
 */
@@ -151,7 +151,7 @@
 
           $string .= '<a href="' . tep_href_link('ext/modules/payment/paypal/express.php', '', 'SSL') . '"><img src="' . $image_button . '" border="0" alt="" title="' . $button_title . '" /></a>';
         } else {
-          $string .= '<script src="https://www.paypalobjects.com/api/checkout.js" async></script>';
+          $string .= '<script src="https://www.paypalobjects.com/api/checkout.js"></script>';
 
           $merchant_id = (OSCOM_APP_PAYPAL_EC_STATUS === '1') ? OSCOM_APP_PAYPAL_LIVE_MERCHANT_ID : OSCOM_APP_PAYPAL_SANDBOX_MERCHANT_ID;
           if (empty($merchant_id)) $merchant_id = ' ';
@@ -159,6 +159,8 @@
           $server = (OSCOM_APP_PAYPAL_EC_STATUS === '1') ? 'production' : 'sandbox';
 
           $ppecset_url = tep_href_link('ext/modules/payment/paypal/express.php', 'format=json', 'SSL');
+
+          $ppecerror_url = tep_href_link('ext/modules/payment/paypal/express.php', 'osC_Action=setECError', 'SSL');
 
           switch (OSCOM_APP_PAYPAL_EC_INCONTEXT_BUTTON_COLOR) {
             case '3':
@@ -204,39 +206,35 @@
           $string .= <<<EOD
 <span id="ppECButton"></span>
 <script>
-if ( typeof jQuery == 'undefined' ) {
-  document.write('<scr' + 'ipt src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></scr' + 'ipt>');
-}
-</script>
-<script>
-window.paypalCheckoutReady = function () {
-  paypal.checkout.setup('${merchant_id}', {
-    environment: '{$server}',
-    buttons: [
-      {
-        container: 'ppECButton',
-        color: '${button_color}',
-        size: '${button_size}',
-        shape: '${button_shape}',
-        click: function (event) {
-          event.preventDefault();
-
-          paypal.checkout.initXO();
-
-          var action = $.getJSON('${ppecset_url}');
-
-          action.done(function (data) {
-            paypal.checkout.startFlow(data.token);
-          });
-
-          action.fail(function () {
-            paypal.checkout.closeFlow();
-          });
+paypal.Button.render({
+  env: '{$server}',
+  style: {
+    size: '${button_size}',
+    color: '${button_color}',
+    shape: '${button_shape}'
+  },
+  payment: function(resolve, reject) {
+    paypal.request.post('${ppecset_url}')
+      .then(function(data) {
+        if ((data.token !== undefined) && (data.token.length > 0)) {
+          resolve(data.token);
+        } else {
+          window.location = '${ppecerror_url}';
         }
-      }
-    ]
-  });
-};
+      })
+      .catch(function(err) {
+        reject(err);
+
+        window.location = '${ppecerror_url}';
+      });
+  },
+  onAuthorize: function(data, actions) {
+    return actions.redirect();
+  },
+  onCancel: function(data, actions) {
+    return actions.redirect();
+  }
+}, '#ppECButton');
 </script>
 EOD;
         }
@@ -348,6 +346,7 @@ EOD;
       if (is_numeric($sendto) && ($sendto > 0)) {
         $params['PAYMENTREQUEST_0_SHIPTONAME'] = $order->delivery['firstname'] . ' ' . $order->delivery['lastname'];
         $params['PAYMENTREQUEST_0_SHIPTOSTREET'] = $order->delivery['street_address'];
+        $params['PAYMENTREQUEST_0_SHIPTOSTREET2'] = $order->delivery['suburb'];
         $params['PAYMENTREQUEST_0_SHIPTOCITY'] = $order->delivery['city'];
         $params['PAYMENTREQUEST_0_SHIPTOSTATE'] = tep_get_zone_code($order->delivery['country']['id'], $order->delivery['zone_id'], $order->delivery['state']);
         $params['PAYMENTREQUEST_0_SHIPTOCOUNTRYCODE'] = $order->delivery['country']['iso_code_2'];
@@ -405,6 +404,7 @@ EOD;
       if ( is_numeric($sendto) && ($sendto > 0) ) {
         $params['SHIPTONAME'] = $order->delivery['firstname'] . ' ' . $order->delivery['lastname'];
         $params['SHIPTOSTREET'] = $order->delivery['street_address'];
+        $params['SHIPTOSTREET2'] = $order->delivery['suburb'];
         $params['SHIPTOCITY'] = $order->delivery['city'];
         $params['SHIPTOSTATE'] = tep_get_zone_code($order->delivery['country']['id'], $order->delivery['zone_id'], $order->delivery['state']);
         $params['SHIPTOCOUNTRY'] = $order->delivery['country']['iso_code_2'];
