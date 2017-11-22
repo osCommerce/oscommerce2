@@ -41,7 +41,7 @@
     }
 
     function expireEntries() {
-      tep_db_query("delete from " . TABLE_ACTION_RECORDER . " where module = '" . $this->code . "' and date_added < date_sub(now(), interval " . (int)$this->minutes  . " minute)");
+      tep_db_query("delete from " . TABLE_ACTION_RECORDER . " where module = '" . tep_db_input($this->code) . "' and date_added < date_sub(now(), interval " . (int)$this->minutes  . " minute)");
 
       return tep_db_affected_rows();
     }

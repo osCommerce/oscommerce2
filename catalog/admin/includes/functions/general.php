@@ -732,9 +732,9 @@
 // Sets the status of a banner
   function tep_set_banner_status($banners_id, $status) {
     if ($status == '1') {
-      return tep_db_query("update " . TABLE_BANNERS . " set status = '1', expires_impressions = NULL, expires_date = NULL, date_status_change = NULL where banners_id = '" . $banners_id . "'");
+      return tep_db_query("update " . TABLE_BANNERS . " set status = '1', expires_impressions = NULL, expires_date = NULL, date_status_change = NULL where banners_id = '" . (int)$banners_id . "'");
     } elseif ($status == '0') {
-      return tep_db_query("update " . TABLE_BANNERS . " set status = '0', date_status_change = now() where banners_id = '" . $banners_id . "'");
+      return tep_db_query("update " . TABLE_BANNERS . " set status = '0', date_status_change = now() where banners_id = '" . (int)$banners_id . "'");
     } else {
       return -1;
     }
@@ -1005,7 +1005,7 @@
     if ($restock == 'on') {
       $order_query = tep_db_query("select products_id, products_quantity from " . TABLE_ORDERS_PRODUCTS . " where orders_id = '" . (int)$order_id . "'");
       while ($order = tep_db_fetch_array($order_query)) {
-        tep_db_query("update " . TABLE_PRODUCTS . " set products_quantity = products_quantity + " . $order['products_quantity'] . ", products_ordered = products_ordered - " . $order['products_quantity'] . " where products_id = '" . (int)$order['products_id'] . "'");
+        tep_db_query("update " . TABLE_PRODUCTS . " set products_quantity = products_quantity + " . (int)$order['products_quantity'] . ", products_ordered = products_ordered - " . (int)$order['products_quantity'] . " where products_id = '" . (int)$order['products_id'] . "'");
       }
     }
 

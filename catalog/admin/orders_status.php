@@ -31,7 +31,7 @@
 
           if ($action == 'insert') {
             if (empty($orders_status_id)) {
-              $next_id_query = tep_db_query("select max(orders_status_id) as orders_status_id from " . TABLE_ORDERS_STATUS . "");
+              $next_id_query = tep_db_query("select max(orders_status_id) as orders_status_id from " . TABLE_ORDERS_STATUS);
               $next_id = tep_db_fetch_array($next_id_query);
               $orders_status_id = $next_id['orders_status_id'] + 1;
             }

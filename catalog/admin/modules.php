@@ -34,7 +34,7 @@
       case 'save':
         reset($HTTP_POST_VARS['configuration']);
         while (list($key, $value) = each($HTTP_POST_VARS['configuration'])) {
-          tep_db_query("update " . TABLE_CONFIGURATION . " set configuration_value = '" . $value . "' where configuration_key = '" . $key . "'");
+          tep_db_query("update " . TABLE_CONFIGURATION . " set configuration_value = '" . tep_db_input(tep_db_prepare_input($value)) . "' where configuration_key = '" . tep_db_input(tep_db_prepare_input($key)) . "'");
         }
         tep_redirect(tep_href_link(FILENAME_MODULES, 'set=' . $set . '&module=' . $HTTP_GET_VARS['module']));
         break;
@@ -58,7 +58,7 @@
               $modules_installed[] = $class . $file_extension;
             }
 
-            tep_db_query("update " . TABLE_CONFIGURATION . " set configuration_value = '" . implode(';', $modules_installed) . "' where configuration_key = '" . $module_key . "'");
+            tep_db_query("update " . TABLE_CONFIGURATION . " set configuration_value = '" . implode(';', $modules_installed) . "' where configuration_key = '" . tep_db_input($module_key) . "'");
             tep_redirect(tep_href_link(FILENAME_MODULES, 'set=' . $set . '&module=' . $class));
           } elseif ($action == 'remove') {
             $module->remove();
@@ -69,7 +69,7 @@
               unset($modules_installed[array_search($class . $file_extension, $modules_installed)]);
             }
 
-            tep_db_query("update " . TABLE_CONFIGURATION . " set configuration_value = '" . implode(';', $modules_installed) . "' where configuration_key = '" . $module_key . "'");
+            tep_db_query("update " . TABLE_CONFIGURATION . " set configuration_value = '" . implode(';', $modules_installed) . "' where configuration_key = '" . tep_db_input($module_key) . "'");
             tep_redirect(tep_href_link(FILENAME_MODULES, 'set=' . $set));
           }
         }
@@ -164,7 +164,7 @@
 
         $keys_extra = array();
         for ($j=0, $k=sizeof($module_keys); $j<$k; $j++) {
-          $key_value_query = tep_db_query("select configuration_title, configuration_value, configuration_description, use_function, set_function from " . TABLE_CONFIGURATION . " where configuration_key = '" . $module_keys[$j] . "'");
+          $key_value_query = tep_db_query("select configuration_title, configuration_value, configuration_description, use_function, set_function from " . TABLE_CONFIGURATION . " where configuration_key = '" . tep_db_input($module_keys[$j]) . "'");
           $key_value = tep_db_fetch_array($key_value_query);
 
           $keys_extra[$module_keys[$j]]['title'] = $key_value['configuration_title'];
@@ -199,14 +199,14 @@
 
   if (!isset($HTTP_GET_VARS['list'])) {
     ksort($installed_modules);
-    $check_query = tep_db_query("select configuration_value from " . TABLE_CONFIGURATION . " where configuration_key = '" . $module_key . "'");
+    $check_query = tep_db_query("select configuration_value from " . TABLE_CONFIGURATION . " where configuration_key = '" . tep_db_input($module_key) . "'");
     if (tep_db_num_rows($check_query)) {
       $check = tep_db_fetch_array($check_query);
       if ($check['configuration_value'] != implode(';', $installed_modules)) {
-        tep_db_query("update " . TABLE_CONFIGURATION . " set configuration_value = '" . implode(';', $installed_modules) . "', last_modified = now() where configuration_key = '" . $module_key . "'");
+        tep_db_query("update " . TABLE_CONFIGURATION . " set configuration_value = '" . implode(';', $installed_modules) . "', last_modified = now() where configuration_key = '" . tep_db_input($module_key) . "'");
       }
     } else {
-      tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Installed Modules', '" . $module_key . "', '" . implode(';', $installed_modules) . "', 'This is automatically updated. No need to edit.', '6', '0', now())");
+      tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Installed Modules', '" . tep_db_input($module_key) . "', '" . implode(';', $installed_modules) . "', 'This is automatically updated. No need to edit.', '6', '0', now())");
     }
 
     if ($template_integration == true) {
@@ -220,7 +220,7 @@
           tep_db_query("update " . TABLE_CONFIGURATION . " set configuration_value = '" . implode(';', $tbgroups_array) . "', last_modified = now() where configuration_key = 'TEMPLATE_BLOCK_GROUPS'");
         }
       } else {
-        tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Installed Template Block Groups', 'TEMPLATE_BLOCK_GROUPS', '" . $module_type . "', 'This is automatically updated. No need to edit.', '6', '0', now())");
+        tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Installed Template Block Groups', 'TEMPLATE_BLOCK_GROUPS', '" . tep_db_input($module_type) . "', 'This is automatically updated. No need to edit.', '6', '0', now())");
       }
     }
   }

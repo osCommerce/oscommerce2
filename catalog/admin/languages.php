@@ -87,7 +87,7 @@
       case 'deleteconfirm':
         $lID = tep_db_prepare_input($HTTP_GET_VARS['lID']);
 
-        $lng_query = tep_db_query("select languages_id from " . TABLE_LANGUAGES . " where code = '" . DEFAULT_CURRENCY . "'");
+        $lng_query = tep_db_query("select languages_id from " . TABLE_LANGUAGES . " where code = '" . tep_db_input(DEFAULT_CURRENCY) . "'");
         $lng = tep_db_fetch_array($lng_query);
         if ($lng['languages_id'] == $lID) {
           tep_db_query("update " . TABLE_CONFIGURATION . " set configuration_value = '' where configuration_key = 'DEFAULT_CURRENCY'");
