@@ -200,7 +200,7 @@
       }
     }
 
-    function count_contents() {  // get total number of items in cart 
+    function count_contents() {  // get total number of items in cart
       $total_items = 0;
       if (is_array($this->contents)) {
         reset($this->contents);
@@ -427,6 +427,17 @@
       }
 
       return $this->content_type;
+    }
+
+    function update_content() {
+      reset($this->contents);
+      while (list($products_id, ) = each($this->contents)) {
+        $products_query = tep_db_query("select 1 from " . TABLE_PRODUCTS . " where products_id = '" . (int)$products_id . "' and products_status = 1");
+
+        if (!tep_db_num_rows($products_query)) {
+          $this->remove($products_id);
+        }
+      }
     }
 
     function unserialize($broken) {

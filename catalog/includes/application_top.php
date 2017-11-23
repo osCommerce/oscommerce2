@@ -256,6 +256,8 @@
     $cart = new shoppingCart;
   }
 
+  $cart->update_content();
+
 // include currencies class and create an instance
   require(DIR_WS_CLASSES . 'currencies.php');
   $currencies = new currencies();
