@@ -120,13 +120,17 @@
   function tep_get_all_get_params($exclude_array = '') {
     global $HTTP_GET_VARS;
 
-    if ($exclude_array == '') $exclude_array = array();
+    if (!is_array($exclude_array)) $exclude_array = array();
 
     $get_url = '';
 
-    reset($HTTP_GET_VARS);
-    while (list($key, $value) = each($HTTP_GET_VARS)) {
-      if (($key != tep_session_name()) && ($key != 'error') && (!in_array($key, $exclude_array))) $get_url .= $key . '=' . $value . '&';
+    if (is_array($HTTP_GET_VARS) && (sizeof($HTTP_GET_VARS) > 0)) {
+      reset($HTTP_GET_VARS);
+      while (list($key, $value) = each($HTTP_GET_VARS)) {
+        if (($key != tep_session_name()) && ($key != 'error') && (!in_array($key, $exclude_array)) && ($key != 'x') && ($key != 'y')) {
+          $get_url .= $key . '=' . rawurlencode(stripslashes($value)) . '&';
+        }
+      }
     }
 
     return $get_url;
