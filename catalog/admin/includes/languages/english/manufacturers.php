@@ -23,7 +23,6 @@ define('TEXT_MANUFACTURERS', 'Manufacturers:');
 define('TEXT_DATE_ADDED', 'Date Added:');
 define('TEXT_LAST_MODIFIED', 'Last Modified:');
 define('TEXT_PRODUCTS', 'Products:');
-define('TEXT_IMAGE_NONEXISTENT', 'IMAGE DOES NOT EXIST');
 
 define('TEXT_NEW_INTRO', 'Please fill out the following information for the new manufacturer');
 define('TEXT_EDIT_INTRO', 'Please make any necessary changes');
