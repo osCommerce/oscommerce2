@@ -87,7 +87,7 @@
         $mail_sent_to = TEXT_NEWSLETTER_CUSTOMERS;
         break;
       default:
-        $mail_sent_to = $HTTP_POST_VARS['customers_email_address'];
+        $mail_sent_to = htmlspecialchars(stripslashes($HTTP_POST_VARS['customers_email_address']));
         break;
     }
 ?>
