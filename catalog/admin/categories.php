@@ -96,7 +96,7 @@
         tep_redirect(tep_href_link(FILENAME_CATEGORIES, 'cPath=' . $cPath . '&cID=' . $categories_id));
         break;
       case 'delete_category_confirm':
-        if (isset($HTTP_POST_VARS['categories_id'])) {
+        if (isset($HTTP_POST_VARS['categories_id']) && is_numeric($HTTP_POST_VARS['categories_id']) && ((int)$HTTP_POST_VARS['categories_id'] > 0)) {
           $categories_id = tep_db_prepare_input($HTTP_POST_VARS['categories_id']);
 
           $categories = tep_get_category_tree($categories_id, '', '0', '', true);
