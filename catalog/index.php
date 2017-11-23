@@ -15,14 +15,12 @@
 // the following cPath references come from application_top.php
   $category_depth = 'top';
   if (isset($cPath) && tep_not_null($cPath)) {
-    $categories_products_query = tep_db_query("select count(*) as total from " . TABLE_PRODUCTS_TO_CATEGORIES . " where categories_id = '" . (int)$current_category_id . "'");
-    $categories_products = tep_db_fetch_array($categories_products_query);
-    if ($categories_products['total'] > 0) {
+    $categories_products_query = tep_db_query("select 1 from " . TABLE_PRODUCTS_TO_CATEGORIES . " where categories_id = '" . (int)$current_category_id . "' limit 1");
+    if (tep_db_num_rows($categories_products_query)) {
       $category_depth = 'products'; // display products
     } else {
-      $category_parent_query = tep_db_query("select count(*) as total from " . TABLE_CATEGORIES . " where parent_id = '" . (int)$current_category_id . "'");
-      $category_parent = tep_db_fetch_array($category_parent_query);
-      if ($category_parent['total'] > 0) {
+      $category_parent_query = tep_db_query("select 1 from " . TABLE_CATEGORIES . " where parent_id = '" . (int)$current_category_id . "' limit 1");
+      if (tep_db_num_rows($category_parent_query)) {
         $category_depth = 'nested'; // navigate through the categories
       } else {
         $category_depth = 'products'; // category has no products, but display the 'no products' message
