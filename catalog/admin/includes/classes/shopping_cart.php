@@ -134,7 +134,7 @@
       }
     }
 
-    function count_contents() {  // get total number of items in cart 
+    function count_contents() {  // get total number of items in cart
         $total_items = 0;
         if (is_array($this->contents)) {
             reset($this->contents);
@@ -293,14 +293,5 @@
 
       return $this->weight;
     }
-
-    function unserialize($broken) {
-      for(reset($broken);$kv=each($broken);) {
-        $key=$kv['key'];
-        if (gettype($this->$key)!="user function")
-        $this->$key=$kv['value'];
-      }
-    }
-
   }
 ?>
