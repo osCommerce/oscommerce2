@@ -109,7 +109,8 @@
           $methods = array();
           $size = sizeof($uspsQuote);
           for ($i=0; $i<$size; $i++) {
-            list($type, $cost) = each($uspsQuote[$i]);
+            $type = key($uspsQuote[$i]);
+            $cost = current($uspsQuote[$i]);
 
 // echo "USPS $type @ $cost<br />";
 	    if (($method == '' && in_array($type, $this->types)) || $method == $type) {

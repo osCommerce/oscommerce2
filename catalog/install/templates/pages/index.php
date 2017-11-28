@@ -159,8 +159,7 @@
       <table border="0" width="100%" cellspacing="0" cellpadding="2" style="background: #fffbdf; border: 1px solid #ffc20b; padding: 2px;">
 
 <?php
-      reset($warning_array);
-      while (list($key, $value) = each($warning_array)) {
+      foreach ($warning_array as $key => $value) {
         echo '        <tr>' . "\n" .
              '          <td valign="top"><strong>' . $key . '</strong></td>' . "\n" .
              '          <td valign="top">' . $value . '</td>' . "\n" .

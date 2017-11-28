@@ -35,15 +35,13 @@
   function do_magic_quotes_gpc(&$ar) {
     if (!is_array($ar)) return false;
 
-    reset($ar);
-    while (list($key, $value) = each($ar)) {
+    foreach ($ar as $key => $value) {
       if (is_array($ar[$key])) {
         do_magic_quotes_gpc($ar[$key]);
       } else {
         $ar[$key] = addslashes($value);
       }
     }
-    reset($ar);
   }
 
   if (PHP_VERSION >= 4.1) {
@@ -75,7 +73,7 @@
     function checkdnsrr($host, $type) {
       if(tep_not_null($host) && tep_not_null($type)) {
         @exec("nslookup -type=" . escapeshellarg($type) . " " . escapeshellarg($host), $output);
-        while(list($k, $line) = each($output)) {
+        foreach ($output as $k => $line) {
           if(preg_match("/^$host/i", $line)) {
             return true;
           }

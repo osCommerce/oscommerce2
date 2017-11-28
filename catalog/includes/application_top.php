@@ -109,7 +109,7 @@
       }
 
       if (sizeof($GET_array) > 0) {
-        while (list($key, $value) = each($GET_array)) {
+        foreach ($GET_array as $key => $value) {
           $HTTP_GET_VARS[$key] = $value;
         }
       }

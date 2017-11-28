@@ -45,7 +45,7 @@
     for ($i=0, $n=sizeof($products); $i<$n; $i++) {
 // Push all attributes information in an array
       if (isset($products[$i]['attributes']) && is_array($products[$i]['attributes'])) {
-        while (list($option, $value) = each($products[$i]['attributes'])) {
+        foreach ($products[$i]['attributes'] as $option => $value) {
           echo tep_draw_hidden_field('id[' . $products[$i]['id'] . '][' . $option . ']', $value);
           $attributes = tep_db_query("select popt.products_options_name, poval.products_options_values_name, pa.options_values_price, pa.price_prefix
                                       from " . TABLE_PRODUCTS_OPTIONS . " popt, " . TABLE_PRODUCTS_OPTIONS_VALUES . " poval, " . TABLE_PRODUCTS_ATTRIBUTES . " pa
@@ -90,8 +90,7 @@
       }
 
       if (isset($products[$i]['attributes']) && is_array($products[$i]['attributes'])) {
-        reset($products[$i]['attributes']);
-        while (list($option, $value) = each($products[$i]['attributes'])) {
+        foreach ($products[$i]['attributes'] as $option => $value) {
           $products_name .= '<br /><small><i> - ' . $products[$i][$option]['products_options_name'] . ' ' . $products[$i][$option]['products_options_values_name'] . '</i></small>';
         }
       }
