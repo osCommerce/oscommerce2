@@ -84,9 +84,13 @@
     global $cPath_array;
 
     if ($current_category_id == '') {
-      $cPath_new = implode('_', $cPath_array);
+      if (!isset($cPath_array) || (sizeof($cPath_array) == 0)) {
+        $cPath_new = '';
+      } else {
+        $cPath_new = implode('_', $cPath_array);
+      }
     } else {
-      if (sizeof($cPath_array) == 0) {
+      if (!isset($cPath_array) || (sizeof($cPath_array) == 0)) {
         $cPath_new = $current_category_id;
       } else {
         $cPath_new = '';
@@ -499,6 +503,8 @@
   }
 
   function tep_get_languages() {
+    $languages_array = array();
+
     $languages_query = tep_db_query("select languages_id, name, code, image, directory from " . TABLE_LANGUAGES . " order by sort_order");
     while ($languages = tep_db_fetch_array($languages_query)) {
       $languages_array[] = array('id' => $languages['languages_id'],
