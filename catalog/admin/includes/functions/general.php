@@ -84,9 +84,13 @@
     global $cPath_array;
 
     if ($current_category_id == '') {
-      $cPath_new = implode('_', $cPath_array);
+      if (!isset($cPath_array) || (sizeof($cPath_array) == 0)) {
+        $cPath_new = '';
+      } else {
+        $cPath_new = implode('_', $cPath_array);
+      }
     } else {
-      if (sizeof($cPath_array) == 0) {
+      if (!isset($cPath_array) || (sizeof($cPath_array) == 0)) {
         $cPath_new = $current_category_id;
       } else {
         $cPath_new = '';
@@ -120,13 +124,16 @@
   function tep_get_all_get_params($exclude_array = '') {
     global $HTTP_GET_VARS;
 
-    if ($exclude_array == '') $exclude_array = array();
+    if (!is_array($exclude_array)) $exclude_array = array();
 
     $get_url = '';
 
-    reset($HTTP_GET_VARS);
-    while (list($key, $value) = each($HTTP_GET_VARS)) {
-      if (($key != tep_session_name()) && ($key != 'error') && (!in_array($key, $exclude_array))) $get_url .= $key . '=' . $value . '&';
+    if (is_array($HTTP_GET_VARS) && (sizeof($HTTP_GET_VARS) > 0)) {
+      foreach ($HTTP_GET_VARS as $key => $value) {
+        if (($key != tep_session_name()) && ($key != 'error') && (!in_array($key, $exclude_array)) && ($key != 'x') && ($key != 'y')) {
+          $get_url .= $key . '=' . rawurlencode(stripslashes($value)) . '&';
+        }
+      }
     }
 
     return $get_url;
@@ -188,8 +195,12 @@
 
     if ($include_itself) {
       $category_query = tep_db_query("select cd.categories_name from " . TABLE_CATEGORIES_DESCRIPTION . " cd where cd.language_id = '" . (int)$languages_id . "' and cd.categories_id = '" . (int)$parent_id . "'");
-      $category = tep_db_fetch_array($category_query);
-      $category_tree_array[] = array('id' => $parent_id, 'text' => $category['categories_name']);
+
+      if (tep_db_num_rows($category_query)) {
+        $category = tep_db_fetch_array($category_query);
+
+        $category_tree_array[] = array('id' => $parent_id, 'text' => $category['categories_name']);
+      }
     }
 
     $categories_query = tep_db_query("select c.categories_id, cd.categories_name, c.parent_id from " . TABLE_CATEGORIES . " c, " . TABLE_CATEGORIES_DESCRIPTION . " cd where c.categories_id = cd.categories_id and cd.language_id = '" . (int)$languages_id . "' and c.parent_id = '" . (int)$parent_id . "' order by c.sort_order, cd.categories_name");
@@ -477,7 +488,7 @@
   function tep_get_uprid($prid, $params) {
     $uprid = $prid;
     if ( (is_array($params)) && (!strstr($prid, '{')) ) {
-      while (list($option, $value) = each($params)) {
+      foreach ($params as $option => $value) {
         $uprid = $uprid . '{' . $option . '}' . $value;
       }
     }
@@ -492,6 +503,8 @@
   }
 
   function tep_get_languages() {
+    $languages_array = array();
+
     $languages_query = tep_db_query("select languages_id, name, code, image, directory from " . TABLE_LANGUAGES . " order by sort_order");
     while ($languages = tep_db_fetch_array($languages_query)) {
       $languages_array[] = array('id' => $languages['languages_id'],
@@ -732,9 +745,9 @@
 // Sets the status of a banner
   function tep_set_banner_status($banners_id, $status) {
     if ($status == '1') {
-      return tep_db_query("update " . TABLE_BANNERS . " set status = '1', expires_impressions = NULL, expires_date = NULL, date_status_change = NULL where banners_id = '" . $banners_id . "'");
+      return tep_db_query("update " . TABLE_BANNERS . " set status = '1', expires_impressions = NULL, expires_date = NULL, date_status_change = NULL where banners_id = '" . (int)$banners_id . "'");
     } elseif ($status == '0') {
-      return tep_db_query("update " . TABLE_BANNERS . " set status = '0', date_status_change = now() where banners_id = '" . $banners_id . "'");
+      return tep_db_query("update " . TABLE_BANNERS . " set status = '0', date_status_change = now() where banners_id = '" . (int)$banners_id . "'");
     } else {
       return -1;
     }
@@ -806,8 +819,7 @@
 ////
 // Alias function for module configuration keys
   function tep_mod_select_option($select_array, $key_name, $key_value) {
-    reset($select_array);
-    while (list($key, $value) = each($select_array)) {
+    foreach ($select_array as $key => $value) {
       if (is_int($key)) $key = $value;
       $string .= '<br /><input type="radio" name="configuration[' . $key_name . ']" value="' . $key . '"';
       if ($key_value == $key) $string .= ' checked="checked"';
@@ -1005,7 +1017,7 @@
     if ($restock == 'on') {
       $order_query = tep_db_query("select products_id, products_quantity from " . TABLE_ORDERS_PRODUCTS . " where orders_id = '" . (int)$order_id . "'");
       while ($order = tep_db_fetch_array($order_query)) {
-        tep_db_query("update " . TABLE_PRODUCTS . " set products_quantity = products_quantity + " . $order['products_quantity'] . ", products_ordered = products_ordered - " . $order['products_quantity'] . " where products_id = '" . (int)$order['products_id'] . "'");
+        tep_db_query("update " . TABLE_PRODUCTS . " set products_quantity = products_quantity + " . (int)$order['products_quantity'] . ", products_ordered = products_ordered - " . (int)$order['products_quantity'] . " where products_id = '" . (int)$order['products_id'] . "'");
       }
     }
 

@@ -56,7 +56,7 @@
       case 'deleteconfirm':
         $currencies_id = tep_db_prepare_input($HTTP_GET_VARS['cID']);
 
-        $currency_query = tep_db_query("select currencies_id from " . TABLE_CURRENCIES . " where code = '" . DEFAULT_CURRENCY . "'");
+        $currency_query = tep_db_query("select currencies_id from " . TABLE_CURRENCIES . " where code = '" . tep_db_input(DEFAULT_CURRENCY) . "'");
         $currency = tep_db_fetch_array($currency_query);
 
         if ($currency['currencies_id'] == $currencies_id) {
@@ -85,7 +85,7 @@
           }
 
           if (tep_not_null($rate)) {
-            tep_db_query("update " . TABLE_CURRENCIES . " set value = '" . $rate . "', last_updated = now() where currencies_id = '" . (int)$currency['currencies_id'] . "'");
+            tep_db_query("update " . TABLE_CURRENCIES . " set value = '" . tep_db_input($rate) . "', last_updated = now() where currencies_id = '" . (int)$currency['currencies_id'] . "'");
 
             $messageStack->add_session(sprintf(TEXT_INFO_CURRENCY_UPDATED, $currency['title'], $currency['code'], $server_used), 'success');
           } else {

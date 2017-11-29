@@ -42,7 +42,7 @@
 
         $tables_query = tep_db_query('show tables');
         while ($tables = tep_db_fetch_array($tables_query)) {
-          list(,$table) = each($tables);
+          $table = reset($tables);
 
           $schema = 'drop table if exists ' . $table . ';' . "\n" .
                     'create table ' . $table . ' (' . "\n";
@@ -80,7 +80,7 @@
             $index[$kname]['columns'][] = $keys['Column_name'];
           }
 
-          while (list($kname, $info) = each($index)) {
+          foreach ($index as $kname => $info) {
             $schema .= ',' . "\n";
 
             $columns = implode($info['columns'], ', ');
@@ -105,8 +105,7 @@
             while ($rows = tep_db_fetch_array($rows_query)) {
               $schema = 'insert into ' . $table . ' (' . implode(', ', $table_list) . ') values (';
 
-              reset($table_list);
-              while (list(,$i) = each($table_list)) {
+              foreach ($table_list as $i) {
                 if (!isset($rows[$i])) {
                   $schema .= 'NULL, ';
                 } elseif (tep_not_null($rows[$i])) {
@@ -139,7 +138,7 @@
               $backup_file .= '.zip';
           }
           header('Content-type: application/x-octet-stream');
-          header('Content-disposition: attachment; filename=' . $backup_file);
+          header('Content-disposition: attachment; filename="' . $backup_file . '"');
 
           readfile(DIR_FS_BACKUP . $backup_file);
           unlink(DIR_FS_BACKUP . $backup_file);
@@ -165,11 +164,11 @@
         tep_set_time_limit(0);
 
         if ($action == 'restorenow') {
-          $read_from = $HTTP_GET_VARS['file'];
+          $read_from = basename($HTTP_GET_VARS['file']);
 
-          if (file_exists(DIR_FS_BACKUP . $HTTP_GET_VARS['file'])) {
-            $restore_file = DIR_FS_BACKUP . $HTTP_GET_VARS['file'];
-            $extension = substr($HTTP_GET_VARS['file'], -3);
+          if (file_exists(DIR_FS_BACKUP . $read_from)) {
+            $restore_file = DIR_FS_BACKUP . $read_from;
+            $extension = substr($read_from, -3);
 
             if ( ($extension == 'sql') || ($extension == '.gz') || ($extension == 'zip') ) {
               switch ($extension) {
@@ -270,7 +269,7 @@
           tep_db_query("delete from " . TABLE_SESSIONS);
 
           tep_db_query("delete from " . TABLE_CONFIGURATION . " where configuration_key = 'DB_LAST_RESTORE'");
-          tep_db_query("insert into " . TABLE_CONFIGURATION . " values (null, 'Last Database Restore', 'DB_LAST_RESTORE', '" . $read_from . "', 'Last database restore file', '6', '0', null, now(), '', '')");
+          tep_db_query("insert into " . TABLE_CONFIGURATION . " values (null, 'Last Database Restore', 'DB_LAST_RESTORE', '" . tep_db_prepare_input(tep_db_input($read_from)) . "', 'Last database restore file', '6', '0', null, now(), '', '')");
 
           if (isset($remove_raw) && ($remove_raw == true)) {
             unlink($restore_from);
@@ -282,15 +281,16 @@
         tep_redirect(tep_href_link(FILENAME_BACKUP));
         break;
       case 'download':
-        $extension = substr($HTTP_GET_VARS['file'], -3);
+        $file = basename($HTTP_GET_VARS['file']);
+        $extension = substr($file, -3);
 
         if ( ($extension == 'zip') || ($extension == '.gz') || ($extension == 'sql') ) {
-          if ($fp = fopen(DIR_FS_BACKUP . $HTTP_GET_VARS['file'], 'rb')) {
-            $buffer = fread($fp, filesize(DIR_FS_BACKUP . $HTTP_GET_VARS['file']));
+          if (file_exists(DIR_FS_BACKUP . $file) && ($fp = fopen(DIR_FS_BACKUP . $file, 'rb'))) {
+            $buffer = fread($fp, filesize(DIR_FS_BACKUP . $file));
             fclose($fp);
 
             header('Content-type: application/x-octet-stream');
-            header('Content-disposition: attachment; filename=' . $HTTP_GET_VARS['file']);
+            header('Content-disposition: attachment; filename="' . $file . '"');
 
             echo $buffer;
 
@@ -303,12 +303,16 @@
       case 'deleteconfirm':
         if (strstr($HTTP_GET_VARS['file'], '..')) tep_redirect(tep_href_link(FILENAME_BACKUP));
 
-        tep_remove(DIR_FS_BACKUP . '/' . $HTTP_GET_VARS['file']);
+        $file = basename($HTTP_GET_VARS['file']);
 
-        if (!$tep_remove_error) {
-          $messageStack->add_session(SUCCESS_BACKUP_DELETED, 'success');
+        if (file_exists(DIR_FS_BACKUP . $file)) {
+          tep_remove(DIR_FS_BACKUP . $file);
 
-          tep_redirect(tep_href_link(FILENAME_BACKUP));
+          if (!$tep_remove_error) {
+            $messageStack->add_session(SUCCESS_BACKUP_DELETED, 'success');
+
+            tep_redirect(tep_href_link(FILENAME_BACKUP));
+          }
         }
         break;
     }

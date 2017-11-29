@@ -73,7 +73,7 @@
       $info = tep_get_system_information();
       $info_file = 'server_info-' . date('YmdHis') . '.txt';
       header('Content-type: text/plain');
-      header('Content-disposition: attachment; filename=' . $info_file);
+      header('Content-disposition: attachment; filename="' . $info_file . '"');
       echo tep_format_system_info_array($info);
       exit;
 

@@ -18,7 +18,7 @@
     var $code, $title, $description, $enabled, $_app;
 
     function paypal_express() {
-      global $PHP_SELF, $order, $payment, $request_type;
+      global $PHP_SELF, $oscTemplate, $order, $payment, $request_type;
 
       $this->_app = new OSCOM_PayPal();
       $this->_app->loadLanguageFile('modules/EC/EC.php');
@@ -87,6 +87,20 @@
           tep_redirect(tep_href_link(FILENAME_CHECKOUT_CONFIRMATION, '', 'SSL'));
         }
       }
+
+      if ( $this->enabled === true ) {
+        if ( defined('FILENAME_SHOPPING_CART') && (basename($PHP_SELF) == FILENAME_SHOPPING_CART) ) {
+          if ( $this->templateClassExists() ) {
+            if ( (OSCOM_APP_PAYPAL_GATEWAY == '1') && (OSCOM_APP_PAYPAL_EC_CHECKOUT_FLOW == '1') ) {
+              $oscTemplate->addBlock('<style>#ppECButton { display: inline-block; }</style>', 'header_tags');
+            }
+
+            if ( file_exists(DIR_FS_CATALOG . 'ext/modules/payment/paypal/express.css') ) {
+              $oscTemplate->addBlock('<link rel="stylesheet" type="text/css" href="ext/modules/payment/paypal/express.css" />', 'header_tags');
+            }
+          }
+        }
+      }
     }
 
     function update_status() {
@@ -149,7 +163,7 @@
             $button_title .= ' (' . $this->code . '; Sandbox)';
           }
 
-          $string .= '<a href="' . tep_href_link('ext/modules/payment/paypal/express.php', '', 'SSL') . '"><img src="' . $image_button . '" border="0" alt="" title="' . $button_title . '" /></a>';
+          $string .= '<a id="ppECButtonClassicLink" href="' . tep_href_link('ext/modules/payment/paypal/express.php', '', 'SSL') . '"><img id="ppECButtonClassic" src="' . $image_button . '" border="0" alt="" title="' . $button_title . '" /></a>';
         } else {
           $string .= '<script src="https://www.paypalobjects.com/api/checkout.js"></script>';
 
@@ -247,7 +261,7 @@ EOD;
           $button_title .= ' (' . $this->code . '; Sandbox)';
         }
 
-        $string .= '<a href="' . tep_href_link('ext/modules/payment/paypal/express.php', '', 'SSL') . '"><img src="' . $image_button . '" border="0" alt="" title="' . $button_title . '" /></a>';
+        $string .= '<a id="ppECButtonPfLink" href="' . tep_href_link('ext/modules/payment/paypal/express.php', '', 'SSL') . '"><img id="ppECButtonPf" src="' . $image_button . '" border="0" alt="" title="' . $button_title . '" /></a>';
       }
 
       return $string;
@@ -597,6 +611,10 @@ EOD;
       }
 
       return 'Physical';
+    }
+
+    function templateClassExists() {
+      return class_exists('oscTemplate') && isset($GLOBALS['oscTemplate']) && is_object($GLOBALS['oscTemplate']) && (get_class($GLOBALS['oscTemplate']) == 'oscTemplate');
     }
   }
 ?>

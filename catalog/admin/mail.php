@@ -87,7 +87,7 @@
         $mail_sent_to = TEXT_NEWSLETTER_CUSTOMERS;
         break;
       default:
-        $mail_sent_to = $HTTP_POST_VARS['customers_email_address'];
+        $mail_sent_to = htmlspecialchars(stripslashes($HTTP_POST_VARS['customers_email_address']));
         break;
     }
 ?>
@@ -124,8 +124,7 @@
                 <td class="smallText" align="right">
 <?php
 /* Re-Post all POST'ed variables */
-    reset($HTTP_POST_VARS);
-    while (list($key, $value) = each($HTTP_POST_VARS)) {
+    foreach ($HTTP_POST_VARS as $key => $value) {
       if (!is_array($HTTP_POST_VARS[$key])) {
         echo tep_draw_hidden_field($key, htmlspecialchars(stripslashes($value)));
       }

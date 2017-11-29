@@ -149,8 +149,7 @@
       if ($insert_order == true) {
         $order_totals = array();
         if (is_array($order_total_modules->modules)) {
-          reset($order_total_modules->modules);
-          while (list(, $value) = each($order_total_modules->modules)) {
+          foreach ($order_total_modules->modules as $value) {
             $class = substr($value, 0, strrpos($value, '.'));
             if ($GLOBALS[$class]->enabled) {
               for ($i=0, $n=sizeof($GLOBALS[$class]->output); $i<$n; $i++) {
@@ -410,7 +409,7 @@
 // otherwise, we have to build the query dynamically with a loop
             $products_attributes = $order->products[$i]['attributes'];
             if (is_array($products_attributes)) {
-              $stock_query_raw .= " AND pa.options_id = '" . $products_attributes[0]['option_id'] . "' AND pa.options_values_id = '" . $products_attributes[0]['value_id'] . "'";
+              $stock_query_raw .= " AND pa.options_id = '" . (int)$products_attributes[0]['option_id'] . "' AND pa.options_values_id = '" . (int)$products_attributes[0]['value_id'] . "'";
             }
             $stock_query = tep_db_query($stock_query_raw);
           } else {
@@ -424,7 +423,7 @@
             } else {
               $stock_left = $stock_values['products_quantity'];
             }
-            tep_db_query("update " . TABLE_PRODUCTS . " set products_quantity = '" . $stock_left . "' where products_id = '" . tep_get_prid($order->products[$i]['id']) . "'");
+            tep_db_query("update " . TABLE_PRODUCTS . " set products_quantity = '" . (int)$stock_left . "' where products_id = '" . tep_get_prid($order->products[$i]['id']) . "'");
             if ( ($stock_left < 1) && (STOCK_ALLOW_CHECKOUT == 'false') ) {
               tep_db_query("update " . TABLE_PRODUCTS . " set products_status = '0' where products_id = '" . tep_get_prid($order->products[$i]['id']) . "'");
             }

@@ -244,6 +244,8 @@
           $counter = 0;
           $cheapest_rate = null;
           $cheapest_counter = $counter;
+          $selected_shipping_id = isset($HTTP_GET_VARS['osc_shipping_id']) ? $HTTP_GET_VARS['osc_shipping_id'] : null;
+          $selected_shipping_counter = null;
 
           foreach ($quotes_array as $quote) {
             $shipping_rate = $paypal_express->_app->formatCurrencyRaw($quote['cost'] + tep_calculate_tax($quote['cost'], $quote['tax']));
@@ -262,10 +264,17 @@
               $cheapest_counter = $counter;
             }
 
+            if (isset($selected_shipping_id) && ($selected_shipping_id == $quote['id'])) {
+              $selected_shipping_counter = $counter;
+              $log_sane['OSCOM_CUSTOMER_SELECTED_SHIPPING_RATE_ID'] = $quote['id'];
+            }
+
             $counter++;
           }
 
-          if ( method_exists($shipping_modules, 'get_first') ) { // select first shipping method
+          if ( isset($selected_shipping_counter) ) {
+            $params['L_SHIPPINGOPTIONISDEFAULT' . $selected_shipping_counter] = 'true';
+          } elseif ( method_exists($shipping_modules, 'get_first') ) { // select first shipping method
             $params['L_SHIPPINGOPTIONISDEFAULT0'] = 'true';
           } else { // select cheapest shipping method
             $params['L_SHIPPINGOPTIONISDEFAULT' . $cheapest_counter] = 'true';
@@ -559,8 +568,10 @@ EOD;
             }
           }
 
-          if (!tep_session_is_registered('shipping')) tep_session_register('shipping');
-          $shipping = false;
+          if (!tep_session_is_registered('shipping')) {
+            tep_session_register('shipping');
+            $shipping = false;
+          }
 
           if ( (tep_count_shipping_modules() > 0) || ($free_shipping == true) ) {
             if ($free_shipping == true) {
@@ -593,13 +604,39 @@ EOD;
               }
 
               if ($shipping_set == false) {
-                if ( method_exists($shipping_modules, 'get_first') ) { // select first shipping method
-                  $shipping = $shipping_modules->get_first();
-                } else { // select cheapest shipping method
-                  $shipping = $shipping_modules->cheapest();
+                $shipping_selected = false;
+
+                $module = null;
+                $method = null;
+
+                if (is_array($shipping) && isset($shipping['id']) && (strpos($shipping['id'], '_') !== false)) {
+                  list($module, $method) = explode('_', $shipping['id']);
+                } elseif (is_string($shipping) && !empty($shipping) && (strpos($shipping, '_') !== false)) {
+                  list($module, $method) = explode('_', $shipping);
                 }
 
-                $shipping = $shipping['id'];
+                foreach ($quotes as $quote) {
+                  if ($quote['id'] == $module) {
+                    foreach ($quote['methods'] as $m) {
+                      if ($m['id'] == $method) {
+                        $shipping = $quote['id'] . '_' . $m['id'];
+                        $shipping_selected = true;
+
+                        break 2;
+                      }
+                    }
+                  }
+                }
+
+                if ($shipping_selected === false) {
+                  if ( method_exists($shipping_modules, 'get_first') ) { // select first shipping method
+                    $shipping = $shipping_modules->get_first();
+                  } else { // select cheapest shipping method
+                    $shipping = $shipping_modules->cheapest();
+                  }
+
+                  $shipping = $shipping['id'];
+                }
               }
             }
           } else {
@@ -846,6 +883,7 @@ EOD;
         $expensive_rate = 0;
         $cheapest_counter = $counter;
         $default_shipping = null;
+        $selected_shipping_id = null;
 
         foreach ($quotes_array as $quote) {
           $shipping_rate = $paypal_express->_app->formatCurrencyRaw($quote['cost'] + tep_calculate_tax($quote['cost'], $quote['tax']));
@@ -865,6 +903,7 @@ EOD;
 
           if (tep_session_is_registered('shipping') && ($shipping['id'] == $quote['id'])) {
             $default_shipping = $counter;
+            $selected_shipping_id = $shipping['id'];
           }
 
           $counter++;
@@ -897,7 +936,12 @@ EOD;
           $item_params['L_SHIPPINGOPTIONISDEFAULT' . $default_shipping] = 'true';
 
 // Instant Update
-          $item_params['CALLBACK'] = tep_href_link('ext/modules/payment/paypal/express.php', 'osC_Action=callbackSet', 'SSL', false, false);
+          $item_params['CALLBACK'] = tep_href_link('ext/modules/payment/paypal/express.php', 'osC_Action=callbackSet' . (isset($selected_shipping_id) ? '&osc_shipping_id=' . $selected_shipping_id : ''), 'SSL', false, false);
+
+          if ( strpos($item_params['CALLBACK'], '&amp;') !== false ) {
+            $item_params['CALLBACK'] = str_replace('&amp;', '&', $item_params['CALLBACK']);
+          }
+
           $item_params['CALLBACKTIMEOUT'] = '6';
           $item_params['CALLBACKVERSION'] = $paypal_express->api_version;
 

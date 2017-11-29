@@ -109,7 +109,7 @@
       }
 
       if (sizeof($GET_array) > 0) {
-        while (list($key, $value) = each($GET_array)) {
+        foreach ($GET_array as $key => $value) {
           $HTTP_GET_VARS[$key] = $value;
         }
       }
@@ -255,6 +255,8 @@
     tep_session_register('cart');
     $cart = new shoppingCart;
   }
+
+  $cart->update_content();
 
 // include currencies class and create an instance
   require(DIR_WS_CLASSES . 'currencies.php');
