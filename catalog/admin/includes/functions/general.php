@@ -1175,7 +1175,7 @@
     if (SEND_EMAILS != 'true') return false;
 
     // Instantiate a new mail object
-    $message = new email(array('X-Mailer: osCommerce'));
+    $message = new email();
 
     // Build the text version
     $text = strip_tags($email_text);

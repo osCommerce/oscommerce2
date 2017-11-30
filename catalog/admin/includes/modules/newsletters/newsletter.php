@@ -59,7 +59,7 @@
     function send($newsletter_id) {
       $mail_query = tep_db_query("select customers_firstname, customers_lastname, customers_email_address from " . TABLE_CUSTOMERS . " where customers_newsletter = '1'");
 
-      $mimemessage = new email(array('X-Mailer: osCommerce'));
+      $mimemessage = new email();
 
       // Build the text version
       $text = strip_tags($this->content);

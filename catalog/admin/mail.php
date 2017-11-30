@@ -37,7 +37,7 @@
     $message = tep_db_prepare_input($HTTP_POST_VARS['message']);
 
     //Let's build a message object using the email class
-    $mimemessage = new email(array('X-Mailer: osCommerce'));
+    $mimemessage = new email();
 
     // Build the text version
     $text = strip_tags($message);
