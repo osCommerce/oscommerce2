@@ -196,7 +196,7 @@ function selectAll(FormName, SelectBox) {
         }
       }
 
-      $mimemessage = new email(array('X-Mailer: osCommerce'));
+      $mimemessage = new email();
 
       // Build the text version
       $text = strip_tags($this->content);
