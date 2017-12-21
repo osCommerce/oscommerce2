@@ -40,9 +40,12 @@
                   '# Backup Date: ' . date(PHP_DATE_TIME_FORMAT) . "\n\n";
         fputs($fp, $schema);
 
-        $tables_query = tep_db_query('show tables');
+        $tables_query = tep_db_query("select t.TABLE_NAME, t.ENGINE, t.TABLE_COLLATION, ccsa.CHARACTER_SET_NAME 
+        from INFORMATION_SCHEMA.TABLES t, INFORMATION_SCHEMA.COLLATION_CHARACTER_SET_APPLICABILITY ccsa 
+        where t.TABLE_SCHEMA = '" . DB_DATABASE . "' and ccsa.COLLATION_NAME = t.TABLE_COLLATION and t.TABLE_TYPE = 'BASE TABLE'"); // save only tables
+
         while ($tables = tep_db_fetch_array($tables_query)) {
-          $table = reset($tables);
+          $table = $tables['TABLE_NAME'];
 
           $schema = 'drop table if exists ' . $table . ';' . "\n" .
                     'create table ' . $table . ' (' . "\n";
@@ -96,7 +99,7 @@
             }
           }
 
-          $schema .= "\n" . ');' . "\n\n";
+          $schema .= "\n" . ') ENGINE=' . $tables['ENGINE'] . ' CHARACTER SET ' . $tables['CHARACTER_SET_NAME'] . ' COLLATE ' . $tables['TABLE_COLLATION'] . ';' . "\n\n";
           fputs($fp, $schema);
 
 // dump the data
